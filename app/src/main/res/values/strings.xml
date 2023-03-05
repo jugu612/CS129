@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Ting!</string>
-    <string name="sign_up">Sign Up With Email</string>
+    <string name="sign_up">Sign In With Email</string>
     <string name="login">Continue With Google</string>
 </resources>

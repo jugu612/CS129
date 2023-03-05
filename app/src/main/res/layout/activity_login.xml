@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#048C7F "
+    android:background="@color/dark_green"
     android:padding="24dp"
-    tools:context=".RegLogin">
+    tools:context=".Login">
 
     <ImageView
         android:id="@+id/imageView"
@@ -20,59 +20,57 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginTop="20dp">
 
-        <Button
-            android:id="@+id/google_login_button"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="300dp"
+            android:layout_height="80dp"
             android:layout_gravity="center"
-            android:background="@android:color/black"
-            android:fontFamily="sans-serif-condensed"
-            android:text="@string/login"
-            android:textColor="@android:color/white" />
+            android:hint="Email">
+
+        </com.google.android.material.textfield.TextInputEditText>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="300dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:hint="Password">
+
+        </com.google.android.material.textfield.TextInputEditText>
 
         <Button
             android:id="@+id/login_button"
             android:layout_width="250dp"
             android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="20dp"
             android:background="@android:color/black"
             android:fontFamily="sans-serif-condensed"
-            android:text="@string/sign_up"
-            android:textColor="@android:color/white" />
-
+            android:text="Login"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:layout_marginTop="15dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Don't have an account yet?"
-                android:textSize="15sp">
-
-            </TextView>
-
-            <TextView
-                android:id="@+id/signup_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dp"
-                android:text="Sign Up"
+                android:text="Forgot Password"
                 android:textColor="@color/white"
                 android:textSize="15sp">
 
             </TextView>
 
 
-        </LinearLayout>
-    </LinearLayout>
 
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </LinearLayout>
