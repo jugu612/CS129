@@ -33,7 +33,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:layout_width="175dp"
         android:layout_height="175dp"
-        android:src="@drawable/tempProfile"
+        android:src="@drawable/tempprofile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +105,7 @@
             app:layout_constraintEnd_toStartOf="@+id/divider2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/SectionLogo_Health_Wellness" />
+            app:srcCompat="@drawable/sectionlogo_health" />
 
         <TextView
             android:id="@+id/textView3"
@@ -242,7 +242,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/SectionLogo_Planner" />
+            app:srcCompat="@drawable/sectionlogo_planner" />
 
         <TextView
             android:id="@+id/textView_PlannerSection_Text"
@@ -313,7 +313,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/SectionLogo_Focusmode" />
+            app:srcCompat="@drawable/sectionlogo_focus" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
