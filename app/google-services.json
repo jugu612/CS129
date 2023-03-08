@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "823225262950",
+    "project_id": "ting-8b179",
+    "storage_bucket": "ting-8b179.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823225262950:android:32d9e185ee6c3182381ea7",
+        "android_client_info": {
+          "package_name": "com.amadeus.ting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823225262950-c15c3htjscpnoku0elv8q3epf79l1s8h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDH4Tr5AtTJ1HxgECj4RSzGO3hwnkxc6Xk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823225262950-c15c3htjscpnoku0elv8q3epf79l1s8h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
