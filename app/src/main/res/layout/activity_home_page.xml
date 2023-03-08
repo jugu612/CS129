@@ -33,7 +33,7 @@
     <com.google.android.material.imageview.ShapeableImageView
         android:layout_width="175dp"
         android:layout_height="175dp"
-        android:src="@drawable/tempprofile"
+        android:src="@drawable/profiletemp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -242,7 +242,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/sectionlogo_planner" />
+            app:srcCompat="@drawable/sectionlogo_planer" />
 
         <TextView
             android:id="@+id/textView_PlannerSection_Text"
