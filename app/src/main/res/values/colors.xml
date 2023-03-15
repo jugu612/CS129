@@ -10,5 +10,9 @@
     <color name = "dark_green">#048C7F</color>
     <color name = "cyan">#76C8F0</color>
     <color name ="yellow">#FCCD60</color>
+    <color name ="salmon">#F4949E</color>
+    <color name ="red">#EA4C46</color>
+    <color name ="cblue">#02A4D3</color>
+
 
 </resources>

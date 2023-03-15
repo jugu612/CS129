@@ -4,4 +4,6 @@
     <string name="login">Continue With Google</string>
     <string name="cd_previous">Previous</string>
     <string name="cd_next">Next</string>
+    <string name="cancel">cancel</string>
+    <string name="save">save</string>
 </resources>
