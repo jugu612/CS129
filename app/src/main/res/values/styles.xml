@@ -5,7 +5,7 @@
     </style>
 
     <style name="MyDialogStyle" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:background">@drawable/rounded_popup</item>
+        <item name="android:background">@drawable/rounded_button</item>
     </style>
 
 

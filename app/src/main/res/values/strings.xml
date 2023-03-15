@@ -2,7 +2,7 @@
     <string name="app_name">Ting!</string>
     <string name="sign_up">Sign Up With Google</string>
     <string name="login">Continue With Google</string>
-    <string name="ok">OK</string>
+    <string name="save">Save</string>
     <string name="cancel">Cancel</string>
 
 </resources>
