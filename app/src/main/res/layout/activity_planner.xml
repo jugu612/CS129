@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/plannerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Planner">
@@ -9,6 +10,7 @@
     <LinearLayout
         android:id="@+id/linearLayout_Header"
         android:layout_width="0dp"
+
         android:layout_height="67dp"
         android:background="@color/red"
         android:orientation="vertical"

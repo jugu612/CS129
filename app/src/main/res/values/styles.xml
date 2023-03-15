@@ -4,4 +4,9 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="MyDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:background">@drawable/rounded_popup</item>
+    </style>
+
+
 </resources>
