@@ -15,7 +15,6 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
-
 class RegLogin : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth //Authentication
@@ -50,7 +49,7 @@ class RegLogin : AppCompatActivity() {
 
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
 
                 val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                 handleResults(task)
@@ -75,6 +74,8 @@ class RegLogin : AppCompatActivity() {
         auth.signInWithCredential(credential).addOnCompleteListener {
             if (it.isSuccessful) {
                 val intent : Intent = Intent(this, HomePage::class.java)
+                intent.putExtra("email",account.email)
+                intent.putExtra("name",account.displayName)
                 startActivity(intent)
             } else {
                 Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
