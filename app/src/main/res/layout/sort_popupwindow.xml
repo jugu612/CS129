@@ -2,6 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     >
@@ -21,6 +22,7 @@
             >
 
             <FrameLayout
+                android:id="@+id/frameLayout"
                 android:layout_width="274dp"
                 android:layout_height="48dp"
                 android:layout_gravity="bottom"
@@ -42,8 +44,8 @@
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="#009688"
                     android:fontFamily="@font/glacial_indifference_bold"
-                    android:textColor="@color/white"
-                    android:text="@string/save" />
+                    android:text="@string/save"
+                    android:textColor="@color/white" />
 
                 <Button
                     android:id="@+id/cancel_button"
@@ -56,6 +58,52 @@
                     android:text="@string/cancel"
                     android:textColor="@color/white" />
             </FrameLayout>
+
+            <Button
+                android:id="@+id/text_sortby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="52dp"
+                android:layout_marginTop="64dp"
+                android:background="@android:color/transparent"
+                android:text="Sort by: "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/text_alphabetical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="44dp"
+                android:layout_marginTop="64dp"
+                android:background="@android:color/transparent"
+                android:text="Alphabetically"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_sortby" />
+
+            <Button
+                android:id="@+id/text_deadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="52dp"
+                android:layout_marginEnd="200dp"
+                android:layout_marginBottom="53dp"
+                android:background="@android:color/transparent"
+                android:text="Deadline"
+                app:layout_constraintBottom_toTopOf="@+id/text_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_alphabetical" />
+
+            <Button
+                android:id="@+id/text_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:layout_marginEnd="208dp"
+                android:background="@android:color/transparent"
+                android:text="Label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_deadline" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
