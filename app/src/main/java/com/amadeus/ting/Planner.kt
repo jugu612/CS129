@@ -42,7 +42,8 @@ class Planner : AppCompatActivity() {
 
         // Label -> Myka
         onClick<ShapeableImageView>(R.id.label_button) {
-
+            val labelAlertDialog = Labels()
+            labelAlertDialog.showCustomDialog(this, R.layout.view_labels, R.layout.add_label)
 
         }
 
@@ -138,6 +139,51 @@ class MyAlertDialog {
                 val nestedBuilder = AlertDialog.Builder(context, R.style.MyDialogStyle)
                 nestedBuilder.setView(nestedDialogLayout)
                 builder.setCancelable(false)
+
+                nestedDialog = nestedBuilder.create()
+                nestedDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                nestedDialog?.show()
+
+                val cancelButtonNested = nestedDialogLayout.findViewById<Button>(R.id.cancel_button)
+                cancelButtonNested.setOnClickListener {
+                    nestedDialog?.dismiss()
+                }
+            }
+        }
+
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
+    }
+
+}
+
+
+class Labels {
+    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1) {
+        val inflater = LayoutInflater.from(context)
+        val dialogLayout = inflater.inflate(popupLayout, null)
+
+        val builder = AlertDialog.Builder(context, R.style.MyDialogStyle)
+        builder.setView(dialogLayout)
+        builder.setCancelable(false)
+
+        val cancelButton = dialogLayout.findViewById<Button>(R.id.cancel_button)
+        val dialog = builder.create()
+
+        cancelButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        // Nested Dialog: -1 if there is no need for nested dialog
+        var nestedDialog: AlertDialog? = null
+        if (nestedPopupLayout != -1) {
+            val showNestedDialogButton = dialogLayout.findViewById<Button>(R.id.label_sample)
+
+            showNestedDialogButton.setOnClickListener {
+                val nestedDialogLayout = inflater.inflate(nestedPopupLayout, null)
+                val nestedBuilder = AlertDialog.Builder(context, R.style.MyDialogStyle)
+                nestedBuilder.setView(nestedDialogLayout)
+                builder.setCancelable(false) //would not be cancelled but will go back to prev window
 
                 nestedDialog = nestedBuilder.create()
                 nestedDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
