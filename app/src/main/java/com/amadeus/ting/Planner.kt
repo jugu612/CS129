@@ -13,13 +13,31 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.widget.Button
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.SnapHelper
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
+import com.amadeus.ting.databinding.ActivityPlannerBinding
 import android.widget.PopupWindow
 
 class Planner : AppCompatActivity() {
-
+    // Initializing horizontal calendar
+    private lateinit var binding: ActivityPlannerBinding
+    private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
+    private val cal = Calendar.getInstance(Locale.ENGLISH)
+    private val currentDate = Calendar.getInstance(Locale.ENGLISH)
+    private val dates = ArrayList<Date>()
+    private lateinit var adapter: CalendarAdapter
+    private val calendarList2 = ArrayList<CalendarDateModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_planner)
+        binding = ActivityPlannerBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setUpAdapter()
+        setUpClickListener()
+        setUpCalendar()
 
         // Label -> Myka
         onClick<ShapeableImageView>(R.id.label_button) {
@@ -43,8 +61,52 @@ class Planner : AppCompatActivity() {
             }
 
         }
+
+    }
+    private fun setUpClickListener() {
+        binding.ivCalendarNext.setOnClickListener {
+            cal.add(Calendar.MONTH, 1)
+            setUpCalendar()
+        }
+        binding.ivCalendarPrevious.setOnClickListener {
+            cal.add(Calendar.MONTH, -1)
+            if (cal == currentDate)
+                setUpCalendar()
+            else
+                setUpCalendar()
+        }
     }
 
+    private fun setUpAdapter() {
+        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.single_calendar_margin)
+        binding.recyclerView.addItemDecoration(HorizontalItemDecoration(spacingInPixels))
+        val snapHelper: SnapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(binding.recyclerView)
+        adapter = CalendarAdapter { calendarDateModel: CalendarDateModel, position: Int ->
+            calendarList2.forEachIndexed { index, calendarModel ->
+                calendarModel.isSelected = index == position
+            }
+            adapter.setData(calendarList2)
+        }
+        binding.recyclerView.adapter = adapter
+    }
+
+    private fun setUpCalendar() {
+        val calendarList = ArrayList<CalendarDateModel>()
+        binding.tvDateMonth.text = sdf.format(cal.time)
+        val monthCalendar = cal.clone() as Calendar
+        val maxDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+        dates.clear()
+        monthCalendar.set(Calendar.DAY_OF_MONTH, 1)
+        while (dates.size < maxDaysInMonth) {
+            dates.add(monthCalendar.time)
+            calendarList.add(CalendarDateModel(monthCalendar.time))
+            monthCalendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+        calendarList2.clear()
+        calendarList2.addAll(calendarList)
+        adapter.setData(calendarList)
+    }
     private inline fun <reified T : View> Activity.onClick(id: Int, crossinline action: (T) -> Unit) {
         findViewById<T>(id)?.setOnClickListener {
             action(it as T)
