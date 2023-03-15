@@ -2,4 +2,6 @@
     <string name="app_name">Ting!</string>
     <string name="sign_up">Sign Up With Google</string>
     <string name="login">Continue With Google</string>
+    <string name="cd_previous">Previous</string>
+    <string name="cd_next">Next</string>
 </resources>
