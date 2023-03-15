@@ -2,6 +2,7 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     >
@@ -10,63 +11,101 @@
         android:layout_height="550dp"
         app:cardCornerRadius="50dp"
         >
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:orientation="vertical"
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/teal_200"
+            android:background="@color/white"
             android:padding="10dp"
             >
 
+            <FrameLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="274dp"
+                android:layout_height="48dp"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="470dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="30dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/title_text"
-                android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/save_button"
+                    android:layout_width="100dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="end"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="#009688"
+                    android:fontFamily="@font/glacial_indifference_bold"
+                    android:text="@string/save"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/cancel_button"
+                    android:layout_width="100dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="start"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="#F44336"
+                    android:fontFamily="@font/glacial_indifference_bold"
+                    android:text="@string/cancel"
+                    android:textColor="@color/white" />
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/text_sortby"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Title"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_marginStart="52dp"
+                android:layout_marginTop="64dp"
+                android:background="@android:color/holo_blue_bright"
+                android:text="NEW ACTIVITY "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/message_text"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/text_alphabetical"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Message"
-                android:textSize="16sp" />
+                android:layout_marginStart="44dp"
+                android:layout_marginTop="64dp"
+                android:background="@android:color/transparent"
+                android:text="Alphabetically"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_sortby" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp">
+            <Button
+                android:id="@+id/text_deadline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="52dp"
+                android:layout_marginEnd="200dp"
+                android:layout_marginBottom="53dp"
+                android:background="@android:color/transparent"
+                android:text="Deadline"
+                app:layout_constraintBottom_toTopOf="@+id/text_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_alphabetical" />
 
-                    <Button
-                        android:id="@+id/ok_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="start"
-                        android:layout_marginTop="250dp"
-                        android:background="@drawable/rounded_button"
-                        android:text="@string/save" />
+            <Button
+                android:id="@+id/text_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:layout_marginEnd="208dp"
+                android:background="@android:color/transparent"
+                android:text="Label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_deadline" />
 
-                    <Button
-                        android:id="@+id/cancel_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:layout_marginTop="250dp"
-                        android:background="@drawable/rounded_button"
-                        android:padding="8dp"
-                        android:text="@string/cancel" />
-                </FrameLayout>
-
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
 </LinearLayout>
