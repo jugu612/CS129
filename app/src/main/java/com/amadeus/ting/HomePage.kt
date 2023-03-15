@@ -7,18 +7,25 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 
 class HomePage : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
 
         auth = FirebaseAuth.getInstance()
+
+        val email = intent.getStringExtra("email")
+        val displayName = intent.getStringExtra("name")
+
 
         onClick<ConstraintLayout>(R.id.linearLayout_HealthSection) {
             val goToHealthWellness = Intent(this, HealthAndWellness::class.java)
@@ -47,7 +54,4 @@ class HomePage : AppCompatActivity() {
             action(it as T)
         }
     }
-
-
-
 }
