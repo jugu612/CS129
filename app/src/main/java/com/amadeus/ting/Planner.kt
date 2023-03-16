@@ -55,7 +55,7 @@ class Planner : AppCompatActivity() {
         // Sort -> Dust
         onClick<ShapeableImageView>(R.id.sort_button) {
             val labelAlert = MyAlertDialog()
-            labelAlert.showCustomDialog(this, R.layout.sort_popupwindow, R.layout.popupwindow)
+            labelAlert.showCustomDialog(this, R.layout.sort_popupwindow, R.layout.sort_nestedpopupwindow, R.id.text_label)
 
         }
 
@@ -113,7 +113,7 @@ class Planner : AppCompatActivity() {
 }
 
 class MyAlertDialog {
-    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1) {
+    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1, buttonToPress: Int) {
         val inflater = LayoutInflater.from(context)
         val dialogLayout = inflater.inflate(popupLayout, null)
 
@@ -131,13 +131,13 @@ class MyAlertDialog {
         // Nested Dialog: -1 if there is no need for nested dialog
         var nestedDialog: AlertDialog? = null
         if (nestedPopupLayout != -1) {
-            val showNestedDialogButton = dialogLayout.findViewById<Button>(R.id.text_alphabetical)
+            val showNestedDialogButton = dialogLayout.findViewById<Button>(buttonToPress)
 
             showNestedDialogButton.setOnClickListener {
                 val nestedDialogLayout = inflater.inflate(nestedPopupLayout, null)
                 val nestedBuilder = AlertDialog.Builder(context, R.style.MyDialogStyle)
                 nestedBuilder.setView(nestedDialogLayout)
-                builder.setCancelable(false)
+                nestedBuilder.setCancelable(false)
 
                 nestedDialog = nestedBuilder.create()
                 nestedDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
