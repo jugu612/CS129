@@ -31,6 +31,7 @@ class Planner : AppCompatActivity() {
     private val dates = ArrayList<Date>()
     private lateinit var adapter: CalendarAdapter
     private val calendarList2 = ArrayList<CalendarDateModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_planner)
@@ -42,7 +43,8 @@ class Planner : AppCompatActivity() {
 
         // Label -> Myka
         onClick<ShapeableImageView>(R.id.label_button) {
-
+            val labelAlertDialog = MyAlertDialog()
+            labelAlertDialog.showCustomDialog(this, R.layout.view_labels, R.layout.add_label, R.id.label_sample)
 
         }
 
@@ -55,6 +57,7 @@ class Planner : AppCompatActivity() {
         // Sort -> Dust
         onClick<ShapeableImageView>(R.id.sort_button) {
             val labelAlert = MyAlertDialog()
+
             labelAlert.showCustomDialog(this, R.layout.sort_popupwindow, R.layout.sort_nestedpopupwindow, R.id.text_label)
 
         }
@@ -131,6 +134,7 @@ class MyAlertDialog {
         // Nested Dialog: -1 if there is no need for nested dialog
         var nestedDialog: AlertDialog? = null
         if (nestedPopupLayout != -1) {
+
             val showNestedDialogButton = dialogLayout.findViewById<Button>(buttonToPress)
 
             showNestedDialogButton.setOnClickListener {
