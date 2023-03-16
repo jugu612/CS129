@@ -60,7 +60,8 @@ class Planner : AppCompatActivity() {
         // Sort -> Dust
         onClick<ShapeableImageView>(R.id.sort_button) {
             val labelAlert = MyAlertDialog()
-            labelAlert.showCustomDialog(this, R.layout.sort_popupwindow, R.layout.popupwindow, R.id.text_alphabetical)
+
+            labelAlert.showCustomDialog(this, R.layout.sort_popupwindow, R.layout.sort_nestedpopupwindow, R.id.text_label)
 
         }
 
