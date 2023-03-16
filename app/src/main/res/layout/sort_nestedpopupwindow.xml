@@ -63,72 +63,12 @@
                 android:id="@+id/text_sortby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="148dp"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/glacial_indifference_bold"
-                android:text="Sort by:"
-                android:textAllCaps="false"
-                android:textSize="30dp"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="208dp"
+                android:background="@android:color/holo_blue_bright"
+                android:text="SHOW EXISTING LABELS"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/text_alphabetical"
-                android:layout_width="127dp"
-                android:layout_height="23dp"
-                android:layout_marginStart="92dp"
-                android:layout_marginTop="40dp"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/glacial_indifference"
-                android:text="Alphabetically"
-                android:textAllCaps="false"
-                android:textColor="@drawable/button_effects"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_sortby" />
-
-            <Button
-                android:id="@+id/text_label"
-                android:layout_width="53dp"
-                android:layout_height="23dp"
-                android:layout_marginStart="92dp"
-                android:layout_marginTop="40dp"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/glacial_indifference"
-                android:text="Label"
-                android:textAllCaps="false"
-                android:textColor="@drawable/button_effects"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_deadline" />
-
-            <Button
-                android:id="@+id/text_deadline"
-                android:layout_width="78dp"
-                android:layout_height="23dp"
-                android:layout_marginStart="92dp"
-                android:layout_marginTop="40dp"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/glacial_indifference"
-                android:text="Deadline"
-                android:textAllCaps="false"
-                android:textColor="@drawable/button_effects"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_alphabetical" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="110dp"
-                android:layout_height="100dp"
-                android:layout_marginStart="110dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="110dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/sort_icon" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
