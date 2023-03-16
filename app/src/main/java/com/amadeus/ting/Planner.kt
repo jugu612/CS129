@@ -9,6 +9,7 @@ import android.view.View
 import com.google.android.material.imageview.ShapeableImageView
 import android.app.AlertDialog
 import android.content.Context
+import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
@@ -31,6 +32,8 @@ class Planner : AppCompatActivity() {
     private val dates = ArrayList<Date>()
     private lateinit var adapter: CalendarAdapter
     private val calendarList2 = ArrayList<CalendarDateModel>()
+
+    private lateinit var sqliteHelper: SQLiteHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
