@@ -31,6 +31,7 @@ class Planner : AppCompatActivity() {
     private val dates = ArrayList<Date>()
     private lateinit var adapter: CalendarAdapter
     private val calendarList2 = ArrayList<CalendarDateModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_planner)
@@ -42,7 +43,8 @@ class Planner : AppCompatActivity() {
 
         // Label -> Myka
         onClick<ShapeableImageView>(R.id.label_button) {
-
+            val labelAlertDialog = MyAlertDialog()
+            labelAlertDialog.showCustomDialog(this, R.layout.view_labels, R.layout.add_label, R.id.label_sample)
 
         }
 
@@ -55,7 +57,7 @@ class Planner : AppCompatActivity() {
         // Sort -> Dust
         onClick<ShapeableImageView>(R.id.sort_button) {
             val labelAlert = MyAlertDialog()
-            labelAlert.showCustomDialog(this, R.layout.sort_popupwindow, R.layout.popupwindow)
+            labelAlert.showCustomDialog(this, R.layout.sort_popupwindow, R.layout.popupwindow, R.id.text_alphabetical)
 
         }
 
@@ -113,7 +115,7 @@ class Planner : AppCompatActivity() {
 }
 
 class MyAlertDialog {
-    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1) {
+    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1, buttonToPress: Int) {
         val inflater = LayoutInflater.from(context)
         val dialogLayout = inflater.inflate(popupLayout, null)
 
@@ -131,13 +133,14 @@ class MyAlertDialog {
         // Nested Dialog: -1 if there is no need for nested dialog
         var nestedDialog: AlertDialog? = null
         if (nestedPopupLayout != -1) {
-            val showNestedDialogButton = dialogLayout.findViewById<Button>(R.id.text_alphabetical)
+
+            val showNestedDialogButton = dialogLayout.findViewById<Button>(buttonToPress)
 
             showNestedDialogButton.setOnClickListener {
                 val nestedDialogLayout = inflater.inflate(nestedPopupLayout, null)
                 val nestedBuilder = AlertDialog.Builder(context, R.style.MyDialogStyle)
                 nestedBuilder.setView(nestedDialogLayout)
-                builder.setCancelable(false)
+                nestedBuilder.setCancelable(false)
 
                 nestedDialog = nestedBuilder.create()
                 nestedDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
