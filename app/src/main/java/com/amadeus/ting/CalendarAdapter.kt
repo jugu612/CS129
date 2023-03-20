@@ -35,7 +35,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                 cardView.setCardBackgroundColor(
                     ContextCompat.getColor(
                         itemView.context,
-                        R.color.cyan
+                        R.color.red
                     )
                 )
             } else {

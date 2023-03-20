@@ -6,6 +6,7 @@
         android:id="@+id/card_calendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/circularlayout"
         app:cardElevation="@dimen/margin_5">
 
         <LinearLayout
@@ -22,7 +23,7 @@
 
             <TextView
                 android:id="@+id/tv_calendar_date"
-                style="@style/TextAppearance.MaterialComponents.Subtitle1"
+                android:fontFamily="@font/glacial_indifference_bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
