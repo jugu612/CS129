@@ -48,13 +48,13 @@ class RegLogin : AppCompatActivity() {
     }
 
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        result ->
-            if (result.resultCode == RESULT_OK) {
+            result ->
+        if (result.resultCode == RESULT_OK) {
 
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                handleResults(task)
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            handleResults(task)
 
-            }
+        }
     }
 
     private fun handleResults(task: Task<GoogleSignInAccount>) {

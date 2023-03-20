@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import com.google.android.material.imageview.ShapeableImageView
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Color
@@ -22,6 +23,7 @@ import kotlin.collections.ArrayList
 import com.amadeus.ting.databinding.ActivityPlannerBinding
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 
 class Planner : AppCompatActivity() {
     // Initializing horizontal calendar
@@ -33,7 +35,7 @@ class Planner : AppCompatActivity() {
     private lateinit var adapter: CalendarAdapter
     private val calendarList2 = ArrayList<CalendarDateModel>()
 
-    private lateinit var sqliteHelper: SQLiteHelper
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +45,20 @@ class Planner : AppCompatActivity() {
         setUpAdapter()
         setUpClickListener()
         setUpCalendar()
+
+        var helper = SQLite(applicationContext)
+        var db = helper.readableDatabase
+        var rs = db.rawQuery("SELECT * FROM TASKS", null)
+
+        if (rs.moveToNext())
+            Toast.makeText(applicationContext, rs.getString(1), Toast.LENGTH_LONG).show()
+
+        button.setOnClickListener {
+            var cv = ContentValues()
+            cv.put("TASKID", editText.text.toString())
+            cv.put("UNAME", editText.text.toString())
+            db.insert("TASKS", null, cv)
+        }
 
         // Label -> Myka
         onClick<ShapeableImageView>(R.id.label_button) {
