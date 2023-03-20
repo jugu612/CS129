@@ -69,8 +69,10 @@ class Planner : AppCompatActivity() {
 
         // Create -> Jugu
         onClick<ShapeableImageView>(R.id.create_button) {
-            val goToProgress = Intent(this, ProgressReport::class.java)
-            startActivity(goToProgress)
+            val labelAlert = MyAlertDialog()
+
+            labelAlert.showCustomDialog(this, R.layout.create_popupwindow)
+
         }
 
         // Sort -> Dust
@@ -135,7 +137,7 @@ class Planner : AppCompatActivity() {
 }
 
 class MyAlertDialog {
-    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1, buttonToPress: Int) {
+    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1, buttonToPress: Int = -1) {
         val inflater = LayoutInflater.from(context)
         val dialogLayout = inflater.inflate(popupLayout, null)
 
