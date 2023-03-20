@@ -5,21 +5,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    >
+    tools:context=".Planner">
+
     <androidx.cardview.widget.CardView
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="550dp"
-        app:cardCornerRadius="50dp"
-        >
+        app:cardCornerRadius="50dp">
+
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
-            android:orientation="vertical"
-            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
             android:background="@color/white"
-            android:padding="10dp"
-            >
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <FrameLayout
                 android:id="@+id/frameLayout"
@@ -59,26 +60,27 @@
                     android:textColor="@color/white" />
             </FrameLayout>
 
-            <Button
+            <EditText
                 android:id="@+id/text_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="100dp"
+                android:layout_width="193dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="56dp"
+                android:layout_marginTop="68dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/glacial_indifference_bold"
-                android:text="Title"
+                android:hint="Title"
+                android:minHeight="48dp"
                 android:textAllCaps="false"
                 android:textSize="30dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
+            <TextView
                 android:id="@+id/text_detail"
                 android:layout_width="127dp"
                 android:layout_height="23dp"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="20dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/glacial_indifference"
                 android:text="Details:"
@@ -88,35 +90,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_title" />
 
-            <Button
+            <EditText
                 android:id="@+id/text_addDetails"
-                android:layout_width="wrap_content"
-                android:layout_height="23dp"
-                android:layout_marginStart="92dp"
-                android:layout_marginTop="40dp"
+                android:layout_width="177dp"
+                android:layout_height="202dp"
+                android:layout_marginStart="64dp"
+                android:layout_marginTop="24dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/glacial_indifference"
-                android:text="Add Details..."
+                android:hint="Add Details..."
                 android:textAllCaps="false"
                 android:textColor="@drawable/button_effects"
                 android:textSize="10sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_detail" />
-
-            <Button
-                android:id="@+id/text_deadline"
-                android:layout_width="78dp"
-                android:layout_height="23dp"
-                android:layout_marginStart="92dp"
-                android:layout_marginTop="40dp"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/glacial_indifference"
-                android:text="Deadline"
-                android:textAllCaps="false"
-                android:textColor="@drawable/button_effects"
-                android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_addDetails" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
