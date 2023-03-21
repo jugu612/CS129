@@ -1,16 +1,12 @@
 package com.amadeus.ting
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.imageview.ShapeableImageView
 import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.Context
-import android.database.sqlite.SQLiteOpenHelper
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
@@ -21,9 +17,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import com.amadeus.ting.databinding.ActivityPlannerBinding
-import android.widget.PopupWindow
-import android.widget.TextView
-import android.widget.Toast
 
 class Planner : AppCompatActivity() {
     // Initializing horizontal calendar
@@ -46,25 +39,42 @@ class Planner : AppCompatActivity() {
         setUpClickListener()
         setUpCalendar()
 
-        var helper = SQLite(applicationContext)
-        var db = helper.readableDatabase
-        var rs = db.rawQuery("SELECT * FROM TASKS", null)
+        // Create an instance of the SQLite class
+        val dbHelper = TaskDatabase(applicationContext)
+        // Create three tasks
+        val task1 = TaskModel(1, "Go Home", "Milk, bread, eggs", "2023-03-22", "Chores")
+        val task2 = TaskModel(2, "Take a sleep", "sheesh", "2023-03-24", "Me Time")
+        val task3 = TaskModel(3, "Testing one two three....", "So what?", "2023-03-26", "Chores")
+        val task4 = TaskModel(3, "ano baaaaaaa", "So what?", "2023-04-26", "Chores")
+        val task5 = TaskModel(3, "aaaaaaa testing one two", "edi wag?", "2023-05-21", "Chores")
 
-        if (rs.moveToNext())
-            Toast.makeText(applicationContext, rs.getString(1), Toast.LENGTH_LONG).show()
+        // Insert the tasks into the database
+        dbHelper.addTask(task1)
+        dbHelper.addTask(task2)
+        dbHelper.addTask(task3)
+        dbHelper.addTask(task4)
+        dbHelper.addTask(task5)
 
-        button.setOnClickListener {
-            var cv = ContentValues()
-            cv.put("TASKID", editText.text.toString())
-            cv.put("UNAME", editText.text.toString())
-            db.insert("TASKS", null, cv)
+        // Retrieve all tasks from the database and print them to the console
+        val allTasksAlphabetical = dbHelper.getAllTasksSortedAlphabetically()
+        allTasksAlphabetical.forEach { task ->
+            println("Tasks Alphabetical: ${task.taskName} (${task.deadline})")
+        }
+
+        val allTasksLabel = dbHelper.getTasksByLabel("Me Time")
+        allTasksLabel.forEach { task ->
+            println("Tasks Label: ${task.taskName} (${task.deadline})")
+        }
+
+        val allTasksDeadline = dbHelper.sortByDeadline()
+        allTasksDeadline.forEach { task ->
+            println("Tasks by Deadline: ${task.taskName} (${task.deadline})")
         }
 
         // Label -> Myka
         onClick<ShapeableImageView>(R.id.label_button) {
             val labelAlertDialog = MyAlertDialog()
             labelAlertDialog.showCustomDialog(this, R.layout.view_labels, R.layout.add_label, R.id.label_sample)
-
         }
 
         // Create -> Jugu
