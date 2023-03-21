@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -61,49 +62,122 @@
             </FrameLayout>
 
             <EditText
-                android:id="@+id/text_title"
-                android:layout_width="193dp"
-                android:layout_height="0dp"
-                android:layout_marginStart="56dp"
-                android:layout_marginTop="68dp"
-                android:background="@android:color/transparent"
+                android:id="@+id/edit_title"
+                android:layout_width="287dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="30dp"
+                android:ems="10"
                 android:fontFamily="@font/glacial_indifference_bold"
-                android:hint="Title"
+                android:inputType="textShortMessage"
                 android:minHeight="48dp"
-                android:textAllCaps="false"
+                android:hint="Title"
                 android:textSize="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
 
             <TextView
                 android:id="@+id/text_detail"
                 android:layout_width="127dp"
                 android:layout_height="23dp"
-                android:layout_marginStart="64dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="10dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/glacial_indifference"
-                android:text="Details:"
+                android:text=" Details:"
                 android:textAllCaps="false"
                 android:textColor="@drawable/button_effects"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_title" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_title" />
+
 
             <EditText
-                android:id="@+id/text_addDetails"
-                android:layout_width="177dp"
+                android:id="@+id/edit_details"
+                android:layout_width="268dp"
                 android:layout_height="202dp"
-                android:layout_marginStart="64dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:background="@drawable/roundborder"
+                android:backgroundTint="#d3d3d3"
+                android:fontFamily="@font/glacial_indifference"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:lines="5"
+                android:padding="16dp"
+                android:hint="Add Details..."
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_detail" />
+
+            <TextView
+                android:id="@+id/task_deadline"
+                android:layout_width="97dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="48dp"
                 android:layout_marginTop="24dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/glacial_indifference"
-                android:hint="Add Details..."
+                android:text=" Date:"
                 android:textAllCaps="false"
                 android:textColor="@drawable/button_effects"
-                android:textSize="10sp"
+                android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_detail" />
+                app:layout_constraintTop_toBottomOf="@+id/edit_details" />
+
+            <Button
+                android:id="@+id/dateButton"
+                android:layout_width="194dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="44dp"
+                android:layout_marginBottom="78dp"
+                android:background="@null"
+                android:fontFamily="@font/glacial_indifference_bold"
+                android:gravity="left"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/frameLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/edit_details"
+                app:layout_constraintVertical_bias="0.631" />
+
+            <TextView
+                android:id="@+id/task_label"
+                android:layout_width="70dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="24dp"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/glacial_indifference"
+                android:text=" Label:"
+                android:textAllCaps="false"
+                android:textColor="@drawable/button_effects"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/task_deadline" />
+
+            <Spinner
+                android:id="@+id/task_spinner"
+                android:layout_width="179dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="31dp"
+                android:entries="@array/options"
+                android:spinnerMode="dropdown"
+                android:background="#D3D3D3"
+                android:fontFamily = "@font/glacial_indifference_bold"
+                app:layout_constraintBottom_toTopOf="@+id/frameLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/task_label"
+                app:layout_constraintTop_toBottomOf="@+id/dateButton" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,4 +6,10 @@
     <string name="cd_next">Next</string>
     <string name="cancel">cancel</string>
     <string name="save">save</string>
+    <string-array name="options">
+        <item>Option 1</item>
+        <item>Option 2</item>
+        <item>Option 3</item>
+    </string-array>
+
 </resources>
