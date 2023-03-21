@@ -25,10 +25,6 @@ class HomePage : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        val email = intent.getStringExtra("email")
-        val displayName = intent.getStringExtra("name")
-
-
         onClick<ConstraintLayout>(R.id.linearLayout_HealthSection) {
             val goToHealthWellness = Intent(this, HealthAndWellness::class.java)
             startActivity(goToHealthWellness)

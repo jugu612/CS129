@@ -36,7 +36,6 @@ class RegLogin : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
 
-
         findViewById<Button>(R.id.google_login_button).setOnClickListener {
             signInGoogle()
         }
@@ -48,14 +47,14 @@ class RegLogin : AppCompatActivity() {
     }
 
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result ->
-        if (result.resultCode == RESULT_OK) {
+        result ->
+                if (result.resultCode == Activity.RESULT_OK) {
 
-            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-            handleResults(task)
+                    val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                    handleResults(task)
 
-        }
-    }
+                }
+    }   
 
     private fun handleResults(task: Task<GoogleSignInAccount>) {
         if (task.isSuccessful) {
