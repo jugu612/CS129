@@ -1,5 +1,7 @@
 buildscript {
     ext.kotlin_version = "1.4.32"
+
+    // Configures the repositories where the build script will search for dependencies.
     repositories {
         google()
         mavenCentral()

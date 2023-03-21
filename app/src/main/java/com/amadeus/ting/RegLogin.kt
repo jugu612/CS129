@@ -17,7 +17,10 @@ import com.google.firebase.auth.GoogleAuthProvider
 
 class RegLogin : AppCompatActivity() {
 
-    private lateinit var auth : FirebaseAuth //Authentication
+    // Authentication object to handle Firebase authentication
+    private lateinit var auth : FirebaseAuth
+
+    // Client object for handling Google Sign-in
     private lateinit var googleSignInClient : GoogleSignInClient
 
 
@@ -25,14 +28,16 @@ class RegLogin : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reg_login)
 
-
+        // Initialize the FirebaseAuth instance
         auth = FirebaseAuth.getInstance()
 
+        // Configure the Google Sign-In Options
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
+        // Create the GoogleSignInClient instance
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
 
@@ -41,11 +46,13 @@ class RegLogin : AppCompatActivity() {
         }
     }
 
+    // Function to initiate Google Sign-in flow
     private fun signInGoogle() {
         val signInIntent = googleSignInClient.signInIntent
         launcher.launch(signInIntent)
     }
 
+    // Handle the result of the Google Sign-in flow
     private val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         result ->
                 if (result.resultCode == Activity.RESULT_OK) {
@@ -54,7 +61,7 @@ class RegLogin : AppCompatActivity() {
                     handleResults(task)
 
                 }
-    }   
+    }
 
     private fun handleResults(task: Task<GoogleSignInAccount>) {
         if (task.isSuccessful) {
