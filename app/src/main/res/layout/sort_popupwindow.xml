@@ -130,6 +130,12 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/sort_icon" />
 
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteX="220dp"
+                tools:layout_editor_absoluteY="193dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
