@@ -6,6 +6,11 @@
     <string name="cd_next">Next</string>
     <string name="cancel">cancel</string>
     <string name="save">save</string>
+    <string-array name="options">
+        <item>Option 1</item>
+        <item>Option 2</item>
+        <item>Option 3</item>
+    </string-array>
 
     <string name="default_web_client_id">823225262950-jrchc0t8628plma2ap42goipqo5a1pe1.apps.googleusercontent.com</string>
 
