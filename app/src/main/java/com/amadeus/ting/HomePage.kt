@@ -2,6 +2,7 @@ package com.amadeus.ting
 
 import android.app.Activity
 import android.content.Intent
+import android.database.sqlite.SQLiteOpenHelper
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -14,19 +15,19 @@ import com.google.firebase.auth.FirebaseAuth
 
 class HomePage : AppCompatActivity() {
 
-    private lateinit var auth : FirebaseAuth
-    private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var auth : FirebaseAuth //Firebase authentication instance
+    private lateinit var googleSignInClient: GoogleSignInClient //Google Sign In client instance
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
 
-        auth = FirebaseAuth.getInstance()
+        auth = FirebaseAuth.getInstance() //Initializing the Firebase authentication instance
 
-        val email = intent.getStringExtra("email")
-        val displayName = intent.getStringExtra("name")
+        val email = intent.getStringExtra("email") //Extracting the email from the intent
+        val displayName = intent.getStringExtra("name") //Extracting the name from the intent
 
-
+        //Setting up the onClickListeners for the different sections of the home page
         onClick<ConstraintLayout>(R.id.linearLayout_HealthSection) {
             val goToHealthWellness = Intent(this, HealthAndWellness::class.java)
             startActivity(goToHealthWellness)
@@ -49,9 +50,12 @@ class HomePage : AppCompatActivity() {
 
     }
 
+    //Inline function that sets an onClickListener for a given view ID
     private inline fun <reified T : View> Activity.onClick(id: Int, crossinline action: (T) -> Unit) {
-        findViewById<T>(id)?.setOnClickListener {
-            action(it as T)
+        findViewById<T>(id)?.apply {
+            setOnClickListener {
+                action(this)
+            }
         }
     }
 }

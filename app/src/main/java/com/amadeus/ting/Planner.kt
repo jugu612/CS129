@@ -3,7 +3,6 @@ package com.amadeus.ting
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -38,6 +37,7 @@ class Planner : AppCompatActivity(){
     private val calendarList2 = ArrayList<CalendarDateModel>()
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_planner)
@@ -47,11 +47,42 @@ class Planner : AppCompatActivity(){
         setUpClickListener()
         setUpCalendar()
 
+        // Create an instance of the SQLite class
+        val dbHelper = TaskDatabase(applicationContext)
+        // Create three tasks
+        val task1 = TaskModel(1, "Go Home", "Milk, bread, eggs", "2023-03-22", "Chores")
+        val task2 = TaskModel(2, "Take a sleep", "sheesh", "2023-03-24", "Me Time")
+        val task3 = TaskModel(3, "Testing one two three....", "So what?", "2023-03-26", "Chores")
+        val task4 = TaskModel(3, "ano baaaaaaa", "So what?", "2023-04-26", "Chores")
+        val task5 = TaskModel(3, "aaaaaaa testing one two", "edi wag?", "2023-05-21", "Chores")
+
+        // Insert the tasks into the database
+        dbHelper.addTask(task1)
+        dbHelper.addTask(task2)
+        dbHelper.addTask(task3)
+        dbHelper.addTask(task4)
+        dbHelper.addTask(task5)
+
+        // Retrieve all tasks from the database and print them to the console
+        val allTasksAlphabetical = dbHelper.getAllTasksSortedAlphabetically()
+        allTasksAlphabetical.forEach { task ->
+            println("Tasks Alphabetical: ${task.taskName} (${task.deadline})")
+        }
+
+        val allTasksLabel = dbHelper.getTasksByLabel("Me Time")
+        allTasksLabel.forEach { task ->
+            println("Tasks Label: ${task.taskName} (${task.deadline})")
+        }
+
+        val allTasksDeadline = dbHelper.sortByDeadline()
+        allTasksDeadline.forEach { task ->
+            println("Tasks by Deadline: ${task.taskName} (${task.deadline})")
+        }
+
         // Label -> Myka
         onClick<ShapeableImageView>(R.id.label_button) {
             val labelAlertDialog = MyAlertDialog()
             labelAlertDialog.showCustomDialog(this, R.layout.view_labels, R.layout.add_label, R.id.label_sample)
-
         }
 
         // Create -> Jugu
