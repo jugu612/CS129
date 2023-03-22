@@ -1,24 +1,31 @@
 package com.amadeus.ting
 
+
+import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.imageview.ShapeableImageView
 import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.PersistableBundle
 import android.view.LayoutInflater
-import android.widget.Button
+import android.widget.*
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import com.amadeus.ting.databinding.ActivityPlannerBinding
+import com.amadeus.ting.DatePick
 
-class Planner : AppCompatActivity() {
+
+class Planner : AppCompatActivity(){
     // Initializing horizontal calendar
     private lateinit var binding: ActivityPlannerBinding
     private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
@@ -81,9 +88,10 @@ class Planner : AppCompatActivity() {
         onClick<ShapeableImageView>(R.id.create_button) {
             val labelAlert = MyAlertDialog()
 
-            labelAlert.showCustomDialog(this, R.layout.create_popupwindow)
-
+            labelAlert.showCustomDialog(this, R.layout.create_popupwindow, -1, -1, 1)
         }
+
+
 
         // Sort -> Dust
         onClick<ShapeableImageView>(R.id.sort_button) {
@@ -94,6 +102,8 @@ class Planner : AppCompatActivity() {
         }
 
     }
+
+
     private fun setUpClickListener() {
         binding.ivCalendarNext.setOnClickListener {
             cal.add(Calendar.MONTH, 1)
@@ -138,6 +148,8 @@ class Planner : AppCompatActivity() {
         calendarList2.addAll(calendarList)
         adapter.setData(calendarList)
     }
+
+
     private inline fun <reified T : View> Activity.onClick(id: Int, crossinline action: (T) -> Unit) {
         findViewById<T>(id)?.setOnClickListener {
             action(it as T)
@@ -147,7 +159,7 @@ class Planner : AppCompatActivity() {
 }
 
 class MyAlertDialog {
-    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1, buttonToPress: Int = -1) {
+    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1, buttonToPress: Int = -1, dateOption: Int = -1) {
         val inflater = LayoutInflater.from(context)
         val dialogLayout = inflater.inflate(popupLayout, null)
 
@@ -157,11 +169,17 @@ class MyAlertDialog {
 
         val cancelButton = dialogLayout.findViewById<Button>(R.id.cancel_button)
         val dialog = builder.create()
-
         cancelButton.setOnClickListener {
             dialog.dismiss()
         }
-
+        if (dateOption != -1){
+            val dateButton = dialogLayout.findViewById<Button>(R.id.dateButton)
+            val dateOpt= DatePick(dateButton)
+            dateOpt.DefaultDate()
+            dateButton.setOnClickListener {
+                dateOpt.pickDate()
+            }
+        }
         // Nested Dialog: -1 if there is no need for nested dialog
         var nestedDialog: AlertDialog? = null
         if (nestedPopupLayout != -1) {
