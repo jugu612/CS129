@@ -110,16 +110,16 @@ class Planner : AppCompatActivity() {
 
     private fun setUpAdapter() {
         val spacingInPixels = resources.getDimensionPixelSize(R.dimen.single_calendar_margin)
-        binding.recyclerView.addItemDecoration(HorizontalItemDecoration(spacingInPixels))
+        binding.calendarRecycler.addItemDecoration(HorizontalItemDecoration(spacingInPixels))
         val snapHelper: SnapHelper = LinearSnapHelper()
-        snapHelper.attachToRecyclerView(binding.recyclerView)
+        snapHelper.attachToRecyclerView(binding.calendarRecycler)
         adapter = CalendarAdapter { calendarDateModel: CalendarDateModel, position: Int ->
             calendarList2.forEachIndexed { index, calendarModel ->
                 calendarModel.isSelected = index == position
             }
             adapter.setData(calendarList2)
         }
-        binding.recyclerView.adapter = adapter
+        binding.calendarRecycler.adapter = adapter
     }
 
     private fun setUpCalendar() {
