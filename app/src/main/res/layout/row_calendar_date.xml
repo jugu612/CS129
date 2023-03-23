@@ -6,26 +6,36 @@
         android:id="@+id/card_calendar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/circularlayout"
-        app:cardElevation="@dimen/margin_5">
+        android:background="@drawable/circularlayout">
 
         <LinearLayout
-            android:layout_width="@dimen/calendar_layout_width"
-            android:layout_height="@dimen/calendar_layout_height"
+            android:id="@+id/circle_cal"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@drawable/roundborder">
 
             <TextView
                 android:id="@+id/tv_calendar_day"
                 style="@style/TextAppearance.MaterialComponents.Overline"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Day"
+                android:fontFamily="@font/glacial_indifference"
+                android:textSize="13sp"
+                android:letterSpacing="0.05"
+                android:textFontWeight="600"/>
 
             <TextView
                 android:id="@+id/tv_calendar_date"
-                android:fontFamily="@font/glacial_indifference_bold"
+                android:fontFamily="@font/glacial_indifference"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:layout_marginTop="7dp"
+                android:textColor="@color/black"
+                android:textFontWeight="600"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>

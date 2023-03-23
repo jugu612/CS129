@@ -2,6 +2,7 @@ package com.amadeus.ting
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
@@ -17,7 +18,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         fun bind(calendarDateModel: CalendarDateModel) {
             val calendarDay = itemView.findViewById<TextView>(R.id.tv_calendar_day)
             val calendarDate = itemView.findViewById<TextView>(R.id.tv_calendar_date)
-            val cardView = itemView.findViewById<CardView>(R.id.card_calendar)
+            val cardView = itemView.findViewById<LinearLayout>(R.id.circle_cal)
 
             if (calendarDateModel.isSelected) {
                 calendarDay.setTextColor(
@@ -32,7 +33,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                         R.color.white
                     )
                 )
-                cardView.setCardBackgroundColor(
+                cardView.setBackgroundColor(
                     ContextCompat.getColor(
                         itemView.context,
                         R.color.red
@@ -51,7 +52,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                         R.color.black
                     )
                 )
-                cardView.setCardBackgroundColor(
+                cardView.setBackgroundColor(
                     ContextCompat.getColor(
                         itemView.context,
                         R.color.white
