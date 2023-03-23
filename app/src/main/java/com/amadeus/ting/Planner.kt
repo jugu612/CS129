@@ -4,6 +4,7 @@ package com.amadeus.ting
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -72,6 +73,10 @@ class Planner : AppCompatActivity(){
 
             labelAlert.showCustomDialog(this, R.layout.sort_popupwindow, R.layout.sort_nestedpopupwindow, R.id.text_label)
 
+        }
+        onClick<ShapeableImageView>(R.id.back_button){
+            val goToHomePage = Intent(this, HomePage::class.java)
+            startActivity(goToHomePage)
         }
 
     }
