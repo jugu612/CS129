@@ -1,24 +1,29 @@
 package com.amadeus.ting
 
+
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.view.View
-import com.google.android.material.imageview.ShapeableImageView
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.Button
+import android.view.View
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
+import com.amadeus.ting.databinding.ActivityPlannerBinding
+import com.google.android.material.imageview.ShapeableImageView
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
-import com.amadeus.ting.databinding.ActivityPlannerBinding
+import com.amadeus.ting.TaskDatabase
 
-class Planner : AppCompatActivity() {
+
+
+class Planner : AppCompatActivity(){
     // Initializing horizontal calendar
     private lateinit var binding: ActivityPlannerBinding
     private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
@@ -27,6 +32,8 @@ class Planner : AppCompatActivity() {
     private val dates = ArrayList<Date>()
     private lateinit var adapter: CalendarAdapter
     private val calendarList2 = ArrayList<CalendarDateModel>()
+    private lateinit var recyclerView: RecyclerView
+    private var taskadapter: TaskAdapter? = null
 
 
 
@@ -38,38 +45,11 @@ class Planner : AppCompatActivity() {
         setUpAdapter()
         setUpClickListener()
         setUpCalendar()
-
-        // Create an instance of the SQLite class
+        initRecyclerView()
         val dbHelper = TaskDatabase(applicationContext)
-        // Create three tasks
-        val task1 = TaskModel(1, "Go Home", "Milk, bread, eggs", "2023-03-22", "Chores")
-        val task2 = TaskModel(2, "Take a sleep", "sheesh", "2023-03-24", "Me Time")
-        val task3 = TaskModel(3, "Testing one two three....", "So what?", "2023-03-26", "Chores")
-        val task4 = TaskModel(3, "ano baaaaaaa", "So what?", "2023-04-26", "Chores")
-        val task5 = TaskModel(3, "aaaaaaa testing one two", "edi wag?", "2023-05-21", "Chores")
 
-        // Insert the tasks into the database
-        dbHelper.addTask(task1)
-        dbHelper.addTask(task2)
-        dbHelper.addTask(task3)
-        dbHelper.addTask(task4)
-        dbHelper.addTask(task5)
-
-        // Retrieve all tasks from the database and print them to the console
-        val allTasksAlphabetical = dbHelper.getAllTasksSortedAlphabetically()
-        allTasksAlphabetical.forEach { task ->
-            println("Tasks Alphabetical: ${task.taskName} (${task.deadline})")
-        }
-
-        val allTasksLabel = dbHelper.getTasksByLabel("Me Time")
-        allTasksLabel.forEach { task ->
-            println("Tasks Label: ${task.taskName} (${task.deadline})")
-        }
-
-        val allTasksDeadline = dbHelper.sortByDeadline()
-        allTasksDeadline.forEach { task ->
-            println("Tasks by Deadline: ${task.taskName} (${task.deadline})")
-        }
+        val tskList = dbHelper.getAllTasks()
+        taskadapter?.addList(tskList)
 
         // Label -> Myka
         onClick<ShapeableImageView>(R.id.label_button) {
@@ -81,8 +61,9 @@ class Planner : AppCompatActivity() {
         onClick<ShapeableImageView>(R.id.create_button) {
             val labelAlert = MyAlertDialog()
 
-            labelAlert.showCustomDialog(this, R.layout.create_popupwindow)
-
+            labelAlert.showCustomDialog(this, R.layout.create_popupwindow, -1, -1, 1)
+            taskadapter?.addList(tskList)
+            updateTaskList()
         }
 
         // Sort -> Dust
@@ -94,6 +75,21 @@ class Planner : AppCompatActivity() {
         }
 
     }
+
+    fun updateTaskList() {
+        val dbHelper = TaskDatabase(applicationContext)
+        val tskList = dbHelper.getAllTasks()
+        taskadapter?.addList(tskList)
+    }
+    private fun initRecyclerView(){
+        recyclerView = findViewById<RecyclerView>(R.id.Tasklist)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        taskadapter  = TaskAdapter()
+        recyclerView.adapter = taskadapter
+
+    }
+
+
     private fun setUpClickListener() {
         binding.ivCalendarNext.setOnClickListener {
             cal.add(Calendar.MONTH, 1)
@@ -110,16 +106,16 @@ class Planner : AppCompatActivity() {
 
     private fun setUpAdapter() {
         val spacingInPixels = resources.getDimensionPixelSize(R.dimen.single_calendar_margin)
-        binding.calendarRecycler.addItemDecoration(HorizontalItemDecoration(spacingInPixels))
+        binding.recyclerView.addItemDecoration(HorizontalItemDecoration(spacingInPixels))
         val snapHelper: SnapHelper = LinearSnapHelper()
-        snapHelper.attachToRecyclerView(binding.calendarRecycler)
+        snapHelper.attachToRecyclerView(binding.recyclerView)
         adapter = CalendarAdapter { calendarDateModel: CalendarDateModel, position: Int ->
             calendarList2.forEachIndexed { index, calendarModel ->
                 calendarModel.isSelected = index == position
             }
             adapter.setData(calendarList2)
         }
-        binding.calendarRecycler.adapter = adapter
+        binding.recyclerView.adapter = adapter
     }
 
     private fun setUpCalendar() {
@@ -138,6 +134,8 @@ class Planner : AppCompatActivity() {
         calendarList2.addAll(calendarList)
         adapter.setData(calendarList)
     }
+
+
     private inline fun <reified T : View> Activity.onClick(id: Int, crossinline action: (T) -> Unit) {
         findViewById<T>(id)?.setOnClickListener {
             action(it as T)
@@ -147,7 +145,10 @@ class Planner : AppCompatActivity() {
 }
 
 class MyAlertDialog {
-    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1, buttonToPress: Int = -1) {
+    private var taskadapter: TaskAdapter? = null
+
+
+    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1, buttonToPress: Int = -1, create: Int = -1) {
         val inflater = LayoutInflater.from(context)
         val dialogLayout = inflater.inflate(popupLayout, null)
 
@@ -157,11 +158,38 @@ class MyAlertDialog {
 
         val cancelButton = dialogLayout.findViewById<Button>(R.id.cancel_button)
         val dialog = builder.create()
-
         cancelButton.setOnClickListener {
             dialog.dismiss()
         }
 
+        if (create != -1){
+            val dbHelper = TaskDatabase(context)
+            val editTitle = dialogLayout.findViewById<EditText>(R.id.edit_title)
+            val editDetails = dialogLayout.findViewById<EditText>(R.id.edit_details)
+            val dateButton = dialogLayout.findViewById<Button>(R.id.dateButton)
+            val labelSpinner = dialogLayout.findViewById<Spinner>(R.id.task_spinner)
+            val dateOpt= DatePick(dateButton)
+            dateOpt.DefaultDate()
+            dateOpt.pickDate()
+
+
+
+            // Create a new task with the input data
+
+            val saveButton = dialogLayout.findViewById<Button>(R.id.save_button)
+            saveButton.setOnClickListener {
+                val title = editTitle.text.toString()
+                val details = editDetails.text.toString()
+                val date = dateButton.text.toString()
+                val label = labelSpinner.selectedItem.toString()
+                val task = TaskModel(0, taskTitle = title, taskDetails = details, taskDate = date, taskLabel = label)
+                dbHelper.addTask(task) // Add the task to the database
+                val gd = dbHelper.getAllTasks()
+                taskadapter?.addList(gd)
+                dialog.dismiss() // Close the dialog
+            }
+
+        }
         // Nested Dialog: -1 if there is no need for nested dialog
         var nestedDialog: AlertDialog? = null
         if (nestedPopupLayout != -1) {
@@ -188,5 +216,6 @@ class MyAlertDialog {
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
     }
-
 }
+
+
