@@ -107,7 +107,6 @@
                 android:fontFamily="@font/glacial_indifference"
                 android:gravity="top|start"
                 android:inputType="textMultiLine"
-                android:lines="5"
                 android:padding="16dp"
                 android:hint="Add Details..."
                 android:textColor="@android:color/black"

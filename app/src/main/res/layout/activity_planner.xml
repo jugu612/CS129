@@ -135,7 +135,7 @@
         android:layout_width="0dp"
         android:layout_height="34dp"
         android:layout_gravity="center"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="240dp"
         android:fontFamily="@font/glacial_indifference_bold"
         android:text="TASK LIST:"
@@ -145,50 +145,6 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </TextView>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout_NoTask_Temp"
-        android:layout_width="228dp"
-        android:layout_height="259dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="60dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.607">
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="195dp"
-            android:layout_height="196dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="2dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView_NoTask"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.882"
-            app:srcCompat="@drawable/app_logo" />
-
-        <TextView
-            android:id="@+id/textView_NoTask"
-            android:layout_width="224dp"
-            android:layout_height="51dp"
-            android:layout_gravity="center"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:text="No tasks are available. \nTap + to create new task."
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2">
-        </TextView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -250,5 +206,23 @@
         </com.google.android.material.imageview.ShapeableImageView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="347dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout_buttons"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_TaskList">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/Tasklist"
+            tools:listitem="@layout/view_tasks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

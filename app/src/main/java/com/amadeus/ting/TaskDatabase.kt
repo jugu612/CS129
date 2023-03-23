@@ -10,10 +10,10 @@ import android.database.sqlite.SQLiteOpenHelper
 // Define a data class to represent a task
 data class TaskModel(
     val taskId: Int,
-    val taskName: String,
+    val taskTitle: String,
     val taskDetails: String,
-    val deadline: String,
-    val label: String
+    val taskDate: String,
+    val taskLabel: String
 )
 
 // Define a SQLite helper class to manage the database containing the tasks
@@ -52,21 +52,23 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
     }
 
     // Insert a new task into the database
-    fun addTask(task: TaskModel) {
+    fun addTask(task: TaskModel){
         // Get a writable database instance
         val db = this.writableDatabase
         // Create a ContentValues object to store the task data
         val values = ContentValues().apply {
-            put(COLUMN_TASKNAME, task.taskName)
+            put(COLUMN_TASKNAME, task.taskTitle)
             put(COLUMN_TASKDETAILS, task.taskDetails)
-            put(COLUMN_DEADLINE, task.deadline)
-            put(COLUMN_LABEL, task.label)
+            put(COLUMN_DEADLINE, task.taskDate)
+            put(COLUMN_LABEL, task.taskLabel)
         }
         // Insert the task data into the database
         db.insert(TABLE_NAME, null, values)
         // Close the database connection
         db.close()
+
     }
+
 
     fun getAllTasks(): List<TaskModel> {
         // Create an empty list to store the tasks
@@ -111,10 +113,10 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         val db = this.writableDatabase
         // Create a ContentValues object with the new task values
         val values = ContentValues().apply {
-            put(COLUMN_TASKNAME, task.taskName)
+            put(COLUMN_TASKNAME, task.taskTitle)
             put(COLUMN_TASKDETAILS, task.taskDetails)
-            put(COLUMN_DEADLINE, task.deadline)
-            put(COLUMN_LABEL, task.label)
+            put(COLUMN_DEADLINE, task.taskDate)
+            put(COLUMN_LABEL, task.taskLabel)
         }
         // Update the database with the new values for the specified task ID
         db.update(TABLE_NAME, values, "$COLUMN_TASKID=?", arrayOf(task.taskId.toString()))

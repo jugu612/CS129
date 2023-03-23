@@ -8,6 +8,8 @@
     <string name="save">save</string>
     <string name="web_client_id">823225262950-jrchc0t8628plma2ap42goipqo5a1pe1.apps.googleusercontent.com</string>
     <string-array name="options">
+        <item>☆ Label</item>
+        <item>♡ Personal</item>
         <item>Option 1</item>
         <item>Option 2</item>
         <item>Option 3</item>
