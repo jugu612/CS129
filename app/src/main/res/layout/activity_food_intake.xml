@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/foodIntakeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FoodIntake"
+    tools:ignore="ExtraText">
+
+    <LinearLayout
+        android:id="@+id/linearLayout_Header"
+        android:layout_width="411dp"
+        android:layout_height="67dp"
+        android:background="@color/cyan"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/back_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="left"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="17dp"
+            android:src="@drawable/back_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.277"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.914"
+            app:shapeAppearanceOverlay="@style/Circle"
+            tools:ignore="RtlHardcoded">
+
+        </com.google.android.material.imageview.ShapeableImageView>
+
+        <TextView
+            android:layout_width="269dp"
+            android:layout_height="50sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="-37dp"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:text="@string/food_intake"
+            android:textAlignment="center"
+            android:textColor="#FFFFFF"
+            android:textSize="35sp" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/bell_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="right"
+            android:layout_marginTop="-45dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/notif_icon"
+            app:shapeAppearanceOverlay="@style/Circle"
+            tools:ignore="RtlHardcoded">
+
+        </com.google.android.material.imageview.ShapeableImageView>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linearLayout_buttons"
+        android:layout_width="238dp"
+        android:layout_height="62dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="87dp"
+        tools:layout_editor_absoluteY="621dp"
+        tools:ignore="MissingConstraints">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/edit_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/edit_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.085"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:shapeAppearanceOverlay="@style/Circle">
+
+        </com.google.android.material.imageview.ShapeableImageView>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/create_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/add_sched_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:shapeAppearanceOverlay="@style/Circle">
+
+        </com.google.android.material.imageview.ShapeableImageView>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/delete_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/delete_button"
+            app:shapeAppearanceOverlay="@style/Circle"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="172dp"
+            tools:layout_editor_absoluteY="12dp">
+
+        </com.google.android.material.imageview.ShapeableImageView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/food_intake_name_button"
+        android:layout_width="345dp"
+        android:layout_height="429dp"
+        android:src="@drawable/food_intake_name"
+        app:shapeAppearanceOverlay="@style/Circle"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="34dp"
+        tools:layout_editor_absoluteY="-79dp">
+
+    </com.google.android.material.imageview.ShapeableImageView>
+
+    <TextView
+        android:layout_width="269dp"
+        android:layout_height="50sp"
+        android:layout_gravity="center"
+        android:fontFamily="sans-serif"
+        android:text="FOOD INTAKE NAME"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="126dp" />
+    -->
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="195dp"
+        android:layout_height="387dp"
+        android:alpha="0.6f"
+        app:srcCompat="@drawable/food_intake_logo"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="108dp"
+        tools:layout_editor_absoluteY="121dp" />
+
+    <TextView
+        android:layout_width="269dp"
+        android:layout_height="50sp"
+        android:layout_gravity="center"
+        android:fontFamily="sans-serif"
+        android:text="GET STARTED"
+        android:textAlignment="center"
+        android:textColor="#80000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="71dp"
+        tools:layout_editor_absoluteY="425dp" />
+
+    <TextView
+        android:layout_width="269dp"
+        android:layout_height="50sp"
+        android:layout_gravity="center"
+        android:fontFamily="sans-serif"
+        android:text="Receive reminders of your food intake"
+        android:textAlignment="center"
+        android:textColor="#80000000"
+        android:textSize="14sp"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="71dp"
+        tools:layout_editor_absoluteY="450dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
