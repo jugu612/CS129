@@ -8,6 +8,10 @@ import android.database.sqlite.SQLiteOpenHelper
 
 
 // Define a data class to represent a task
+import android.os.Parcel
+import android.os.Parcelable
+import java.io.Serializable
+
 data class TaskModel(
     val taskId: Int,
     val taskTitle: String,
@@ -70,41 +74,41 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
     }
 
 
-    fun getAllTasks(): List<TaskModel> {
-        // Create an empty list to store the tasks
-        val tasks = mutableListOf<TaskModel>()
-        // Get a reference to the database
+    fun getAllTasks(queryType: Int = -1, arrowState: Int = -1, labelToGet: String = ""): List<TaskModel> {
+        val order = if (arrowState == 1) "ASC" else if (arrowState == 0) "DESC" else ""
         val db = this.readableDatabase
-        // Query the database for all tasks
-        val cursor: Cursor? = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
+        val tasks = mutableListOf<TaskModel>()
 
-        // If the query returned results and the cursor is pointing to the first row
+        val query = when (queryType) {
+            1 -> "SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order"
+            2 -> "SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_DEADLINE $order"
+            3 -> "SELECT * FROM $TABLE_NAME WHERE $COLUMN_LABEL=$labelToGet"
+            else -> "SELECT * FROM $TABLE_NAME"
+        }
+
+        val cursor: Cursor? = db.rawQuery(query, null)
+
         if (cursor != null && cursor.moveToFirst()) {
-            // Get the column indices for each field
             val taskIdIndex = cursor.getColumnIndex(COLUMN_TASKID)
             val taskNameIndex = cursor.getColumnIndex(COLUMN_TASKNAME)
             val taskDetailsIndex = cursor.getColumnIndex(COLUMN_TASKDETAILS)
             val deadlineIndex = cursor.getColumnIndex(COLUMN_DEADLINE)
             val labelIndex = cursor.getColumnIndex(COLUMN_LABEL)
 
-            // Loop through each row in the cursor
             do {
-                // Get the values for each field
                 val taskId = cursor.getInt(taskIdIndex)
                 val taskName = cursor.getString(taskNameIndex)
                 val taskDetails = cursor.getString(taskDetailsIndex)
                 val deadline = cursor.getString(deadlineIndex)
                 val label = cursor.getString(labelIndex)
-                // Create a new task object and add it to the list
+
                 val task = TaskModel(taskId, taskName, taskDetails, deadline, label)
                 tasks.add(task)
-            } while (cursor.moveToNext()) // Move to the next row in the cursor
+            } while (cursor.moveToNext())
         }
 
-        // Close the cursor and the database connection
         cursor?.close()
         db.close()
-        // Return the list of tasks
         return tasks
     }
 
@@ -133,7 +137,7 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         db.close()
     }
 
-    private fun getTasks(query: String, selectionArgs: Array<String>): List<TaskModel> {
+     fun getTasks(query: String, selectionArgs: Array<String>): List<TaskModel> {
         // create an empty list to store tasks
         val tasks = mutableListOf<TaskModel>()
         // get a reference to the readable database
@@ -173,20 +177,33 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return tasks
     }
 
-//    fun getAllTasksSortedAlphabetically(): List<TaskModel> {
-//        val order = if (isArrowUp) "ASC" else "DESC"
-//        return getTasks("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order", emptyArray())
-//    }
-
-    fun getAllTasksSortedAlphabetically(): List<TaskModel> {
-        return getTasks("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_TASKNAME COLLATE NOCASE ASC", emptyArray())
+    fun getAllTasksSortedAlphabetically(arrowState: Int): List<TaskModel> {
+        val order = if (arrowState == 1) "ASC" else if (arrowState == 0) "DESC" else ""
+        return getTasks("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order", emptyArray())
     }
 
-    fun getTasksByLabel(labelToGet: String): List<TaskModel> {
-        return getTasks("SELECT * FROM $TABLE_NAME WHERE $COLUMN_LABEL=?", arrayOf(labelToGet))
+    // TODO LABEL SORT
+    fun getTasksByLabel(labelToGet: String): Cursor {
+        val db = writableDatabase
+        return db.rawQuery("SELECT * FROM $TABLE_NAME WHERE $COLUMN_LABEL=?", arrayOf(labelToGet))
     }
 
-    fun sortByDeadline(): List<TaskModel> {
-        return getTasks("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_DEADLINE ASC", emptyArray())
+    fun sortByDeadline(arrowState: Int): List<TaskModel> {
+        val order = if (arrowState == 1) "ASC" else if (arrowState == 0) "DESC" else ""
+        return getTasks("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_DEADLINE $order", emptyArray())
     }
+
+    fun sortByTaskID() : List<TaskModel> {
+        val query = "SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_TASKID ASC"
+        return getTasks(query, emptyArray())
+    }
+
+    fun getTaskID() : String {
+        return COLUMN_TASKID
+    }
+
+    fun getTableName(): String {
+        return TABLE_NAME
+    }
+
 }

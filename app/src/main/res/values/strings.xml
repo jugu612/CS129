@@ -13,4 +13,6 @@
         <item>Others</item>
     </string-array>
     <string name="web_client_id">823225262950-jrchc0t8628plma2ap42goipqo5a1pe1.apps.googleusercontent.com</string>
+    <string name="arrowUp">⬆</string>
+    <string name="arrowDown">⬇</string>
 </resources>

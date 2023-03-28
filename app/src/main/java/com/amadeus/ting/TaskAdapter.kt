@@ -20,6 +20,11 @@ class TaskAdapter: RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
         notifyDataSetChanged()
     }
 
+    fun clearList() {
+        this.taskList = ArrayList()
+        notifyDataSetChanged()
+    }
+
     fun setOnClickItem(callback: (TaskModel)->Unit){
         this.onClickItem = callback
     }
@@ -37,7 +42,6 @@ class TaskAdapter: RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
         var labelTextView: TextView = itemView.findViewById(R.id.view_label)
         var layout = itemView.findViewById<LinearLayout>(R.id.task_layout)
         var btnDeleteTask = itemView.findViewById<Button>(R.id.btnDeleteTask)
-
 
     }
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
