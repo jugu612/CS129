@@ -1,6 +1,12 @@
 package com.amadeus.ting;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 
-public class FoodIntake extends Activity {
+
+class FoodIntake : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_food_intake)
+    }
 }
