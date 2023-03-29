@@ -8,15 +8,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 
 class HomePage : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth //Firebase authentication instance
-    private lateinit var googleSignInClient: GoogleSignInClient //Google Sign In client instance
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
