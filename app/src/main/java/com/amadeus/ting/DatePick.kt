@@ -42,6 +42,7 @@ class DatePick(private val dateButton: Button) : DatePickerDialog.OnDateSetListe
         // Format the current date as a string and set it as the text for the Button
         val currentDate = "$savedMonth/${savedDay+1}/$savedYear  | ☀All Day"
         dateButton.text = currentDate
+        println(dateButton.text.toString())
     }
     private fun getDateTimeCalendar() {
         val cal: Calendar = Calendar.getInstance()

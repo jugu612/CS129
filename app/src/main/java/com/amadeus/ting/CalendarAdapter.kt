@@ -70,8 +70,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.row_calendar_date, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.row_calendar_date, parent, false)
         return MyViewHolder(view)
     }
 
