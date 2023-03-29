@@ -2,12 +2,11 @@ package com.amadeus.ting
 
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
@@ -21,10 +20,13 @@ import com.google.android.material.imageview.ShapeableImageView
 import java.text.SimpleDateFormat
 import java.util.*
 import com.amadeus.ting.TaskDatabase
-
+import com.amadeus.ting.MyAlertDialog
+import com.google.android.gms.tasks.Task
+import java.io.Serializable
 
 
 class Planner : AppCompatActivity(){
+
     // Initializing horizontal calendar
     private lateinit var binding: ActivityPlannerBinding
     private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
@@ -35,22 +37,44 @@ class Planner : AppCompatActivity(){
     private val calendarList2 = ArrayList<CalendarDateModel>()
     private lateinit var recyclerView: RecyclerView
     private var taskadapter: TaskAdapter? = null
-
-
+    private lateinit var tskList: List<TaskModel>
+    private var sortedTaskList: List<TaskModel> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_planner)
         binding = ActivityPlannerBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val dbHelper = TaskDatabase(applicationContext)
         setUpAdapter()
         setUpClickListener()
         setUpCalendar()
         initRecyclerView()
-        val dbHelper = TaskDatabase(applicationContext)
 
-        val tskList = dbHelper.getAllTasks()
+        // Get the shared preferences object with the name "MyPreferences"
+        val sharedPref = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
+
+        // Get the values stored in shared preferences for button press, alphabetical arrow and deadline arrow
+        val buttonValue = sharedPref.getInt("buttonPressed", -1)
+        val getAlphabeticalArrow = sharedPref.getInt("isAlphabeticalArrowUp", -1)
+        val getDeadlineArrow = sharedPref.getInt("isDeadlineArrowUp", -1)
+
+        // Initialize the task list based on the shared preferences values
+        tskList = if (buttonValue != -1) {
+            if (buttonValue == 1 && getAlphabeticalArrow != -1) {
+                dbHelper.getAllTasks(1, getAlphabeticalArrow) // Get all tasks sorted by alphabetical order
+            } else if (buttonValue == 2 && getDeadlineArrow != -1) {
+                dbHelper.getAllTasks(2, getDeadlineArrow) // Get all tasks sorted by deadline
+            } else {
+                dbHelper.getAllTasks() // Get all tasks
+            }
+        } else {
+            dbHelper.getAllTasks() // Get all tasks
+        }
+
+        // Add the task list to the adapter
         taskadapter?.addList(tskList)
+
 
         // Label -> Myka
         onClick<ShapeableImageView>(R.id.label_button) {
@@ -61,19 +85,33 @@ class Planner : AppCompatActivity(){
         // Create -> Jugu
         onClick<ShapeableImageView>(R.id.create_button) {
             val labelAlert = MyAlertDialog()
-
             labelAlert.showCustomDialog(this, R.layout.create_popupwindow, -1, -1, 1)
             taskadapter?.addList(tskList)
             updateTaskList()
         }
 
-        // Sort -> Dust
+        // Set an onClick listener for the sort button
         onClick<ShapeableImageView>(R.id.sort_button) {
-            val labelAlert = MyAlertDialog()
+            val sortLabelAlert = MyAlertDialog()
+            sortLabelAlert.sortAlertDialog(this, R.layout.sort_popupwindow, R.layout.sort_nestedpopupwindow, R.id.text_label, sharedPref) {
 
-            labelAlert.showCustomDialog(this, R.layout.sort_popupwindow, R.layout.sort_nestedpopupwindow, R.id.text_label)
+                // Get the sorted task list from the alert dialog
+                sortedTaskList = sortLabelAlert.getTaskList()
 
+                // Add the sorted task list to the adapter and update the current task list
+                taskadapter?.addList(sortedTaskList)
+                tskList = sortedTaskList
+
+                // Update the shared preferences with the button press and arrow direction states
+                val editor = sharedPref.edit()
+                editor.putInt("buttonPressed", sortLabelAlert.getButtonPressed())
+                editor.putInt("isAlphabeticalArrowUp", sortLabelAlert.getAlphabeticalArrowState())
+                editor.putInt("isDeadlineArrowUp", sortLabelAlert.getDeadlineArrowState())
+                editor.apply()
+            }
         }
+
+
         onClick<ShapeableImageView>(R.id.back_button){
             val goToHomePage = Intent(this, HomePage::class.java)
             startActivity(goToHomePage)
@@ -81,17 +119,18 @@ class Planner : AppCompatActivity(){
 
     }
 
-    fun updateTaskList() {
+    private fun updateTaskList() {
         val dbHelper = TaskDatabase(applicationContext)
         val tskList = dbHelper.getAllTasks()
         taskadapter?.addList(tskList)
     }
+
+
     private fun initRecyclerView(){
         recyclerView = findViewById<RecyclerView>(R.id.Tasklist)
         recyclerView.layoutManager = LinearLayoutManager(this)
         taskadapter  = TaskAdapter()
         recyclerView.adapter = taskadapter
-
     }
 
 
@@ -148,79 +187,3 @@ class Planner : AppCompatActivity(){
     }
 
 }
-
-class MyAlertDialog {
-    private var taskadapter: TaskAdapter? = null
-
-
-    fun showCustomDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1, buttonToPress: Int = -1, create: Int = -1) {
-        val inflater = LayoutInflater.from(context)
-        val dialogLayout = inflater.inflate(popupLayout, null)
-
-        val builder = AlertDialog.Builder(context, R.style.MyDialogStyle)
-        builder.setView(dialogLayout)
-        builder.setCancelable(false)
-
-        val cancelButton = dialogLayout.findViewById<Button>(R.id.cancel_button)
-        val dialog = builder.create()
-        cancelButton.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        if (create != -1){
-            val dbHelper = TaskDatabase(context)
-            val editTitle = dialogLayout.findViewById<EditText>(R.id.edit_title)
-            val editDetails = dialogLayout.findViewById<EditText>(R.id.edit_details)
-            val dateButton = dialogLayout.findViewById<Button>(R.id.dateButton)
-            val labelSpinner = dialogLayout.findViewById<Spinner>(R.id.task_spinner)
-            val dateOpt= DatePick(dateButton)
-            dateOpt.DefaultDate()
-            dateOpt.pickDate()
-
-
-
-            // Create a new task with the input data
-
-            val saveButton = dialogLayout.findViewById<Button>(R.id.save_button)
-            saveButton.setOnClickListener {
-                val title = editTitle.text.toString()
-                val details = editDetails.text.toString()
-                val date = dateButton.text.toString()
-                val label = labelSpinner.selectedItem.toString()
-                val task = TaskModel(0, taskTitle = title, taskDetails = details, taskDate = date, taskLabel = label)
-                dbHelper.addTask(task) // Add the task to the database
-                val gd = dbHelper.getAllTasks()
-                taskadapter?.addList(gd)
-                dialog.dismiss() // Close the dialog
-            }
-
-        }
-        // Nested Dialog: -1 if there is no need for nested dialog
-        var nestedDialog: AlertDialog? = null
-        if (nestedPopupLayout != -1) {
-
-            val showNestedDialogButton = dialogLayout.findViewById<Button>(buttonToPress)
-
-            showNestedDialogButton.setOnClickListener {
-                val nestedDialogLayout = inflater.inflate(nestedPopupLayout, null)
-                val nestedBuilder = AlertDialog.Builder(context, R.style.MyDialogStyle)
-                nestedBuilder.setView(nestedDialogLayout)
-                nestedBuilder.setCancelable(false)
-
-                nestedDialog = nestedBuilder.create()
-                nestedDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                nestedDialog?.show()
-
-                val cancelButtonNested = nestedDialogLayout.findViewById<Button>(R.id.cancel_button)
-                cancelButtonNested.setOnClickListener {
-                    nestedDialog?.dismiss()
-                }
-            }
-        }
-
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        dialog.show()
-    }
-}
-
-
