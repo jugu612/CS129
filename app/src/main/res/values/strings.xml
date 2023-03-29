@@ -13,4 +13,8 @@
         <item>Others</item>
     </string-array>
     <string name="web_client_id">823225262950-jrchc0t8628plma2ap42goipqo5a1pe1.apps.googleusercontent.com</string>
+    <string name="arrowUp">⬆</string>
+    <string name="arrowDown">⬇</string>
+    <string name="food_intake">FOOD INTAKE</string>
+    <string name="food_intake_name">Food Intake Name</string>
 </resources>
