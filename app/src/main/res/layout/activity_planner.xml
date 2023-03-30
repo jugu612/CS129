@@ -77,9 +77,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/horizontal_calendar"
         android:layout_width="400dp"
-
-        android:layout_height="150dp"
-        android:layout_marginTop="80dp"
+        android:layout_height="135dp"
+        android:layout_marginTop="70dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -164,29 +163,47 @@
         android:layout_height="34dp"
         android:layout_gravity="center"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="240dp"
+        android:layout_marginTop="5dp"
+
         android:fontFamily="@font/glacial_indifference_bold"
         android:text="TASK LIST:"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/horizontal_calendar">
 
     </TextView>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@id/taskList_Wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_TaskList">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/Tasklist"
+            android:layout_width="350dp"
+            android:layout_height="347dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:listitem="@layout/view_tasks" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout_buttons"
         android:layout_width="238dp"
         android:layout_height="62dp"
-        android:orientation="horizontal"
         android:layout_gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.929">
+        app:layout_constraintTop_toBottomOf="@+id/taskList_Wrapper">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/label_button"
@@ -235,22 +252,5 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="347dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout_buttons"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_TaskList">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/Tasklist"
-            tools:listitem="@layout/view_tasks"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

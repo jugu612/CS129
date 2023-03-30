@@ -145,7 +145,6 @@
         android:id="@+id/imageView5"
         android:layout_width="195dp"
         android:layout_height="387dp"
-        android:alpha="0.6f"
         app:srcCompat="@drawable/food_intake_logo"
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="108dp"
