@@ -23,6 +23,7 @@ import com.amadeus.ting.TaskDatabase
 import com.amadeus.ting.MyAlertDialog
 import com.google.android.gms.tasks.Task
 import java.io.Serializable
+import java.time.LocalDate
 
 
 class Planner : AppCompatActivity(){
@@ -50,6 +51,7 @@ class Planner : AppCompatActivity(){
         setUpClickListener()
         setUpCalendar()
         initRecyclerView()
+
 
         // Get the shared preferences object with the name "MyPreferences"
         val sharedPref = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE)
@@ -147,20 +149,33 @@ class Planner : AppCompatActivity(){
                 setUpCalendar()
         }
     }
-
+    /* Calendar Data Binding */
     private fun setUpAdapter() {
-        val spacingInPixels = resources.getDimensionPixelSize(R.dimen.single_calendar_margin)
-        binding.calendarRecycler.addItemDecoration(HorizontalItemDecoration(spacingInPixels))
+        //For positioning the recyclerview
+        val curDate = LocalDate.now()
+        val defPos = curDate.dayOfMonth-3
+
+        // Horizontal spacing for each date in the calendar
+        val dateSpacing = resources.getDimensionPixelSize(R.dimen.single_calendar_margin)
+        binding.calendarRecycler.addItemDecoration(HorizontalItemDecoration(dateSpacing))
+
+        // Center snap for scrolling
         val snapHelper: SnapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.calendarRecycler)
-        adapter = CalendarAdapter { calendarDateModel: CalendarDateModel, position: Int ->
+
+
+
+        adapter = CalendarAdapter { calendarDateModel: CalendarDateModel, position ->
             calendarList2.forEachIndexed { index, calendarModel ->
                 calendarModel.isSelected = index == position
             }
             adapter.setData(calendarList2)
         }
         binding.calendarRecycler.adapter = adapter
+        binding.calendarRecycler.scrollToPosition(defPos)
+        binding.calendarRecycler.findViewHolderForAdapterPosition(defPos+2)?.itemView?.performClick()
     }
+
 
     private fun setUpCalendar() {
         val calendarList = ArrayList<CalendarDateModel>()

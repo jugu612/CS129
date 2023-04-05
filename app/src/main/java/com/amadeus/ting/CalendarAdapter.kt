@@ -9,16 +9,18 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amadeus.ting.R
 import com.amadeus.ting.CalendarDateModel
+import java.time.LocalDate
 
 class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateModel, position: Int) -> Unit) :
     RecyclerView.Adapter<CalendarAdapter.MyViewHolder>() {
     private val list = ArrayList<CalendarDateModel>()
-
+    val current = LocalDate.now()
     inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bind(calendarDateModel: CalendarDateModel) {
             val calendarDay = itemView.findViewById<TextView>(R.id.tv_calendar_day)
             val calendarDate = itemView.findViewById<TextView>(R.id.tv_calendar_date)
             val cardView = itemView.findViewById<LinearLayout>(R.id.circle_cal)
+            val defaultPos = current.dayOfMonth
 
             if (calendarDateModel.isSelected) {
                 calendarDay.setTextColor(
@@ -87,4 +89,13 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         list.addAll(calendarList)
         notifyDataSetChanged()
     }
+
+    fun scrolltoPos(position: Int){
+
+    }
+
+    fun showTasks(){
+        // Shows tasks on selected date
+    }
+
 }
