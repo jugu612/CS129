@@ -26,8 +26,8 @@ class HomePage : AppCompatActivity() {
 
         //Setting up the onClickListeners for the different sections of the home page
         onClick<ConstraintLayout>(R.id.linearLayout_HealthSection) {
-            val goToHealthWellness = Intent(this, HealthAndWellness::class.java)
-            startActivity(goToHealthWellness)
+            val goToFoodIntake = Intent(this, FoodIntake::class.java)
+            startActivity(goToFoodIntake)
         }
 
         onClick<ConstraintLayout>(R.id.linearLayout_PlannerSection) {
