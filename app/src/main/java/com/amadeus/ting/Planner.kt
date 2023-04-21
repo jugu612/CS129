@@ -4,12 +4,8 @@ package com.amadeus.ting
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.os.Parcelable
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -19,10 +15,6 @@ import com.amadeus.ting.databinding.ActivityPlannerBinding
 import com.google.android.material.imageview.ShapeableImageView
 import java.text.SimpleDateFormat
 import java.util.*
-import com.amadeus.ting.TaskDatabase
-import com.amadeus.ting.MyAlertDialog
-import com.google.android.gms.tasks.Task
-import java.io.Serializable
 import java.time.LocalDate
 
 
@@ -88,8 +80,6 @@ class Planner : AppCompatActivity(){
         onClick<ShapeableImageView>(R.id.create_button) {
             val labelAlert = MyAlertDialog()
             labelAlert.showCustomDialog(this, R.layout.create_popupwindow, -1, -1, 1)
-            taskadapter?.addList(tskList)
-            updateTaskList()
         }
 
         // Set an onClick listener for the sort button
@@ -121,17 +111,11 @@ class Planner : AppCompatActivity(){
 
     }
 
-    private fun updateTaskList() {
-        val dbHelper = TaskDatabase(applicationContext)
-        val tskList = dbHelper.getAllTasks()
-        taskadapter?.addList(tskList)
-    }
-
 
     private fun initRecyclerView(){
         recyclerView = findViewById<RecyclerView>(R.id.Tasklist)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        taskadapter  = TaskAdapter()
+        taskadapter  = TaskAdapter(this)
         recyclerView.adapter = taskadapter
     }
 
