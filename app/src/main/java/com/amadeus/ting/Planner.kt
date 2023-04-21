@@ -131,7 +131,7 @@ class Planner : AppCompatActivity(){
     private fun initRecyclerView(){
         recyclerView = findViewById<RecyclerView>(R.id.Tasklist)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        taskadapter  = TaskAdapter()
+        taskadapter  = TaskAdapter(this)
         recyclerView.adapter = taskadapter
     }
 

@@ -13,6 +13,7 @@
     <color name ="salmon">#F4949E</color>
     <color name ="red">#EA4C46</color>
     <color name ="cblue">#02A4D3</color>
-
+    <color name ="gray">#808080</color>
+    <color name ="deepBlue">#2C275F</color>
 
 </resources>
