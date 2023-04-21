@@ -7,17 +7,12 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 
-// Define a data class to represent a task
-import android.os.Parcel
-import android.os.Parcelable
-import java.io.Serializable
-
 data class TaskModel(
-    val taskId: Int,
-    val taskTitle: String,
-    val taskDetails: String,
-    val taskDate: String,
-    val taskLabel: String
+    var taskId: Int,
+    var taskTitle: String,
+    var taskDetails: String,
+    var taskDate: String,
+    var taskLabel: String
 )
 
 // Define a SQLite helper class to manage the database containing the tasks
