@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout_Header"
-        android:layout_width="411dp"
+        android:layout_width="match_parent"
         android:layout_height="67dp"
         android:background="@color/cyan"
         android:orientation="vertical"
@@ -118,8 +118,8 @@
 
         <ImageView
             android:id="@+id/food_intake_logo"
-            android:layout_width="75dp"
-            android:layout_height="54dp"
+            android:layout_width="103dp"
+            android:layout_height="116dp"
             android:contentDescription="@string/display"
             android:gravity="center"
             android:orientation="vertical"
@@ -130,44 +130,96 @@
             app:layout_constraintVertical_bias="0.155"
             app:srcCompat="@drawable/food_intake_logo" />
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/food_intake_name_button"
-            android:layout_width="345dp"
-            android:layout_height="75dp"
-            android:layout_marginStart="34dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginEnd="33dp"
-            android:layout_marginBottom="435dp"
+
+        <TextView
+            android:id="@+id/meals_per_day_text"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:gravity="center"
             android:orientation="vertical"
-            android:src="@drawable/food_intake_name"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            app:shapeAppearanceOverlay="@style/Circle">
+            android:text="Meals per Day"
+            android:textColor="#2C275F"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="@id/meals_per_day_button"
+            app:layout_constraintTop_toBottomOf="@+id/food_intake_logo" />
 
-        </com.google.android.material.imageview.ShapeableImageView>
 
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/first_notification_button"
-            android:layout_width="345dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="34dp"
-            android:layout_marginBottom="160dp"
+        <Spinner
+            android:gravity="center"
+            android:id="@+id/meals_per_day_button"
+            android:layout_width="330dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            android:dropDownVerticalOffset="50dp"
             android:orientation="vertical"
-            android:src="@drawable/dropdown"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.333"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/food_intake_spinner_up"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintVertical_bias="1.0"
-            app:shapeAppearanceOverlay="@style/Circle">
+            app:layout_constraintTop_toBottomOf="@+id/meals_per_day_text"
+            app:layout_constraintStart_toStartOf="@+id/eating_intervals_text"/>
 
-        </com.google.android.material.imageview.ShapeableImageView>
+        <TextView
+            android:id="@+id/eating_intervals_text"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:text="Eating Interval"
+            android:textColor="#2C275F"
+            android:textSize="24sp"
+            app:layout_constraintTop_toBottomOf="@+id/meals_per_day_button"
+            app:layout_constraintStart_toStartOf="@id/eating_intervals_button"/>
+
+        <Spinner
+            android:id="@+id/eating_intervals_button"
+            android:layout_width="330dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="50dp"
+            android:background="@drawable/food_intake_spinner_up"
+            android:dropDownVerticalOffset="50dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/eating_intervals_text" />
+
+        <TextView
+            android:id="@+id/meal_hour_text"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:text="Mealtime Reminder"
+            android:textColor="#2C275F"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="@id/meals_per_day_button"
+            app:layout_constraintTop_toBottomOf="@+id/eating_intervals_button" />
+
+        <Spinner
+            android:gravity="center"
+            android:id="@+id/first_reminder_button"
+            android:layout_width="330dp"
+            android:layout_height="50dp"
+            android:layout_marginTop = "8dp"
+            android:dropDownVerticalOffset="50dp"
+            android:orientation="vertical"
+            android:background="@drawable/food_intake_spinner_up"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintTop_toBottomOf="@+id/meal_hour_text"
+            app:layout_constraintStart_toStartOf="@+id/eating_intervals_text"/>
+
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/reset_notif_button"
@@ -187,189 +239,6 @@
             app:layout_constraintVertical_bias="1.0">
 
         </com.google.android.material.imageview.ShapeableImageView>
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/eating_intervals_button"
-            android:layout_width="345dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="34dp"
-            android:layout_marginTop="76dp"
-            android:layout_marginEnd="34dp"
-            android:layout_marginBottom="250dp"
-            android:orientation="vertical"
-            android:src="@drawable/dropdown"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            app:shapeAppearanceOverlay="@style/Circle">
-
-        </com.google.android.material.imageview.ShapeableImageView>
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/meals_per_day_button"
-            android:layout_width="345dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="31dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginBottom="345dp"
-            android:orientation="vertical"
-            android:src="@drawable/dropdown"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.992"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            app:shapeAppearanceOverlay="@style/Circle">
-
-        </com.google.android.material.imageview.ShapeableImageView>
-
-        <TextView
-            android:id="@+id/textView17"
-            android:layout_width="150dp"
-            android:layout_height="27dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="161dp"
-            android:layout_marginBottom="25dp"
-            android:fontFamily="sans-serif"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:text="@string/food_intake_name"
-            android:textAlignment="center"
-            android:textColor="#000000"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="@+id/food_intake_name_button"
-            app:layout_constraintEnd_toEndOf="@+id/food_intake_name_button"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/food_intake_name_button"
-            app:layout_constraintTop_toTopOf="@+id/food_intake_name_button"
-            app:layout_constraintVertical_bias="0.333" />
-
-        <TextView
-            android:id="@+id/textView18"
-            android:layout_width="160dp"
-            android:layout_height="27dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="220dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:text="@string/meals_per_day"
-            android:textAlignment="center"
-            android:textColor="#2C275F"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.009"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="27dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="37dp"
-            android:layout_marginEnd="226dp"
-            android:layout_marginBottom="36dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:gravity="center"
-            android:text="@string/select"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/meals_per_day_button"
-            app:layout_constraintEnd_toEndOf="@+id/meals_per_day_button"
-            app:layout_constraintHorizontal_bias="0.997"
-            app:layout_constraintStart_toEndOf="@+id/meals_per_day_button"
-            app:layout_constraintStart_toStartOf="@+id/meals_per_day_button"
-            app:layout_constraintTop_toTopOf="@+id/meals_per_day_button"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="160dp"
-            android:layout_height="27dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="1dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:text="@string/eating_intervals"
-            android:textAlignment="center"
-            android:textColor="#2C275F"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/eating_intervals_button"
-            app:layout_constraintHorizontal_bias="0.02"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/eating_intervals_button" />
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="27dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="40dp"
-            android:layout_marginTop="37dp"
-            android:layout_marginEnd="225dp"
-            android:layout_marginBottom="35dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:text="@string/select"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/eating_intervals_button"
-            app:layout_constraintEnd_toEndOf="@+id/eating_intervals_button"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/eating_intervals_button"
-            app:layout_constraintTop_toTopOf="@+id/eating_intervals_button"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="200dp"
-            android:layout_height="27dp"
-            android:layout_gravity="center"
-            android:layout_marginStart="37dp"
-            android:layout_marginTop="404dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:text="@string/first_notification_reminder"
-            android:textAlignment="center"
-            android:textColor="#2C275F"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="80dp"
-            android:layout_height="27dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="35dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:text="@string/select"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/first_notification_button"
-            app:layout_constraintEnd_toEndOf="@+id/first_notification_button"
-            app:layout_constraintHorizontal_bias="0.173"
-            app:layout_constraintStart_toStartOf="@+id/first_notification_button"
-            app:layout_constraintTop_toTopOf="@+id/first_notification_button"
-            app:layout_constraintVertical_bias="0.363" />
-
 
         <TextView
             android:id="@+id/textView6"
