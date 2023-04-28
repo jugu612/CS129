@@ -58,8 +58,10 @@ class MyAlertDialog {
                 val label = labelSpinner.selectedItem.toString()
                 val task = TaskModel(0, taskTitle = title, taskDetails = details, taskDate = date, taskLabel = label)
                 dbHelper.addTask(task) // Add the task to the database
-                val gd = dbHelper.getAllTasks()
-                taskadapter?.addList(gd)
+                val addedList = dbHelper.getAllTasks()
+                taskadapter = TaskAdapter(context)
+                taskadapter?.addList(addedList)
+                taskList = addedList
                 dialog.dismiss() // Close the dialog
             }
 
@@ -141,16 +143,16 @@ class MyAlertDialog {
                     buttonPressed = 1
                 }
             } 2 -> {
-                deadlineButton.isChecked = true
-                arrowDeadline.visibility = View.VISIBLE
-                arrowDeadline.text = if (getDeadlineArrow == 1) "⬆" else "⬇"
+            deadlineButton.isChecked = true
+            arrowDeadline.visibility = View.VISIBLE
+            arrowDeadline.text = if (getDeadlineArrow == 1) "⬆" else "⬇"
 
-                arrowDeadline.setOnClickListener {
-                    isDeadlineArrowUp = if (isDeadlineArrowUp == 1) { 0 } else { 1 }
-                    arrowDeadline.text = if (isDeadlineArrowUp == 1) "⬆" else "⬇"
-                    buttonPressed = 2
-                }
-            } 3 -> labelButton.isChecked = true
+            arrowDeadline.setOnClickListener {
+                isDeadlineArrowUp = if (isDeadlineArrowUp == 1) { 0 } else { 1 }
+                arrowDeadline.text = if (isDeadlineArrowUp == 1) "⬆" else "⬇"
+                buttonPressed = 2
+            }
+        } 3 -> labelButton.isChecked = true
             else -> {
                 alphabeticalButton.isChecked = false
                 deadlineButton.isChecked = false
