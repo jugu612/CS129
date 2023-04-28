@@ -23,6 +23,7 @@ class PlannerTest {
                 override fun getConstraints(): org.hamcrest.Matcher<View>? {
                     return null
                 }
+
                 override fun getDescription(): String {
                     return "Click on a child view with specified id."
                 }
