@@ -157,6 +157,7 @@ class Planner : AppCompatActivity(){
         }
         binding.calendarRecycler.adapter = adapter
         binding.calendarRecycler.scrollToPosition(defPos)
+        // Line below requires debugging, need to check why it doesn't function
         binding.calendarRecycler.findViewHolderForAdapterPosition(defPos+2)?.itemView?.performClick()
     }
 

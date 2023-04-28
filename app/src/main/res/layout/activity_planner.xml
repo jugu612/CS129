@@ -163,7 +163,7 @@
         android:layout_height="34dp"
         android:layout_gravity="center"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
 
         android:fontFamily="@font/glacial_indifference_bold"
         android:text="TASK LIST:"
@@ -179,7 +179,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
-        android:layout_marginBottom="1dp"
         android:layout_marginEnd="1dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -188,9 +187,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/Tasklist"
-            android:layout_width="350dp"
-            android:layout_height="430dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="349dp"
+            android:layout_height="368dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/view_tasks" />
@@ -200,11 +198,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout_buttons"
         android:layout_width="238dp"
-        android:layout_height="50dp"
+        android:layout_height="62dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
