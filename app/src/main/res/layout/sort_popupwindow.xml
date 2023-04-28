@@ -62,14 +62,14 @@
 
                 <RadioButton
                     android:id="@+id/text_alphabetical"
-                    android:backgroundTint="@drawable/button_effects"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_weight="1"
+                    android:backgroundTint="@drawable/button_effects"
+                    android:buttonTint="@drawable/button_effects"
                     android:fontFamily="@font/glacial_indifference"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:buttonTint="@drawable/button_effects"
                     android:text="Alphabetical"
                     android:textAllCaps="false"
                     android:textSize="18sp" />

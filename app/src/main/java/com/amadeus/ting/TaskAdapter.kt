@@ -52,6 +52,7 @@ class TaskAdapter: RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
         holder.labelTextView.text = currentItem.taskLabel
         holder.itemView.setOnClickListener{onClickItem?.invoke(currentItem)}
         holder.btnDeleteTask.setOnClickListener {
+
             val builder = AlertDialog.Builder(holder.itemView.context)
             builder.setTitle("Delete Task")
             builder.setMessage("Are you sure you want to delete this task?")
