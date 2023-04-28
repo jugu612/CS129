@@ -44,7 +44,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="-37dp"
             android:fontFamily="@font/glacial_indifference_bold"
-            android:text="@string/food_intake"
+            android:text="MEALTIME"
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="35sp" />

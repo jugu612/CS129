@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
-    android:layout_width="300dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fontFamily="@font/glacial_indifference_bold"
     android:textColor="@color/white"
@@ -10,4 +9,5 @@
     android:backgroundTintMode="src_atop"
     android:layout_centerVertical="true"
     android:layout_marginEnd="33dp"
-    android:textSize="18sp" />
+    android:textSize="20sp"
+    android:popupBackground="@android:drawable/dialog_holo_light_frame" />
