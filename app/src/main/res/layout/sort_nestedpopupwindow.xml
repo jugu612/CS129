@@ -42,7 +42,7 @@
                     android:layout_height="48dp"
                     android:layout_gravity="end"
                     android:background="@drawable/rounded_button"
-                    android:backgroundTint="#009688"
+                    android:backgroundTint="#409215"
                     android:fontFamily="@font/glacial_indifference_bold"
                     android:text="@string/save"
                     android:textColor="@color/white" />

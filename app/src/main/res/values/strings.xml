@@ -17,4 +17,13 @@
     <string name="arrowDown">⬇</string>
     <string name="food_intake">FOOD INTAKE</string>
     <string name="food_intake_name">Food Intake Name</string>
+    <string name="select">Select...</string>
+    <string name="change_default_alarm_settings">Change Default Alarm Settings</string>
+    <string name="todo">TODO</string>
+    <string name="get_started">GET STARTED</string>
+    <string name="receive_reminders_of_your_food_intake">Receive reminders of your food intake</string>
+    <string name="meals_per_day">Meals Per Day</string>
+    <string name="first_notification_reminder">First Notification Reminder</string>
+    <string name="eating_intervals">Eating Intervals</string>
+    <string name="display">display</string>
 </resources>

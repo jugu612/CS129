@@ -22,8 +22,8 @@
             android:id="@+id/back_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_gravity="left"
-            android:layout_marginLeft="10dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="17dp"
             android:src="@drawable/back_icon"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -138,9 +138,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
@@ -186,8 +183,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/Tasklist"
-            android:layout_width="350dp"
-            android:layout_height="347dp"
+            android:layout_width="349dp"
+            android:layout_height="368dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/view_tasks" />
@@ -199,9 +196,11 @@
         android:layout_width="238dp"
         android:layout_height="62dp"
         android:layout_gravity="center"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         android:layout_marginBottom="10dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/taskList_Wrapper"
         app:layout_constraintBottom_toBottomOf="parent">
