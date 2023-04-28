@@ -41,7 +41,7 @@ class FoodIntakeInput : AppCompatActivity() {
                 } else if (m == 0) {
                     "$hours"
                 } else {
-                    "$hours, $minutes"
+                    "$hours and $minutes"
                 }
                 intervalOptions.add(interval)
             }
@@ -77,37 +77,38 @@ class FoodIntakeInput : AppCompatActivity() {
     }
 
 
+
     fun setupFoodSelectionSpinner(activity: Activity, spinnerId: Int, spinnerOptions: Array<out Any>) {
-        val mealFrequency = activity.findViewById<Spinner>(spinnerId)
+        val mealOption = activity.findViewById<Spinner>(spinnerId)
         val adapterMF = ArrayAdapter(
             activity,
             R.layout.spinner_item_color,
             spinnerOptions.map { it.toString() }
         )
         adapterMF.setDropDownViewResource(R.layout.spinner_item_color)
-        mealFrequency.adapter = adapterMF
+        mealOption.adapter = adapterMF
 
-        mealFrequency.setOnTouchListener { _, _ ->
-            if (mealFrequency.isPressed) {
-                mealFrequency.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_down)
+        mealOption.setOnTouchListener { _, _ ->
+            if (mealOption.isPressed) {
+                mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_down)
             } else {
-                mealFrequency.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_down)
+                mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_down)
             }
             false
         }
 
-        mealFrequency.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        mealOption.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedPosition = parent.selectedItemPosition
                 if (selectedPosition == position) {
-                    mealFrequency.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_up)
+                    mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_up)
                 } else {
-                    mealFrequency.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_up)
+                    mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_up)
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                mealFrequency.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_up)
+                mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_up)
             }
         })
     }
