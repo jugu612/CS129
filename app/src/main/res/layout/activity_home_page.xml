@@ -7,10 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".HomePage">
 
-    <LinearLayout
-        android:id="@+id/linearLayout_Header"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/Header"
         android:layout_width="0dp"
         android:layout_height="60dp"
+        android:foregroundGravity="center"
         android:background="@color/dark_green"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,17 +20,37 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:layout_width="100dp"
-            android:layout_height="50sp"
+            android:id="@+id/ting"
+            android:layout_width="98dp"
+            android:layout_height="43dp"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:fontFamily="@font/glacial_indifference_bold"
             android:text="TING!"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textSize="35sp"></TextView>
+            android:textSize="35sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    </LinearLayout>
+        </TextView>
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/logout_button"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/logout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.466"
+            tools:ignore="RtlHardcoded">
+
+        </com.google.android.material.imageview.ShapeableImageView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/user_image"
@@ -225,7 +246,7 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.266"
+        app:layout_constraintHorizontal_bias="0.272"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.864">
@@ -250,8 +271,6 @@
             android:id="@+id/textView_PlannerSection_Text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="29dp"
-            android:layout_marginEnd="29dp"
             android:layout_marginBottom="15dp"
             android:fontFamily="@font/glacial_indifference_bold"
             android:text="Planner"
@@ -260,14 +279,12 @@
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView_PlannerIcon">
 
         </TextView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout_FocusSection"
@@ -278,7 +295,7 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.713"
+        app:layout_constraintHorizontal_bias="0.724"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.864">

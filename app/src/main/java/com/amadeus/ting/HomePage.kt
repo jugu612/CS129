@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
@@ -45,6 +46,16 @@ class HomePage : AppCompatActivity() {
             startActivity(goToProgress)
         }
 
+        onClick<ShapeableImageView>(R.id.logout_button) {
+            val goToRegLogin = Intent(this, RegLogin::class.java)
+            startActivity(goToRegLogin)
+            Toast.makeText(this, "Successfully logged out.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        // disables the back button
     }
 
     //Inline function that sets an onClickListener for a given view ID
