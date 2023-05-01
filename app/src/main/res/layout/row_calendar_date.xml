@@ -25,7 +25,8 @@
                 android:fontFamily="@font/glacial_indifference"
                 android:textSize="13sp"
                 android:letterSpacing="0.05"
-                android:textFontWeight="600"/>
+                android:textFontWeight="600"
+                />
 
             <TextView
                 android:id="@+id/tv_calendar_date"
@@ -36,31 +37,14 @@
                 android:layout_marginTop="7dp"
                 android:textColor="@color/black"
                 android:textFontWeight="600"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:id="@+id/test_calstatus"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:background="@drawable/roundborder"
-                    android:backgroundTint="@color/white"
-                    android:layout_marginRight="2dp">
-                </LinearLayout>
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:id="@+id/test_calstatus2"
-                    android:layout_width="10dp"
-                    android:layout_height="10dp"
-                    android:background="@drawable/roundborder"
-                    android:backgroundTint="@color/white"
-                    android:layout_marginLeft="2dp">
-                </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/date_status"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-            </LinearLayout>
 
 
         </LinearLayout>

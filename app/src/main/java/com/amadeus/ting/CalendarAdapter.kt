@@ -14,6 +14,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
     private val list = ArrayList<CalendarDateModel>()
     private lateinit var dbHelper:TaskDatabase
     private lateinit var dialogLayout:View
+    private var selectedPosition = -1
 
     val current = LocalDate.now()
     inner class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -23,11 +24,8 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
             val calendarDay = itemView.findViewById<TextView>(R.id.tv_calendar_day)
             val calendarDate = itemView.findViewById<TextView>(R.id.tv_calendar_date)
             val cardView = itemView.findViewById<LinearLayout>(R.id.circle_cal)
-            val dateStatus = itemView.findViewById<LinearLayout>(R.id.test_calstatus)
-            val dateStatus2 = itemView.findViewById<LinearLayout>(R.id.test_calstatus2)
+            val dateStatus = itemView.findViewById<RecyclerView>(R.id.date_status)
             val curDate = current.dayOfMonth
-
-            var curCalModel:CalendarDateModel
 
 
 
@@ -38,7 +36,6 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
             }
 
             if (calendarDateModel.isSelected) {
-                curCalModel = calendarDateModel
                 calendarDay.setTextColor(
                     ContextCompat.getColor(
                         itemView.context,
@@ -86,11 +83,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
             calendarDay.text = calendarDateModel.calendarDay
             calendarDate.text = calendarDateModel.calendarDate
             cardView.setOnClickListener {
-                // reset the isSelected flag of all models
-                list.forEach { it.isSelected = false }
-
-                // set the isSelected flag of the clicked model to true
-                calendarDateModel.isSelected = true
+                selectedPosition = adapterPosition
 
                 // invoke the click listener with the clicked model and its position
                 listener.invoke(calendarDateModel, adapterPosition)
@@ -110,7 +103,14 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val dbHelper = TaskDatabase(holder.itemView.context)
         val taskList = dbHelper.getAllTasks()
-        holder.bind(list[position], taskList)
+
+        val filteredTasks = taskList.filter { taskModel ->
+            taskModel.taskDate == list[position].calendarDate
+        }
+
+        holder.bind(list[position], filteredTasks)
+
+        list[position].isSelected = selectedPosition == position
     }
 
     override fun getItemCount(): Int {
