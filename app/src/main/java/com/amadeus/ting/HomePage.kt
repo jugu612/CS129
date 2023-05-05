@@ -9,12 +9,18 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 
 class HomePage : AppCompatActivity() {
 
     private lateinit var auth : FirebaseAuth //Firebase authentication instance
+    private lateinit var homeadapter: HomepageAdapter
+    private lateinit var recyclerView: RecyclerView
+    private var taskadapter: TaskAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,21 +31,11 @@ class HomePage : AppCompatActivity() {
         val email = intent.getStringExtra("email") //Extracting the email from the intent
         val displayName = intent.getStringExtra("name") //Extracting the name from the intent
 
-        //Setting up the onClickListeners for the different sections of the home page
-        onClick<ConstraintLayout>(R.id.linearLayout_HealthSection) {
-            val goToFoodIntake = Intent(this, FoodIntake::class.java)
-            startActivity(goToFoodIntake)
-        }
+        recyclerView = findViewById(R.id.homepage_recycler)
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        homeadapter = HomepageAdapter(cardDataList)
+        recyclerView.adapter = homeadapter
 
-        onClick<ConstraintLayout>(R.id.linearLayout_PlannerSection) {
-            val goToPlanner = Intent(this, Planner::class.java)
-            startActivity(goToPlanner)
-        }
-
-        onClick<ConstraintLayout>(R.id.linearLayout_FocusSection) {
-            val goToFocus = Intent(this, FocusMode::class.java)
-            startActivity(goToFocus)
-        }
 
         onClick<ShapeableImageView>(R.id.user_image) {
             val goToProgress = Intent(this, ProgressReport::class.java)
