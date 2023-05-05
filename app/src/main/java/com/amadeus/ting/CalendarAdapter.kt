@@ -1,5 +1,4 @@
 package com.amadeus.ting
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,17 +7,40 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
+import android.content.Intent
+import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 
-class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateModel, position: Int) -> Unit) :
+class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateModel, position: Int) -> Unit,
+                      private var dateListener: OnDateClickListener) :
     RecyclerView.Adapter<CalendarAdapter.CalendarViewHolder>() {
     private val list = ArrayList<CalendarDateModel>()
     private lateinit var dbHelper:TaskDatabase
     private lateinit var dialogLayout:View
     private var selectedPosition = -1
 
+    init{
+        this.dateListener = dateListener
+    }
+    //private var taskAdapter:TaskAdapter? = null
+
     val current = LocalDate.now()
-    inner class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bind(calendarDateModel: CalendarDateModel, taskList:List<TaskModel>) {
+
+
+    //Interface extended by the Planner activity
+    interface OnDateClickListener{
+        fun onDateClick(position: Int)
+    }
+    //Inner viewHolder class
+    inner class CalendarViewHolder(view: View, private var dateListener: OnDateClickListener) : RecyclerView.ViewHolder(view){
+        //internal dateListener constructor for the viewholder (crucial step for setting up the onClickListener)
+        init{
+            this.dateListener = dateListener
+        }
+
+
+        fun bind(calendarDateModel: CalendarDateModel) {
+
 
 
             val calendarDay = itemView.findViewById<TextView>(R.id.tv_calendar_day)
@@ -27,14 +49,10 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
             val dateStatus = itemView.findViewById<RecyclerView>(R.id.date_status)
             val curDate = current.dayOfMonth
 
-
-
-
             //Database instance to grab the date and convert it to a usable string
             if(calendarDateModel.calendarDate == curDate.toString()){
                 calendarDateModel.isSelected = true
             }
-
             if (calendarDateModel.isSelected) {
                 calendarDay.setTextColor(
                     ContextCompat.getColor(
@@ -54,7 +72,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                         R.color.red
                     )
                 )
-
+                //taskAdapter?.addList(taskAdapter.taskList)
             }
 
 
@@ -79,7 +97,6 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                 )
             }
 
-
             calendarDay.text = calendarDateModel.calendarDay
             calendarDate.text = calendarDateModel.calendarDate
             cardView.setOnClickListener {
@@ -87,6 +104,10 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
 
                 // invoke the click listener with the clicked model and its position
                 listener.invoke(calendarDateModel, adapterPosition)
+
+                //THIS FUCKING WORKSSSSSSSSSSSSSSSS!!!!
+                dateListener.onDateClick(selectedPosition)
+
 
                 // notify the adapter that the data set has changed
                 notifyDataSetChanged()
@@ -97,18 +118,13 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.row_calendar_date, parent, false)
-        return CalendarViewHolder(view)
+        return CalendarViewHolder(view, dateListener)
     }
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val dbHelper = TaskDatabase(holder.itemView.context)
         val taskList = dbHelper.getAllTasks()
-
-        val filteredTasks = taskList.filter { taskModel ->
-            taskModel.taskDate == list[position].calendarDate
-        }
-
-        holder.bind(list[position], filteredTasks)
+        holder.bind(list[position])
 
         list[position].isSelected = selectedPosition == position
     }
@@ -123,8 +139,6 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         notifyDataSetChanged()
     }
 
-    fun showTasks(){
-        // Shows tasks on selected date
-    }
+
 
 }
