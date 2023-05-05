@@ -84,257 +84,33 @@
 
     </TextView>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="375dp"
-        android:layout_height="1dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="23dp"
-        android:layout_marginBottom="40dp"
-        android:background="?android:attr/listDivider"
-        android:backgroundTint="@color/black"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout_HealthSection"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_Username" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout_HealthSection"
-        android:layout_width="250dp"
-        android:layout_height="120dp"
-        android:background="@drawable/roundborder"
-        android:backgroundTint="@color/cyan"
-        android:color="@color/cyan"
+        android:id="@+id/horizontal_homepage"
+        android:layout_width="400dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.639">
+        app:layout_constraintTop_toBottomOf="@+id/textView_Username">
 
-        <ImageView
-            android:id="@+id/imageView_HealthIcon"
-            android:layout_width="42dp"
-            android:layout_height="40dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="31dp"
-            android:layout_marginBottom="7dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toTopOf="@+id/textView3"
-            app:layout_constraintEnd_toStartOf="@+id/divider2"
-            app:layout_constraintStart_toStartOf="parent"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/homepage_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:orientation="horizontal"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/sectionlogo_health" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginBottom="16dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:gravity="center"
-            android:text="Health &amp; \nWellness"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/divider2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_HealthIcon">
-
-        </TextView>
-
-        <!-- Health Section Divider-->
-        <View
-            android:id="@+id/divider2"
-            android:layout_width="1dp"
-            android:layout_height="90dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginEnd="144dp"
-            android:background="?android:attr/listDivider"
-            android:backgroundTint="#FFFFFF"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView3"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.482" />
-
-        <TextView
-            android:id="@+id/textViewMedicine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="29dp"
-            android:layout_marginEnd="68dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:text="Medicine"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/textViewSleep"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.333"
-            app:layout_constraintStart_toEndOf="@+id/divider2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textViewSleep"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="90dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:text="Sleep"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/textViewFoodIntake"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
-            app:layout_constraintStart_toEndOf="@+id/divider2"
-            app:layout_constraintTop_toBottomOf="@+id/textViewMedicine" />
-
-        <TextView
-            android:id="@+id/textViewFoodIntake"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="54dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:text="Food Intake"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/textViewWaterIntake"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/divider2"
-            app:layout_constraintTop_toBottomOf="@+id/textViewSleep" />
-
-        <TextView
-            android:id="@+id/textViewWaterIntake"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="47dp"
-            android:layout_marginBottom="28dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:text="Water Intake"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/divider2"
-            app:layout_constraintTop_toBottomOf="@+id/textViewFoodIntake" />
-
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/homepage_buttons" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout_PlannerSection"
-        android:layout_width="110dp"
-        android:layout_height="120dp"
-        android:background="@drawable/roundborder"
-        android:backgroundTint="@color/dark_green"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.272"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.864">
-
-
-        <ImageView
-            android:id="@+id/imageView_PlannerIcon"
-            android:layout_width="47dp"
-            android:layout_height="49dp"
-            android:layout_marginStart="31dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="31dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toTopOf="@+id/textView_PlannerSection_Text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/sectionlogo_planer" />
-
-        <TextView
-            android:id="@+id/textView_PlannerSection_Text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:text="Planner"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_PlannerIcon">
-
-        </TextView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout_FocusSection"
-        android:layout_width="110dp"
-        android:layout_height="120dp"
-        android:background="@drawable/roundborder"
-        android:backgroundTint="@color/yellow"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.724"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.864">
-
-        <TextView
-            android:id="@+id/textView_FocusSection_Text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="15dp"
-            android:fontFamily="@font/glacial_indifference_bold"
-            android:text="Focus Mode"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView_FocusIcon">
-
-        </TextView>
-
-        <ImageView
-            android:id="@+id/imageView_FocusIcon"
-            android:layout_width="59dp"
-            android:layout_height="52dp"
-            android:layout_marginStart="26dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginEnd="25dp"
-            android:layout_weight="1"
-            app:layout_constraintBottom_toTopOf="@+id/textView_FocusSection_Text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/sectionlogo_focus" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
