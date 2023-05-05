@@ -30,13 +30,7 @@
 
         <activity
             android:name=".RegLogin"
-            android:exported="true">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:exported="false">
 
         </activity>
 
@@ -54,7 +48,14 @@
 
         <activity
             android:name=".Planner"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
 
         <activity
             android:name=".ProgressReport"
