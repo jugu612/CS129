@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -18,7 +19,7 @@ import java.util.*
 import java.time.LocalDate
 
 
-class Planner : AppCompatActivity(){
+class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
 
     // Initializing horizontal calendar
     private lateinit var binding: ActivityPlannerBinding
@@ -26,12 +27,13 @@ class Planner : AppCompatActivity(){
     private val cal = Calendar.getInstance(Locale.ENGLISH)
     private val currentDate = Calendar.getInstance(Locale.ENGLISH)
     private val dates = ArrayList<Date>()
-    private lateinit var adapter: CalendarAdapter
+    private lateinit var calendarAdapter: CalendarAdapter
     private val calendarList2 = ArrayList<CalendarDateModel>()
     private lateinit var recyclerView: RecyclerView
     private var taskadapter: TaskAdapter? = null
     private lateinit var tskList: List<TaskModel>
     private var sortedTaskList: List<TaskModel> = emptyList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +69,7 @@ class Planner : AppCompatActivity(){
         }
 
         // Add the task list to the adapter
-        taskadapter?.addList(tskList)
+        taskadapter?.addList(tskList,calendarList2)
 
 
         // Label -> Myka
@@ -109,6 +111,7 @@ class Planner : AppCompatActivity(){
             startActivity(goToHomePage)
         }
 
+
     }
 
 
@@ -149,16 +152,16 @@ class Planner : AppCompatActivity(){
 
 
 
-        adapter = CalendarAdapter { calendarDateModel: CalendarDateModel, position ->
+        calendarAdapter = CalendarAdapter({ calendarDateModel: CalendarDateModel, position ->
             calendarList2.forEachIndexed { index, calendarModel ->
                 calendarModel.isSelected = index == position
             }
-            adapter.setData(calendarList2)
-        }
-        binding.calendarRecycler.adapter = adapter
+            calendarAdapter.setData(calendarList2)
+        }, this)
+
+        binding.calendarRecycler.adapter = calendarAdapter
         binding.calendarRecycler.scrollToPosition(defPos)
         // Line below requires debugging, need to check why it doesn't function
-        binding.calendarRecycler.findViewHolderForAdapterPosition(defPos+2)?.itemView?.performClick()
     }
 
 
@@ -176,7 +179,8 @@ class Planner : AppCompatActivity(){
         }
         calendarList2.clear()
         calendarList2.addAll(calendarList)
-        adapter.setData(calendarList)
+        calendarAdapter.setData(calendarList)
+        taskadapter?.addList(tskList,calendarList2)
     }
 
 
@@ -185,5 +189,19 @@ class Planner : AppCompatActivity(){
             action(it as T)
         }
     }
+
+    //Method called by the adapter to display the tasks for each date
+    override fun onDateClick(position: Int) {
+        if(position%2 == 0){
+            taskadapter?.addList(tskList, calendarList2)
+        }
+        else{
+            taskadapter?.addList(tskList)
+        }
+
+    }
+
+
+
 
 }
