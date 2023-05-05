@@ -85,7 +85,6 @@ class FoodIntake : AppCompatActivity() {
             resetList()
             Toast.makeText(this, "Reset My Day Clicked!", Toast.LENGTH_SHORT).show()
         }
-        // test
 
     }
 
