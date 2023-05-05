@@ -9,17 +9,38 @@ import android.app.AlertDialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.widget.*
-
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     private val dbHelper = TaskDatabase(context)
-    private var taskList: List<TaskModel> = ArrayList()
+    public var taskList: List<TaskModel> = ArrayList()
     private var onClickItem: ((TaskModel) ->Unit)?=null
+    private var selectedDate: String? = null
 
-    fun addList(lists: List<TaskModel>){
-        this.taskList = lists
-        notifyDataSetChanged()
+    //Added some placeholder logic; other functions using this will be affected for the time being
+    fun addList(lists: List<TaskModel>, calendarDatelist: List<CalendarDateModel>?=null) {
+        //List of CalendarDateModels should be non-nullable once date substrings can be extracted
+        if(calendarDatelist != null){
+            val currentDate = Calendar.getInstance().time
+            val dateFormatter = SimpleDateFormat("M/d/YYYY", Locale.getDefault())
+            val formattedDate = dateFormatter.format(currentDate)
+            val filteredDatelist = lists.filter {it.taskDate.substringBefore("\\\\s") == formattedDate}
+            val filteredList = lists.filter {it.taskTitle == "Go Home"}
+            this.taskList = filteredList
+            notifyDataSetChanged()
+        }
+        else {
+            val currentDate = Calendar.getInstance().time
+            val dateFormatter = SimpleDateFormat("MM/dd/YYYY", Locale.getDefault())
+            val formattedDate = dateFormatter.format(currentDate)
+            val filteredList = lists.filter { it.taskTitle == "Test" }
+            this.taskList = filteredList
+            notifyDataSetChanged()
+        }
     }
 
     fun clearList() {
