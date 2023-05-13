@@ -21,18 +21,22 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
     private var onClickItem: ((TaskModel) ->Unit)?=null
     private var selectedDate: String? = null
 
-    //Added some placeholder logic; other functions using this will be affected for the time being
+    //Takes the date attribute from the current calendarDateModel and performs a filter on the list of tasks
     fun addList(lists: List<TaskModel>, calendarDateModel: CalendarDateModel?=null) {
-        //List of CalendarDateModels should be non-nullable once date substrings can be extracted
+        //Clicking on a date in the horizontal calendar filters the tasks by the selected date
         if(calendarDateModel != null){
             val filteredList = lists.filter {it.taskDate.substringBefore("  |") == calendarDateModel.calendarDatefull}
             this.taskList = filteredList
-            notifyDataSetChanged()
         }
+        //Selects tasks from the current date by default on launch
         else{
-            this.taskList = lists
-            notifyDataSetChanged()
+            val currentDate = Calendar.getInstance().time
+            val dateFormatter = SimpleDateFormat("M/d/YYYY", Locale.getDefault())
+            val formattedDate = dateFormatter.format(currentDate)
+            val filteredDatelist = lists.filter {it.taskDate.substringBefore("  |") == formattedDate}
+            this.taskList = filteredDatelist
         }
+        notifyDataSetChanged()
     }
 
     fun clearList() {
