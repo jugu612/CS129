@@ -22,23 +22,15 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
     private var selectedDate: String? = null
 
     //Added some placeholder logic; other functions using this will be affected for the time being
-    fun addList(lists: List<TaskModel>, calendarDatelist: List<CalendarDateModel>?=null) {
+    fun addList(lists: List<TaskModel>, calendarDateModel: CalendarDateModel?=null) {
         //List of CalendarDateModels should be non-nullable once date substrings can be extracted
-        if(calendarDatelist != null){
-            val currentDate = Calendar.getInstance().time
-            val dateFormatter = SimpleDateFormat("M/d/YYYY", Locale.getDefault())
-            val formattedDate = dateFormatter.format(currentDate)
-            val filteredDatelist = lists.filter {it.taskDate.substringBefore("\\\\s") == formattedDate}
-            val filteredList = lists.filter {it.taskTitle == "Go Home"}
+        if(calendarDateModel != null){
+            val filteredList = lists.filter {it.taskDate.substringBefore("  |") == calendarDateModel.calendarDatefull}
             this.taskList = filteredList
             notifyDataSetChanged()
         }
-        else {
-            val currentDate = Calendar.getInstance().time
-            val dateFormatter = SimpleDateFormat("MM/dd/YYYY", Locale.getDefault())
-            val formattedDate = dateFormatter.format(currentDate)
-            val filteredList = lists.filter { it.taskTitle == "Test" }
-            this.taskList = filteredList
+        else{
+            this.taskList = lists
             notifyDataSetChanged()
         }
     }

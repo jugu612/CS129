@@ -69,7 +69,7 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         }
 
         // Add the task list to the adapter
-        taskadapter?.addList(tskList,calendarList2)
+        taskadapter?.addList(tskList)
 
 
         // Label -> Myka
@@ -180,7 +180,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         calendarList2.clear()
         calendarList2.addAll(calendarList)
         calendarAdapter.setData(calendarList)
-        taskadapter?.addList(tskList,calendarList2)
     }
 
 
@@ -192,12 +191,9 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
 
     //Method called by the adapter to display the tasks for each date
     override fun onDateClick(position: Int) {
-        if(position%2 == 0){
-            taskadapter?.addList(tskList, calendarList2)
-        }
-        else{
-            taskadapter?.addList(tskList)
-        }
+        //Add the date here
+        val dateModel = calendarAdapter.getItem(position)
+        taskadapter?.addList(tskList, dateModel)
 
     }
 
