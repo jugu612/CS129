@@ -1,5 +1,6 @@
 package com.amadeus.ting
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -12,6 +13,14 @@ import android.widget.ArrayAdapter
 
 class FoodIntakeInput : AppCompatActivity() {
 
+    // store the user's choice in this variables
+    var mealsPerDay: Int = 3
+
+    var eatingIntervalHours: Int = 120
+    var eatingIntervalMinutes: Int = 0
+
+    var firstReminderHours: Int = 0
+    var firstReminderMinutes: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.edit_food_intake)
@@ -78,6 +87,7 @@ class FoodIntakeInput : AppCompatActivity() {
 
 
 
+    @SuppressLint("ClickableViewAccessibility", "UseCompatLoadingForDrawables")
     fun setupFoodSelectionSpinner(activity: Activity, spinnerId: Int, spinnerOptions: Array<out Any>) {
         val mealOption = activity.findViewById<Spinner>(spinnerId)
         val adapterMF = ArrayAdapter(
@@ -97,7 +107,7 @@ class FoodIntakeInput : AppCompatActivity() {
             false
         }
 
-        mealOption.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        mealOption.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedPosition = parent.selectedItemPosition
                 if (selectedPosition == position) {
@@ -110,7 +120,7 @@ class FoodIntakeInput : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {
                 mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_up)
             }
-        })
+        }
     }
 
 

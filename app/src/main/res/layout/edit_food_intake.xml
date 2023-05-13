@@ -159,7 +159,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintVertical_bias="1.0"
             app:layout_constraintTop_toBottomOf="@+id/meals_per_day_text"
-            app:layout_constraintStart_toStartOf="@+id/eating_intervals_text"/>
+            app:layout_constraintStart_toStartOf="@+id/eating_intervals_text" />
 
         <TextView
             android:id="@+id/eating_intervals_text"
@@ -218,7 +218,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintVertical_bias="1.0"
             app:layout_constraintTop_toBottomOf="@+id/meal_hour_text"
-            app:layout_constraintStart_toStartOf="@+id/eating_intervals_text"/>
+            app:layout_constraintStart_toStartOf="@+id/eating_intervals_text" />
 
 
         <com.google.android.material.imageview.ShapeableImageView
