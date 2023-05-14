@@ -139,6 +139,8 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         notifyDataSetChanged()
     }
 
-
+    fun getItem(position: Int): CalendarDateModel{
+        return list[position]
+    }
 
 }

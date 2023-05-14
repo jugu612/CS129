@@ -21,26 +21,22 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
     private var onClickItem: ((TaskModel) ->Unit)?=null
     private var selectedDate: String? = null
 
-    //Added some placeholder logic; other functions using this will be affected for the time being
-    fun addList(lists: List<TaskModel>, calendarDatelist: List<CalendarDateModel>?=null) {
-        //List of CalendarDateModels should be non-nullable once date substrings can be extracted
-        if(calendarDatelist != null){
+    //Takes the date attribute from the current calendarDateModel and performs a filter on the list of tasks
+    fun addList(lists: List<TaskModel>, calendarDateModel: CalendarDateModel?=null) {
+        //Clicking on a date in the horizontal calendar filters the tasks by the selected date
+        if(calendarDateModel != null){
+            val filteredList = lists.filter {it.taskDate.substringBefore("  |") == calendarDateModel.calendarDatefull}
+            this.taskList = filteredList
+        }
+        //Selects tasks from the current date by default on launch
+        else{
             val currentDate = Calendar.getInstance().time
             val dateFormatter = SimpleDateFormat("M/d/YYYY", Locale.getDefault())
             val formattedDate = dateFormatter.format(currentDate)
-            val filteredDatelist = lists.filter {it.taskDate.substringBefore("\\\\s") == formattedDate}
-            val filteredList = lists.filter {it.taskTitle == "Go Home"}
-            this.taskList = filteredList
-            notifyDataSetChanged()
+            val filteredDatelist = lists.filter {it.taskDate.substringBefore("  |") == formattedDate}
+            this.taskList = filteredDatelist
         }
-        else {
-            val currentDate = Calendar.getInstance().time
-            val dateFormatter = SimpleDateFormat("MM/dd/YYYY", Locale.getDefault())
-            val formattedDate = dateFormatter.format(currentDate)
-            val filteredList = lists.filter { it.taskTitle == "Test" }
-            this.taskList = filteredList
-            notifyDataSetChanged()
-        }
+        notifyDataSetChanged()
     }
 
     fun clearList() {
