@@ -30,11 +30,7 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
         }
         //Selects tasks from the current date by default on launch
         else{
-            val currentDate = Calendar.getInstance().time
-            val dateFormatter = SimpleDateFormat("M/d/YYYY", Locale.getDefault())
-            val formattedDate = dateFormatter.format(currentDate)
-            val filteredDatelist = lists.filter {it.taskDate.substringBefore("  |") == formattedDate}
-            this.taskList = filteredDatelist
+            this.taskList = lists
         }
         notifyDataSetChanged()
     }
