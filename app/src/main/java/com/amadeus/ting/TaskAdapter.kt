@@ -28,7 +28,7 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
             val filteredList = lists.filter {it.taskDate.substringBefore("  |") == calendarDateModel.calendarDatefull}
             this.taskList = filteredList
         }
-        //Selects tasks from the current date by default on launch
+        //Shows all tasks by default
         else{
             this.taskList = lists
         }
