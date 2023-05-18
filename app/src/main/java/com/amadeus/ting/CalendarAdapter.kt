@@ -125,7 +125,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         if(context is Planner){
             color = "Red"
         }
-        else if(context is HealthAndWellness){
+        else if(context is FoodIntake){
             color = "Blue"
         }
         if (color != null) {

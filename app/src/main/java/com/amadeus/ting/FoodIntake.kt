@@ -9,10 +9,30 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
+import com.amadeus.ting.databinding.ActivityFoodIntakeBinding
+import com.amadeus.ting.databinding.ActivityPlannerBinding
 import com.google.android.material.imageview.ShapeableImageView
+import java.time.LocalDate
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
-class FoodIntake : AppCompatActivity() {
+class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
+    // Initializing horizontal calendar
+    private lateinit var binding: ActivityFoodIntakeBinding
+    private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
+    private val cal = Calendar.getInstance(Locale.ENGLISH)
+    private val currentDate = Calendar.getInstance(Locale.ENGLISH)
+    private val dates = java.util.ArrayList<Date>()
+    private lateinit var calendarAdapter: CalendarAdapter
+    private val calendarList2 = java.util.ArrayList<CalendarDateModel>()
+    private lateinit var recyclerView: RecyclerView
+    private var taskadapter: TaskAdapter? = null
+    private lateinit var tskList: List<TaskModel>
+    private var sortedTaskList: List<TaskModel> = emptyList()
 
     companion object {
         const val PREFS_NAME = "FoodIntakePrefFile"  // created a SharedReferences file that can store the data even if the file is exited
@@ -55,6 +75,11 @@ class FoodIntake : AppCompatActivity() {
         // Reads the values from SharedPreferences
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
         buttonToBeClicked = prefs.getInt(BUTTON_TO_BE_CLICKED_KEY, 1)
+        binding = ActivityFoodIntakeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setUpAdapter()
+        setUpClickListener()
+        setUpCalendar()
 
         // Initializes the Recycler View
         newRecyclerView = findViewById(R.id.eating_time_rv)
@@ -146,6 +171,69 @@ class FoodIntake : AppCompatActivity() {
         timeToEatColons[i - 1] = prefs.getString("timeToEatColon_${i - 1}", "").toString()
         timeToEatMinutes[i - 1] = prefs.getInt("timeToEatMinute_${i - 1}", 0)
         timeToEatMeridiem[i - 1] = prefs.getString("timeToEatMeridiem_${i - 1}", "").toString()
+    }
+    //Setting up the calendar adapter
+    private fun setUpClickListener() {
+        binding.ivCalendarNext.setOnClickListener {
+            cal.add(Calendar.MONTH, 1)
+            setUpCalendar()
+        }
+        binding.ivCalendarPrevious.setOnClickListener {
+            cal.add(Calendar.MONTH, -1)
+            if (cal == currentDate)
+                setUpCalendar()
+            else
+                setUpCalendar()
+        }
+    }
+    private fun setUpAdapter() {
+        //For positioning the recyclerview
+        val curDate = LocalDate.now()
+        val defPos = curDate.dayOfMonth-3
+
+        // Horizontal spacing for each date in the calendar
+        val dateSpacing = resources.getDimensionPixelSize(R.dimen.single_calendar_margin)
+        binding.calendarRecycler.addItemDecoration(HorizontalItemDecoration(dateSpacing))
+
+        // Center snap for scrolling
+        val snapHelper: SnapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(binding.calendarRecycler)
+
+
+
+        calendarAdapter = CalendarAdapter({ calendarDateModel: CalendarDateModel, position ->
+            calendarList2.forEachIndexed { index, calendarModel ->
+                calendarModel.isSelected = index == position
+            }
+            calendarAdapter.setData(calendarList2)
+        }, this)
+
+        binding.calendarRecycler.adapter = calendarAdapter
+        binding.calendarRecycler.scrollToPosition(defPos)
+        // Line below requires debugging, need to check why it doesn't function
+    }
+    private fun setUpCalendar() {
+        val calendarList = java.util.ArrayList<CalendarDateModel>()
+        binding.tvDateMonth.text = sdf.format(cal.time)
+        val monthCalendar = cal.clone() as Calendar
+        val maxDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+        dates.clear()
+        monthCalendar.set(Calendar.DAY_OF_MONTH, 1)
+        while (dates.size < maxDaysInMonth) {
+            dates.add(monthCalendar.time)
+            calendarList.add(CalendarDateModel(monthCalendar.time))
+            monthCalendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+        calendarList2.clear()
+        calendarList2.addAll(calendarList)
+        calendarAdapter.setData(calendarList)
+    }
+
+    override fun onDateClick(position: Int) {
+        //Add the date here
+        val dateModel = calendarAdapter.getItem(position)
+        taskadapter?.addList(tskList, dateModel)
+
     }
 
 }
