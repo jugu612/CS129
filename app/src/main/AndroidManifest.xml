@@ -68,6 +68,9 @@
         <activity
             android:name=".FoodIntakeInput"
             android:exported="false"/>
+        <activity
+            android:name=".SleepSection"
+            android:exported="false" />
 
     </application>
 
