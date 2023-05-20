@@ -35,15 +35,17 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     private var sortedTaskList: List<TaskModel> = emptyList()
 
     companion object {
+
         const val PREFS_NAME = "FoodIntakePrefFile"  // created a SharedReferences file that can store the data even if the file is exited
         const val BUTTON_TO_BE_CLICKED_KEY = "buttonToBeClicked"
 
-        var eatingIntervalHours: Int = 3
-        var eatingIntervalMinutes: Int = 40
+        var eatingIntervalHours: Int = 1
+        var eatingIntervalMinutes: Int = 0
 
         lateinit var foodScheduleList : ArrayList<FoodIntakeInfo>
 
         var buttonToBeClicked = 1
+
     }
 
     private lateinit var newRecyclerView : RecyclerView
