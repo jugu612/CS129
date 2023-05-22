@@ -16,7 +16,7 @@ import kotlin.collections.ArrayList
 
 
 class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
-    private val dbHelper = TaskDatabase(context)
+    private val dbHelper = TingDatabase(context)
     public var taskList: List<TaskModel> = ArrayList()
     private var onClickItem: ((TaskModel) ->Unit)?=null
     private var selectedDate: String? = null

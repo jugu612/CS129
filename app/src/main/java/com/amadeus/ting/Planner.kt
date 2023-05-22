@@ -39,7 +39,7 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         setContentView(R.layout.activity_planner)
         binding = ActivityPlannerBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val dbHelper = TaskDatabase(applicationContext)
+        val dbHelper = TingDatabase(applicationContext)
         setUpAdapter()
         setUpClickListener()
         setUpCalendar()

@@ -12,62 +12,79 @@ data class TaskModel(
     var taskTitle: String,
     var taskDetails: String,
     var taskDate: String,
-    var taskLabel: String
+    var taskLabel: String,
 )
 
-// Define a SQLite helper class to manage the database containing the tasks
-class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+data class SleepReminderModel(
+    var sleepReminderId: Int,
+    var sleepDate: String,
+    var sleepTime: String,
+    var wakeTime: String,
+    var sleepHours: Int
+)
 
-    // Define constants for the database and table names, as well as the column names
+
+// Define a SQLite helper class to manage the database containing the tasks
+class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+
     companion object {
         private const val DATABASE_NAME = "tasks.db"
         private const val DATABASE_VERSION = 1
 
-        private const val TABLE_NAME = "tasks"
+        private const val TABLE_TASKS = "tasks"
+        private const val TABLE_SLEEP_REMINDERS = "sleep_reminders"
+
+        // Columns for the tasks table
         private const val COLUMN_TASKID = "taskid"
         private const val COLUMN_TASKNAME = "taskname"
         private const val COLUMN_TASKDETAILS = "taskdetails"
         private const val COLUMN_DEADLINE = "deadline"
         private const val COLUMN_LABEL = "label"
-    }
 
+        // Columns for the sleep reminders table
+        private const val COLUMN_SLEEP_REMINDER_ID = "sleepreminderid"
+        private const val COLUMN_SLEEP_DATE = "sleepdate"
+        private const val COLUMN_SLEEP_TIME = "sleeptime"
+        private const val COLUMN_WAKE_TIME = "waketime"
+        private const val COLUMN_SLEEP_HOURS = "sleephours"
+    }
     // Called when the database is created for the first time
+
     override fun onCreate(db: SQLiteDatabase?) {
+        // Create the tasks table
+        val createTasksTable =
+            "CREATE TABLE $TABLE_TASKS ($COLUMN_TASKID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_TASKNAME TEXT, $COLUMN_TASKDETAILS TEXT, $COLUMN_DEADLINE DATE, $COLUMN_LABEL TEXT)"
+        db?.execSQL(createTasksTable)
 
-        // Define a SQL statement to create the tasks table
-        val createTable =
-            "CREATE TABLE $TABLE_NAME ($COLUMN_TASKID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_TASKNAME TEXT, $COLUMN_TASKDETAILS TEXT, $COLUMN_DEADLINE DATE, $COLUMN_LABEL TEXT)"
-
-        // Execute the SQL statement to create the tasks table
-        db?.execSQL(createTable)
+        // Create the sleep reminders table
+        val createSleepRemindersTable =
+            "CREATE TABLE $TABLE_SLEEP_REMINDERS ($COLUMN_SLEEP_REMINDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_SLEEP_DATE TEXT, $COLUMN_SLEEP_TIME TEXT, $COLUMN_WAKE_TIME TEXT, $COLUMN_SLEEP_HOURS INTEGER)"
+        db?.execSQL(createSleepRemindersTable)
     }
 
+
+    // Called when the database needs to be upgraded
     // Called when the database needs to be upgraded
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         // Define a SQL statement to drop the tasks table if it exists
-        db?.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_TASKS")
         // Call onCreate() to create a new tasks table
         onCreate(db)
     }
 
+
     // Insert a new task into the database
-    fun addTask(task: TaskModel){
-        // Get a writable database instance
+    fun addTask(task: TaskModel) {
         val db = this.writableDatabase
-        // Create a ContentValues object to store the task data
         val values = ContentValues().apply {
             put(COLUMN_TASKNAME, task.taskTitle)
             put(COLUMN_TASKDETAILS, task.taskDetails)
             put(COLUMN_DEADLINE, task.taskDate)
             put(COLUMN_LABEL, task.taskLabel)
         }
-        // Insert the task data into the database
-        db.insert(TABLE_NAME, null, values)
-        // Close the database connection
+        db.insert(TABLE_TASKS, null, values)
         db.close()
-
     }
-
 
     fun getAllTasks(queryType: Int = -1, arrowState: Int = -1, labelToGet: String = ""): List<TaskModel> {
         val order = if (arrowState == 1) "ASC" else if (arrowState == 0) "DESC" else ""
@@ -75,10 +92,10 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         val tasks = mutableListOf<TaskModel>()
 
         val query = when (queryType) {
-            1 -> "SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order"
-            2 -> "SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_DEADLINE $order"
-            3 -> "SELECT * FROM $TABLE_NAME WHERE $COLUMN_LABEL=$labelToGet"
-            else -> "SELECT * FROM $TABLE_NAME"
+            1 -> "SELECT * FROM $TABLE_TASKS ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order"
+            2 -> "SELECT * FROM $TABLE_TASKS ORDER BY $COLUMN_DEADLINE $order"
+            3 -> "SELECT * FROM $TABLE_TASKS WHERE $COLUMN_LABEL=$labelToGet"
+            else -> "SELECT * FROM $TABLE_TASKS"
         }
 
         val cursor: Cursor? = db.rawQuery(query, null)
@@ -118,7 +135,7 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             put(COLUMN_LABEL, task.taskLabel)
         }
         // Update the database with the new values for the specified task ID
-        db.update(TABLE_NAME, values, "$COLUMN_TASKID=?", arrayOf(task.taskId.toString()))
+        db.update(TABLE_TASKS, values, "$COLUMN_TASKID=?", arrayOf(task.taskId.toString()))
         // Close the database connection
         db.close()
     }
@@ -127,7 +144,7 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         // Get a reference to the database
         val db = this.writableDatabase
         // Delete the task with the specified ID from the database
-        db.delete(TABLE_NAME, "$COLUMN_TASKID=?", arrayOf(task.taskId.toString()))
+        db.delete(TABLE_TASKS, "$COLUMN_TASKID=?", arrayOf(task.taskId.toString()))
         // Close the database connection
         db.close()
     }
@@ -148,7 +165,8 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
                 cursor.getColumnIndex(COLUMN_TASKNAME),
                 cursor.getColumnIndex(COLUMN_TASKDETAILS),
                 cursor.getColumnIndex(COLUMN_DEADLINE),
-                cursor.getColumnIndex(COLUMN_LABEL)
+                cursor.getColumnIndex(COLUMN_LABEL),
+
             )
 
             // loop through each row in the cursor and create a task object for each one
@@ -174,22 +192,22 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
     fun getAllTasksSortedAlphabetically(arrowState: Int): List<TaskModel> {
         val order = if (arrowState == 1) "ASC" else if (arrowState == 0) "DESC" else ""
-        return getTasks("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order", emptyArray())
+        return getTasks("SELECT * FROM $TABLE_TASKS ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order", emptyArray())
     }
 
     // TODO LABEL SORT
     fun getTasksByLabel(labelToGet: String): Cursor {
         val db = writableDatabase
-        return db.rawQuery("SELECT * FROM $TABLE_NAME WHERE $COLUMN_LABEL=?", arrayOf(labelToGet))
+        return db.rawQuery("SELECT * FROM $TABLE_TASKS WHERE $COLUMN_LABEL=?", arrayOf(labelToGet))
     }
 
     fun sortByDeadline(arrowState: Int): List<TaskModel> {
         val order = if (arrowState == 1) "ASC" else if (arrowState == 0) "DESC" else ""
-        return getTasks("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_DEADLINE $order", emptyArray())
+        return getTasks("SELECT * FROM $TABLE_TASKS ORDER BY $COLUMN_DEADLINE $order", emptyArray())
     }
 
     fun sortByTaskID() : List<TaskModel> {
-        val query = "SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_TASKID ASC"
+        val query = "SELECT * FROM $TABLE_TASKS ORDER BY $COLUMN_TASKID ASC"
         return getTasks(query, emptyArray())
     }
 
@@ -198,7 +216,53 @@ class TaskDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
     }
 
     fun getTableName(): String {
-        return TABLE_NAME
+        return TABLE_TASKS
     }
+
+    //SleepReminderDatabase"
+
+    fun addSleepReminder(sleepReminder: SleepReminderModel) {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_SLEEP_DATE, sleepReminder.sleepDate)
+            put(COLUMN_SLEEP_TIME, sleepReminder.sleepTime)
+            put(COLUMN_WAKE_TIME, sleepReminder.wakeTime)
+            put(COLUMN_SLEEP_HOURS, sleepReminder.sleepHours)
+        }
+        db.insert(TABLE_SLEEP_REMINDERS, null, values)
+        db.close()
+    }
+
+    fun getAllSleepReminders(): List<SleepReminderModel> {
+        val db = this.readableDatabase
+        val sleepReminders = mutableListOf<SleepReminderModel>()
+
+        val query = "SELECT * FROM $TABLE_SLEEP_REMINDERS"
+        val cursor: Cursor? = db.rawQuery(query, null)
+
+        if (cursor != null && cursor.moveToFirst()) {
+            val sleepReminderIdIndex = cursor.getColumnIndex(COLUMN_SLEEP_REMINDER_ID)
+            val sleepDateIndex = cursor.getColumnIndex(COLUMN_SLEEP_DATE)
+            val sleepTimeIndex = cursor.getColumnIndex(COLUMN_SLEEP_TIME)
+            val wakeTimeIndex = cursor.getColumnIndex(COLUMN_WAKE_TIME)
+            val sleepHoursIndex = cursor.getColumnIndex(COLUMN_SLEEP_HOURS)
+
+            do {
+                val sleepReminderId = cursor.getInt(sleepReminderIdIndex)
+                val sleepDate = cursor.getString(sleepDateIndex)
+                val sleepTime = cursor.getString(sleepTimeIndex)
+                val wakeTime = cursor.getString(wakeTimeIndex)
+                val sleepHours = cursor.getInt(sleepHoursIndex)
+
+                val sleepReminder = SleepReminderModel(sleepReminderId, sleepDate, sleepTime, wakeTime, sleepHours)
+                sleepReminders.add(sleepReminder)
+            } while (cursor.moveToNext())
+        }
+
+        cursor?.close()
+        db.close()
+        return sleepReminders
+    }
+
 
 }

@@ -236,10 +236,6 @@ class FoodIntakeInput : AppCompatActivity() {
         }
     }
 
-
-
-
-
     private inline fun <reified T : View> Activity.onClick(id: Int, crossinline action: (T) -> Unit) {
         findViewById<T>(id)?.setOnClickListener {
             action(it as T)
