@@ -16,7 +16,6 @@ data class TaskModel(
 )
 
 data class SleepReminderModel(
-    var sleepReminderId: Int,
     var sleepDate: String,
     var sleepTime: String,
     var wakeTime: String,
@@ -42,7 +41,6 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val COLUMN_LABEL = "label"
 
         // Columns for the sleep reminders table
-        private const val COLUMN_SLEEP_REMINDER_ID = "sleepreminderid"
         private const val COLUMN_SLEEP_DATE = "sleepdate"
         private const val COLUMN_SLEEP_TIME = "sleeptime"
         private const val COLUMN_WAKE_TIME = "waketime"
@@ -58,7 +56,7 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
         // Create the sleep reminders table
         val createSleepRemindersTable =
-            "CREATE TABLE $TABLE_SLEEP_REMINDERS ($COLUMN_SLEEP_REMINDER_ID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_SLEEP_DATE TEXT, $COLUMN_SLEEP_TIME TEXT, $COLUMN_WAKE_TIME TEXT, $COLUMN_SLEEP_HOURS INTEGER)"
+            "CREATE TABLE $TABLE_SLEEP_REMINDERS ($COLUMN_SLEEP_DATE TEXT, $COLUMN_SLEEP_TIME TEXT, $COLUMN_WAKE_TIME TEXT, $COLUMN_SLEEP_HOURS INTEGER)"
         db?.execSQL(createSleepRemindersTable)
     }
 
@@ -241,20 +239,18 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         val cursor: Cursor? = db.rawQuery(query, null)
 
         if (cursor != null && cursor.moveToFirst()) {
-            val sleepReminderIdIndex = cursor.getColumnIndex(COLUMN_SLEEP_REMINDER_ID)
             val sleepDateIndex = cursor.getColumnIndex(COLUMN_SLEEP_DATE)
             val sleepTimeIndex = cursor.getColumnIndex(COLUMN_SLEEP_TIME)
             val wakeTimeIndex = cursor.getColumnIndex(COLUMN_WAKE_TIME)
             val sleepHoursIndex = cursor.getColumnIndex(COLUMN_SLEEP_HOURS)
 
             do {
-                val sleepReminderId = cursor.getInt(sleepReminderIdIndex)
                 val sleepDate = cursor.getString(sleepDateIndex)
                 val sleepTime = cursor.getString(sleepTimeIndex)
                 val wakeTime = cursor.getString(wakeTimeIndex)
                 val sleepHours = cursor.getInt(sleepHoursIndex)
 
-                val sleepReminder = SleepReminderModel(sleepReminderId, sleepDate, sleepTime, wakeTime, sleepHours)
+                val sleepReminder = SleepReminderModel(sleepDate, sleepTime, wakeTime, sleepHours)
                 sleepReminders.add(sleepReminder)
             } while (cursor.moveToNext())
         }

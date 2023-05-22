@@ -16,8 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 
 class SleepSection : AppCompatActivity() {
-    private lateinit var sleepadapter: SleepAdapter
-    private lateinit var recyclerView: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sleep)
