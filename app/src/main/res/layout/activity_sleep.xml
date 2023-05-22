@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/sleepLayout"
+    android:background="#f9f9f9"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SleepSection">
@@ -62,29 +63,6 @@
     </LinearLayout>
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/list_sleep"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout_Header">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/sleepwake_time"
-            android:layout_width="380dp"
-            android:layout_height="340dp"
-            android:layout_marginEnd="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/view_sleep" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout_buttons"
@@ -92,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="140dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -113,10 +91,186 @@
         </com.google.android.material.imageview.ShapeableImageView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/sleep_item"
+        android:layout_width="360dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="80dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout_Header">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/upper_half"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/cyan"
+                    app:cardElevation="8dp"/>
+
+                <TextView
+                    android:id="@+id/sleep_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/glacial_indifference_bold"
+                    android:gravity="center"
+                    android:text="Sleeping Time"
+                    android:textColor="@color/white"
+                    android:textSize="24dp" />
+
+                <View
+                    android:id="@+id/lower_half"
+                    android:layout_width="match_parent"
+                    android:padding="20dp"
+                    android:layout_height="100dp"
+                    android:layout_below="@id/upper_half"
+                    android:background="@color/white" />
+
+                <TextView
+                    android:id="@+id/sleep_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/upper_half"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/glacial_indifference_bold"
+                    android:gravity="center"
+                    android:text="Time"
+                    android:textColor="@color/cblue"
+                    android:textSize="30sp" />
+
+                <TextView
+                    android:id="@+id/sleep_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/sleep_time"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/glacial_indifference_bold"
+                    android:gravity="center"
+                    android:text="Ring in hrs and mins"
+                    android:textColor="@color/cblue"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/edit_sleep_time"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="right|bottom"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="20dp"
+                    android:backgroundTint="@color/white"
+                    android:background="@drawable/edit_time" />
+            </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/wakeup_item"
+        android:layout_width="360dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="24dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sleep_item">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <View
+                android:id="@+id/wupper_half"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/cyan"
+                app:cardElevation="8dp"/>
+
+            <TextView
+                android:id="@+id/wakeup_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/glacial_indifference_bold"
+                android:gravity="center"
+                android:text="Wake-up Time"
+                android:textColor="@color/white"
+                android:textSize="24dp" />
+
+            <View
+                android:id="@+id/wlower_half"
+                android:layout_width="match_parent"
+                android:padding="20dp"
+                android:layout_height="100dp"
+                android:layout_below="@id/wupper_half"
+                android:background="@color/white" />
+
+            <TextView
+                android:id="@+id/wakeup_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/wupper_half"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="10dp"
+                android:fontFamily="@font/glacial_indifference_bold"
+                android:gravity="center"
+                android:text="Time"
+                android:textColor="@color/cblue"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/wakeup_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/wakeup_time"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/glacial_indifference_bold"
+                android:gravity="center"
+                android:text="Ring in hrs and mins"
+                android:textColor="@color/cblue"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/edit_wakeup_time"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="right|bottom"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:backgroundTint="@color/white"
+                android:background="@drawable/edit_time" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
     <TextView
         android:id="@+id/sleeptime_left"
-        android:layout_width="380dp"
+        android:layout_width="360dp"
         android:layout_height="60dp"
+        android:layout_marginTop="24dp"
         android:background="@drawable/roundborder"
         android:backgroundTint="@color/cyan"
         android:text="9 hrs Sleeping Time"
@@ -126,7 +280,7 @@
         android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list_sleep" />
+        app:layout_constraintTop_toBottomOf="@+id/wakeup_item" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

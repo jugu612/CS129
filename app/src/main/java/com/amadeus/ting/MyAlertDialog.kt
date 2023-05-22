@@ -14,7 +14,7 @@ class MyAlertDialog {
 
     private var taskadapter: TaskAdapter? = null
 
-    private lateinit var dbHelper: TaskDatabase
+    private lateinit var dbHelper: TingDatabase
     private lateinit var dialogLayout: View
     private lateinit var nestedDialogLayout: View
 
@@ -39,7 +39,7 @@ class MyAlertDialog {
         }
 
         if (create != -1){
-            dbHelper = TaskDatabase(context)
+            dbHelper = TingDatabase(context)
             val editTitle = dialogLayout.findViewById<EditText>(R.id.edit_title)
             val editDetails = dialogLayout.findViewById<EditText>(R.id.edit_details)
             val dateButton = dialogLayout.findViewById<Button>(R.id.dateButton)
@@ -108,7 +108,7 @@ class MyAlertDialog {
      */
     fun sortAlertDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1, buttonToPress: Int = -1, sharedPref: SharedPreferences, onSortCompleted: () -> Unit) {
         val dialogLayout = LayoutInflater.from(context).inflate(popupLayout, null)
-        val dbHelper = TaskDatabase(context)
+        val dbHelper = TingDatabase(context)
         val builder = AlertDialog.Builder(context, R.style.MyDialogStyle)
             .setView(dialogLayout)
             .setCancelable(false)

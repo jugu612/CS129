@@ -22,11 +22,6 @@ class SleepSection : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sleep)
 
-        recyclerView = findViewById(R.id.sleepwake_time)
-        sleepadapter = SleepAdapter(sleepDataList)
-        recyclerView.adapter = sleepadapter
-        val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
 
         val backButton: ShapeableImageView = findViewById(R.id.back_button)
         backButton.setOnClickListener {
