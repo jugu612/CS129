@@ -4,10 +4,6 @@ import android.app.AlertDialog
 import java.util.*
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +59,8 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
         holder.check.visibility = if (prefs.getBoolean("checkVisible_$position", false)) View.VISIBLE else View.GONE
 
         // Condition if the food intake is reset and start of the day (outputs blank in recycler view)
-        if (currentItem.timeIntervalHours.toString() == "0" && currentItem.timeIntervalMinutes.toString() == "0" && currentItem.timeIntervalMeridiem == "") {
+        if (currentItem.timeIntervalHours.toString() == "0" && currentItem.timeIntervalMinutes.toString() == "0"
+            && currentItem.timeIntervalMeridiem == "") {
             holder.timeToEatHour.text = ""
             holder.timeToEatMinute.text = "      -"
             holder.timeToEatMeridiem.text = ""
@@ -80,6 +77,11 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
 
             // Set the TimePicker view as the dialog view
             builder.setView(timePicker)
+            timePicker.setIs24HourView(false)
+
+
+            timePicker.hour = currentItem.timeIntervalHours
+            timePicker.minute = currentItem.timeIntervalMinutes
 
             // Set the positive button text and action
             builder.setPositiveButton("OK") { dialog, _ ->
@@ -87,25 +89,29 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
                 val hour = ((timePicker.hour + 11) % 12 + 1).toString()
                 val minute = String.format("%02d", timePicker.minute)
                 val amPm = if (timePicker.hour < 12) "AM" else "PM"
+
+                // sets the new clock time
                 holder.timeToEatHour.text = hour
+                holder.timeToEatColon.text = ":"
                 holder.timeToEatMinute.text = minute
                 holder.timeToEatMeridiem.text = amPm
-            }
 
+                // Save the updated value of buttonToBeClicked to SharedPreferences
+                saveDataPreferencesAfterClick(prefs, position, hour.toInt(), minute.toInt(), amPm, 1)
+
+                // Updates the other food intake schedule below it
+                updateOtherFoodIntake(prefs, position)
+                notifyDataSetChanged() // Refreshes the recycler view to show the updated values immediately
+
+            }
 
             // Set the negative button text and action
             builder.setNegativeButton("Cancel") { dialog, _ ->
-                // Handle negative button click
             }
 
-            // Customize the TimePicker view
-            timePicker.setIs24HourView(false)
-            // Create and show the alert dialog
             val dialog = builder.create()
-
-            //dialog.window?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#2196F3")))
-
             dialog.show()
+
         }
 
         // Eat Button
@@ -125,17 +131,17 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
                 val minutes = calendar.get(Calendar.MINUTE)
                 val amPm = if (calendar.get(Calendar.AM_PM) == Calendar.AM) "AM" else "PM"
 
+                // sets the new edited time
                 holder.timeToEatHour.text = hours.toString()
                 holder.timeToEatMinute.text = String.format("%02d", minutes)
                 holder.timeToEatMeridiem.text = amPm
                 holder.timeToEatColon.text = ":"
 
-
                 // Save the updated value of buttonToBeClicked to SharedPreferences
-                saveDataPreferencesAfterClick(prefs, position, hours, minutes, amPm)
+                saveDataPreferencesAfterClick(prefs, position, hours, minutes, amPm, 0)
 
                 // Updates the other food intake schedule below it
-                updateOtherFoodIntake(prefs)
+                updateOtherFoodIntake(prefs, FoodIntake.buttonToBeClicked - 1)
                 notifyDataSetChanged() // Refreshes the recycler view to show the updated values immediately
 
                 FoodIntake.buttonToBeClicked += 1 // moves to the next button to be clicked
@@ -154,10 +160,10 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
         return foodIntakeSchedule.size
     }
 
-    private fun updateOtherFoodIntake(prefs : SharedPreferences) {
+    private fun updateOtherFoodIntake(prefs : SharedPreferences, buttonToBeClickedNumber : Int) {
 
         // get data of the previous food intake interval from shared preferences
-        val previousFoodInterval = FoodIntake.buttonToBeClicked - 1
+        val previousFoodInterval = buttonToBeClickedNumber
         var previousFoodIntakeHours = prefs.getInt("timeToEatHour_${previousFoodInterval}", 0)
         var previousFoodIntakeMinutes = prefs.getInt("timeToEatMinute_${previousFoodInterval}", 0)
         var previousFoodIntakeMeridiem: String = prefs.getString("timeToEatMeridiem_${previousFoodInterval}", "") ?: ""
@@ -172,7 +178,7 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
         var changeMeridiem = ""
         var didChangeMeridiem = false
         // iterates through the next food intake schedules and calculates the time
-        for (i in FoodIntake.buttonToBeClicked until itemCount) {
+        for (i in buttonToBeClickedNumber + 1 until itemCount) {
 
             var newFoodIntakeHours = previousFoodIntakeHours + FoodIntake.eatingIntervalHours
             var newFoodIntakeMinutes = previousFoodIntakeMinutes + FoodIntake.eatingIntervalMinutes
@@ -223,13 +229,18 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
     }
 
     // save the data in the shared preferences so that the data will be retained even if the app is closed
-    private fun saveDataPreferencesAfterClick(prefs : SharedPreferences, position : Int, hours : Int, minutes : Int, amPm : String) {
+    private fun saveDataPreferencesAfterClick(prefs : SharedPreferences, position : Int, hours : Int, minutes : Int, amPm : String, isEdit : Int) {
 
         with(prefs.edit()) {
             putInt(FoodIntake.BUTTON_TO_BE_CLICKED_KEY, FoodIntake.buttonToBeClicked)
-            putBoolean("editTimeVisible_$position", false)
-            putBoolean("eatButtonVisible_$position", false)
-            putBoolean("checkVisible_$position", true)
+
+            // doesn't change the button visibility if inside the edit button
+            if (isEdit == 0) {
+                putBoolean("editTimeVisible_$position", false)
+                putBoolean("eatButtonVisible_$position", false)
+                putBoolean("checkVisible_$position", true)
+            }
+
             putInt("timeToEatHour_$position", hours)
             putInt("timeToEatMinute_$position", minutes)
             putString("timeToEatMeridiem_$position", amPm)
