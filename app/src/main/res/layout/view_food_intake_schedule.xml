@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="8dp"
+    android:padding="8dp"
     android:layout_marginHorizontal="8dp">
 
     <TextView
@@ -93,7 +93,7 @@
         android:id="@+id/eat_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="145dp"
+        android:layout_marginStart="150dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/cyan"
@@ -108,7 +108,7 @@
         android:id="@+id/edit_time"
         android:layout_width="35dp"
         android:layout_height="40dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="13dp"
         android:src="@drawable/edit_time"
         app:layout_constraintStart_toEndOf="@+id/eat_button"

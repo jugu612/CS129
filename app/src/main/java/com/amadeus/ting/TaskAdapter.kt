@@ -1,13 +1,11 @@
 package com.amadeus.ting
 
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import android.graphics.Color
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
+import android.view.*
 import android.widget.*
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -17,7 +15,7 @@ import kotlin.collections.ArrayList
 
 class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     private val dbHelper = TingDatabase(context)
-    public var taskList: List<TaskModel> = ArrayList()
+    private var taskList: List<TaskModel> = ArrayList()
     private var onClickItem: ((TaskModel) ->Unit)?=null
     private var selectedDate: String? = null
 
@@ -110,11 +108,11 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
         labelSpinner.setSelection(labelIndex)
 
         val builder = AlertDialog.Builder(itemView.context)
-
         builder.setView(dialogLayout)
         builder.setCancelable(false)
         val cancelButton = dialogLayout.findViewById<Button>(R.id.cancel_button)
         val dialog = builder.create()
+
         cancelButton.setOnClickListener {
             dialog.dismiss()
         }
@@ -134,12 +132,18 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
             notifyDataSetChanged()
             dialog.dismiss()
         }
+
+        val window = dialog.window
+        window?.setGravity(Gravity.CENTER)
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(window?.attributes)
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+        layoutParams.gravity = Gravity.CENTER  // Center both horizontally and vertically
+        window?.attributes = layoutParams
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
     }
-
-
-
 
     private fun getLabelIndex(label: String): Int {
         return when (label) {

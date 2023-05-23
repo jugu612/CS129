@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    app:cardCornerRadius="50dp"
+    android:foregroundGravity="center"
+    android:gravity="center"
+    android:layout_gravity="center"
     tools:context=".Planner">
 
     <androidx.cardview.widget.CardView
         android:layout_width="350dp"
         android:layout_height="550dp"
+        android:foregroundGravity="center"
+        android:gravity="center"
+        android:layout_gravity="center"
         app:cardCornerRadius="50dp">
 
 
@@ -123,7 +128,7 @@
                 android:layout_marginTop="24dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/glacial_indifference"
-                android:text=" Date:"
+                android:text=" Date: "
                 android:textAllCaps="false"
                 android:textColor="@drawable/button_effects"
                 android:textSize="20sp"
@@ -133,10 +138,10 @@
             <Button
                 android:id="@+id/dateButton"
                 android:layout_width="194dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="44dp"
-                android:layout_marginBottom="78dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="84dp"
                 android:background="@null"
                 android:fontFamily="@font/glacial_indifference_bold"
                 android:gravity="left"
@@ -144,7 +149,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/frameLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_details"
-                app:layout_constraintVertical_bias="0.631" />
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/task_label"
