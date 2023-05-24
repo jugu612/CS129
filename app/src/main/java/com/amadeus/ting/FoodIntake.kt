@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.amadeus.ting.databinding.ActivityFoodIntakeBinding
-import com.amadeus.ting.databinding.ActivityPlannerBinding
 import com.google.android.material.imageview.ShapeableImageView
 import java.time.LocalDate
 import java.text.SimpleDateFormat

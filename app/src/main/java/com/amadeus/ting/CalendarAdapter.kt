@@ -120,13 +120,10 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
     }
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
-        val context = holder.itemView.context
-        var color: String? = null
-        if(context is Planner){
-            color = "Red"
-        }
-        else if(context is FoodIntake){
-            color = "Blue"
+        val color = when (holder.itemView.context) {
+            is FoodIntake, is SleepSection -> "Blue"
+            is Planner -> "Red"
+            else -> null
         }
         if (color != null) {
             holder.bind(list[position], color)
