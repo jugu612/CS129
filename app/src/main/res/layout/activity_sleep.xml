@@ -166,14 +166,14 @@
                         android:textSize="24sp" />
 
                     <Button
-                        android:id="@+id/edit_sleep_time"
+                        android:id="@+id/check_sleep_time"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="right|bottom"
                         android:layout_marginTop="10dp"
                         android:layout_marginStart="20dp"
                         android:backgroundTint="@color/white"
-                        android:background="@drawable/edit_time" />
+                        android:background="@drawable/food_intake_check" />
 
                     <View
                         android:id="@+id/lower_half"
@@ -286,14 +286,14 @@
                     android:textSize="16sp" />
 
                 <Button
-                    android:id="@+id/edit_wakeup_time"
+                    android:id="@+id/check_wake_time"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="right|bottom"
                     android:layout_marginTop="10dp"
                     android:layout_marginStart="20dp"
                     android:backgroundTint="@color/white"
-                    android:background="@drawable/edit_time" />
+                    android:background="@drawable/food_intake_check" />
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 

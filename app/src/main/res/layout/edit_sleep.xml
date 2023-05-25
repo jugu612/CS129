@@ -79,7 +79,7 @@
                 android:id="@+id/sleeping_time_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="24dp"
                 android:fontFamily="@font/glacial_indifference_bold"
                 android:gravity="center"
@@ -93,16 +93,16 @@
 
             <Button
                 android:id="@+id/sleeping_time_button"
-                android:layout_width="280dp"
+                android:layout_width="265dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="35dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="35dp"
+                android:padding="4dp"
                 android:background="@drawable/roundborder"
                 android:backgroundTint="@color/cyan"
                 android:fontFamily="@font/glacial_indifference_bold"
                 android:gravity="center"
-                android:orientation="vertical"
                 android:popupElevation="4dp"
                 android:text="00:00 PM"
                 android:textColor="@color/white"
@@ -129,11 +129,12 @@
 
             <Button
                 android:id="@+id/waking_time_button"
-                android:layout_width="280dp"
+                android:layout_width="265dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="35dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="35dp"
+                android:layout_marginEnd="30dp"
+                android:padding="4dp"
                 android:background="@drawable/roundborder"
                 android:backgroundTint="@color/cyan"
                 android:fontFamily="@font/glacial_indifference_bold"
@@ -156,29 +157,25 @@
                 android:fontFamily="@font/glacial_indifference_bold"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:text="Reminder"
+                android:text="Sleeping Time Interval"
                 android:textColor="#2C275F"
                 android:textSize="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/waking_time_button" />
 
-            <Spinner
-                android:id="@+id/sw_reminder_button"
-                android:layout_width="280dp"
+            <TextView
+                android:id="@+id/sw_hours_button"
+                android:layout_width="260dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="35dp"
+                android:layout_marginStart="30dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="35dp"
-                android:background="@drawable/roundborder"
-                android:backgroundTint="@color/cyan"
-                android:dropDownWidth="match_parent"
-                android:dropDownHeight="wrap_content"
+                android:layout_marginEnd="30dp"
+                android:padding="4dp"
+                android:background="#D4F1F9"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:overlapAnchor="false"
-                android:popupBackground="@color/cblue"
-                android:popupElevation="4dp"
-                android:spinnerMode="dropdown"
+                android:textColor="#2C275F"
+                android:textSize="20sp"
+                android:fontFamily="@font/glacial_indifference_bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sw_reminder_text" />
@@ -200,7 +197,7 @@
                 android:textSize="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sw_reminder_button" />
+                app:layout_constraintTop_toBottomOf="@+id/sw_hours_button" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
