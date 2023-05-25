@@ -72,6 +72,10 @@
             android:name=".SleepSection"
             android:exported="false" />
 
+        <activity
+            android:name=".WaterIntake"
+            android:exported="false" />
+
     </application>
 
 </manifest>
