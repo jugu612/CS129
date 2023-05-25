@@ -11,6 +11,7 @@ import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -24,6 +25,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.amadeus.ting.databinding.ActivitySleepBinding
+import java.sql.Time
 import java.time.LocalDate
 import kotlin.collections.ArrayList
 
@@ -48,9 +50,11 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     private var sleepingInterval: String? = null
     private var sleepingLeft: Int? = 0
     private var wakingLeft: String? = null
-    private var countdownTimer: CountDownTimer? = null
     private var sleepTimeChecked: Boolean = false
     private var wakeTimeChecked: Boolean = false
+    private var countdownTimer: CountDownTimer? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,14 +66,13 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         setUpClickListener()
         setUpCalendar()
 
+        val currentTime = Calendar.getInstance(TimeZone.getTimeZone("Asia/Manila")).time
+
         sharedPreferences = getSharedPreferences("SleepData", Context.MODE_PRIVATE)
 
         selectedSleepTime = sharedPreferences.getString("SleepTime", null)
         selectedWakeTime = sharedPreferences.getString("WakeTime", null)
         sleepingInterval = calculateSleepingHours(selectedSleepTime, selectedWakeTime)
-
-        Toast.makeText(this, "$selectedSleepTime $selectedWakeTime", Toast.LENGTH_SHORT).show()
-        cardsValues()
 
         val backButton: ShapeableImageView = findViewById(R.id.back_button)
         backButton.setOnClickListener {
@@ -80,36 +83,9 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         editButton.setOnClickListener {
             showCustomDialog(this, R.layout.edit_sleep)
         }
-
-        val checkSleepTimeButton: Button = findViewById(R.id.check_sleep_time)
-        checkSleepTimeButton.setOnClickListener {
-            if (selectedSleepTime != null && !sleepTimeChecked) {
-                sleepTimeChecked = true
-                val currentTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
-                findViewById<TextView>(R.id.sleep_time).text = currentTime
-                findViewById<View>(R.id.upper_half).setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
-                findViewById<TextView>(R.id.sleep_time).text = currentTime
-                with(sharedPreferences.edit()) {
-                    putInt("SleepingLeft", 1)
-                    apply()
-                }
-            }
-        }
-
-        val checkWakeTimeButton: Button = findViewById(R.id.check_wake_time)
-        checkWakeTimeButton.setOnClickListener {
-            if (selectedWakeTime != null && !wakeTimeChecked) {
-                wakeTimeChecked = true
-                val currentTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
-                findViewById<TextView>(R.id.wakeup_time).text = currentTime
-                findViewById<View>(R.id.upper_half).setBackgroundColor(ContextCompat.getColor(this, R.color.cyan))
-                countdownTimer = countdownTime(selectedWakeTime!!, findViewById(R.id.wakeup_left)) // Start the countdown timer
-                sleepingLeft = sharedPreferences.getInt("SleepLeft", 0)
-            }
-        }
-
-
+        updateColorAndTimer(currentTime)
     }
+
 
     private fun showCustomDialog(context: Context, popupLayout: Int) {
         val inflater = LayoutInflater.from(context)
@@ -170,6 +146,154 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         dialog.show()
     }
 
+    private fun updateColorAndTimer(currentTime: Date) {
+            checkButtons()
+
+            val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+            val sleepCalendar = Calendar.getInstance()
+            sleepCalendar.time = timeFormat.parse(selectedSleepTime)
+
+            val wakeCalendar = Calendar.getInstance()
+            wakeCalendar.time = timeFormat.parse(selectedWakeTime)
+
+            val currentCalendar = Calendar.getInstance()
+            currentCalendar.time = currentTime
+
+            // Set the same date for all calendars
+            sleepCalendar.set(Calendar.YEAR, currentCalendar.get(Calendar.YEAR))
+            sleepCalendar.set(Calendar.MONTH, currentCalendar.get(Calendar.MONTH))
+            sleepCalendar.set(Calendar.DAY_OF_MONTH, currentCalendar.get(Calendar.DAY_OF_MONTH))
+
+            wakeCalendar.set(Calendar.YEAR, currentCalendar.get(Calendar.YEAR))
+            wakeCalendar.set(Calendar.MONTH, currentCalendar.get(Calendar.MONTH))
+            wakeCalendar.set(Calendar.DAY_OF_MONTH, currentCalendar.get(Calendar.DAY_OF_MONTH))
+
+            val currentHour = currentCalendar.get(Calendar.HOUR_OF_DAY)
+            val currentMinute = currentCalendar.get(Calendar.MINUTE)
+
+            val sleepHour = sleepCalendar.get(Calendar.HOUR_OF_DAY)
+            val sleepMinute = sleepCalendar.get(Calendar.MINUTE)
+
+            val wakeHour = wakeCalendar.get(Calendar.HOUR_OF_DAY)
+            val wakeMinute = wakeCalendar.get(Calendar.MINUTE)
+            val sleepTimeChecked = sharedPreferences.getBoolean("SleepTimeChecked", false)
+            val wakeTimeChecked = sharedPreferences.getBoolean("WakeTimeChecked", false)
+
+
+
+            if (currentHour == sleepHour && currentMinute == sleepMinute) {
+                setSleepAndWake(
+                    findViewById(R.id.sleep_left),
+                    findViewById(R.id.upper_half),
+                    findViewById(R.id.sleep_time),
+                    "Time to Sleep!",
+                    R.color.yellow
+                )
+                cardsValues(2)
+            }  else if ((currentHour > sleepHour || (currentHour == sleepHour && currentMinute >= sleepMinute)) &&
+                (currentHour < wakeHour || (currentHour == wakeHour && currentMinute < wakeMinute))) {
+                //Toast.makeText( this, "$currentHour $currentMinute \n$sleepCalendar \n$wakeCalendar", Toast.LENGTH_SHORT).show()
+                setSleepAndWake(
+                    findViewById(R.id.sleep_left),
+                    findViewById(R.id.upper_half),
+                    findViewById(R.id.sleep_time),
+                    "Overdue! Time to Sleep!",
+                    R.color.red
+                )
+                cardsValues(2)
+            }else if (currentHour == wakeHour && currentMinute == wakeMinute) {
+                setSleepAndWake(
+                    findViewById(R.id.wakeup_left),
+                    findViewById(R.id.wupper_half),
+                    findViewById(R.id.wakeup_time),
+                    "Time to Wake Up!",
+                    R.color.yellow
+                )
+                cardsValues(3)
+            }else if ((currentHour > wakeHour || (currentHour == wakeHour && currentMinute >= wakeMinute)) &&
+                (currentHour < sleepHour || (currentHour == sleepHour && currentMinute < sleepMinute))) {
+                setSleepAndWake(
+                    findViewById(R.id.wakeup_left),
+                    findViewById(R.id.wupper_half),
+                    findViewById(R.id.wakeup_time),
+                    "Overdue! Time to Wake Up!",
+                    R.color.red
+                )
+                cardsValues(3)
+            }else if ((currentHour > wakeHour || (currentHour == wakeHour && currentMinute >= wakeMinute)) &&
+                (currentHour > sleepHour || (currentHour == sleepHour && currentMinute >= sleepMinute))) {
+                setSleepAndWake(
+                    findViewById(R.id.wakeup_left),
+                    findViewById(R.id.wupper_half),
+                    findViewById(R.id.wakeup_time),
+                    "Did you Sleep?!",
+                    R.color.red
+                )
+                setSleepAndWake(
+                    findViewById(R.id.sleep_left),
+                    findViewById(R.id.upper_half),
+                    findViewById(R.id.sleep_time),
+                    "Did you Sleep?!",
+                    R.color.red
+                )
+                cardsValues(4)}
+            else {
+                cardsValues(1)
+            }
+
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.MINUTE, 1)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        val nextUpdateTime = calendar.timeInMillis
+        val delay = nextUpdateTime - System.currentTimeMillis()
+
+        countdownTimer?.cancel()
+        countdownTimer = object : CountDownTimer(delay, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                // Nothing to do here
+            }
+
+            override fun onFinish() {
+                val upCurrentTime = Calendar.getInstance(TimeZone.getTimeZone("Asia/Manila")).time
+                updateColorAndTimer(upCurrentTime)
+            }
+        }.start()
+    }
+
+    private fun checkButtons() {
+        val checkSleepTimeButton: Button = findViewById(R.id.check_sleep_time)
+        checkSleepTimeButton.setOnClickListener {
+            if (selectedSleepTime != null && !sleepTimeChecked) {
+                sleepTimeChecked = true
+                val currentTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
+                findViewById<TextView>(R.id.sleep_time).text = currentTime
+                findViewById<View>(R.id.upper_half).setBackgroundColor(ContextCompat.getColor(this, R.color.gray))
+                findViewById<TextView>(R.id.sleep_time).text = currentTime
+                with(sharedPreferences.edit()) {
+                    putInt("SleepingLeft", 1)
+                    putBoolean("SleepTimeChecked", sleepTimeChecked)
+                    apply()
+                }
+            }
+        }
+
+        val checkWakeTimeButton: Button = findViewById(R.id.check_wake_time)
+        checkWakeTimeButton.setOnClickListener {
+            if (selectedWakeTime != null && !wakeTimeChecked) {
+                wakeTimeChecked = true
+                val currentTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
+                findViewById<TextView>(R.id.wakeup_time).text = currentTime
+                findViewById<View>(R.id.upper_half).setBackgroundColor(ContextCompat.getColor(this, R.color.cyan))
+                with(sharedPreferences.edit()) {
+                    putBoolean("WakeTimeChecked", wakeTimeChecked)
+                    apply()
+                }
+            }
+        }
+    }
+
+
     private fun showTimePickerDialog(context: Context, callback: (String) -> Unit, isSleepingTime: Boolean) {
         val currentTime = Calendar.getInstance()
         val hour = currentTime.get(Calendar.HOUR_OF_DAY)
@@ -200,19 +324,54 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         timePickerDialog.show()
     }
 
-    private fun cardsValues() {
-        val sleepingTime: TextView = findViewById(R.id.sleep_time)
-        val sleepingTimeLeft: TextView = findViewById(R.id.sleep_left)
-        sleepingTime.text = selectedSleepTime ?: "0:00"
-        selectedSleepTime?.let { countdownTime(it, sleepingTimeLeft) }
+    private fun cardsValues(sleep: Int) {
+        if (sleep == 1) {
+            val sleepingTime: TextView = findViewById(R.id.sleep_time)
+            val sleepingTimeLeft: TextView = findViewById(R.id.sleep_left)
+            sleepingTime.text = selectedSleepTime ?: "0:00"
+            selectedSleepTime?.let { countdownTime(it, sleepingTimeLeft) }
 
-        val wakingTime: TextView = findViewById(R.id.wakeup_time)
-        val wakingTimeLeft: TextView = findViewById(R.id.wakeup_left)
-        wakingTime.text = selectedWakeTime ?: "0:00"
-        selectedWakeTime?.let { countdownTime(it, wakingTimeLeft) }
+            val wakingTime: TextView = findViewById(R.id.wakeup_time)
+            val wakingTimeLeft: TextView = findViewById(R.id.wakeup_left)
+            wakingTime.text = selectedWakeTime ?: "0:00"
+            selectedWakeTime?.let { countdownTime(it, wakingTimeLeft) }
 
-        val sleepingHoursInterval: TextView = findViewById(R.id.sleeptime_left)
-        sleepingHoursInterval.text = sleepingInterval
+            val sleepingHoursInterval: TextView = findViewById(R.id.sleeptime_left)
+            sleepingHoursInterval.text = sleepingInterval
+        }
+        else if (sleep == 2) {
+            val sleepingTime: TextView = findViewById(R.id.sleep_time)
+            sleepingTime.text = selectedSleepTime ?: "0:00"
+
+            val wakingTime: TextView = findViewById(R.id.wakeup_time)
+            val wakingTimeLeft: TextView = findViewById(R.id.wakeup_left)
+            wakingTime.text = selectedWakeTime ?: "0:00"
+            selectedWakeTime?.let { countdownTime(it, wakingTimeLeft) }
+
+            val sleepingHoursInterval: TextView = findViewById(R.id.sleeptime_left)
+            sleepingHoursInterval.text = sleepingInterval
+        }else if (sleep == 3) {
+            val sleepingTime: TextView = findViewById(R.id.sleep_time)
+            val sleepingTimeLeft: TextView = findViewById(R.id.sleep_left)
+            sleepingTime.text = selectedSleepTime ?: "0:00"
+            selectedSleepTime?.let { countdownTime(it, sleepingTimeLeft) }
+
+            val wakingTime: TextView = findViewById(R.id.wakeup_time)
+            wakingTime.text = selectedWakeTime ?: "0:00"
+
+            val sleepingHoursInterval: TextView = findViewById(R.id.sleeptime_left)
+            sleepingHoursInterval.text = sleepingInterval
+        }else if (sleep == 4) {
+            val sleepingTime: TextView = findViewById(R.id.sleep_time)
+            sleepingTime.text = selectedSleepTime ?: "0:00"
+
+
+            val wakingTime: TextView = findViewById(R.id.wakeup_time)
+            wakingTime.text = selectedWakeTime ?: "0:00"
+
+            val sleepingHoursInterval: TextView = findViewById(R.id.sleeptime_left)
+            sleepingHoursInterval.text = sleepingInterval
+    }
 
     }
 
@@ -263,33 +422,19 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         sleepItemCard: View,
         sleepTimeText: TextView,
         countdownText: String,
+        color: Int
     ) {
         val context: Context = applicationContext
 
-        sleepItemCard.setBackgroundColor(ContextCompat.getColor(context, R.color.yellow))
+        sleepItemCard.setBackgroundColor(ContextCompat.getColor(context, color))
         textView.text = countdownText
-        textView.setTextColor(ContextCompat.getColor(context, R.color.yellow))
-        sleepTimeText.setTextColor(ContextCompat.getColor(context, R.color.yellow))
-
-        Timer().schedule(object : TimerTask() {
-            override fun run() {
-                runOnUiThread {
-                    textView.text = countdownText
-                    textView.setTextColor(ContextCompat.getColor(context, R.color.red))
-                    sleepItemCard.setBackgroundColor(ContextCompat.getColor(context, R.color.red))
-                    sleepTimeText.setTextColor(ContextCompat.getColor(context, R.color.red))
-                }
-            }
-        }, 60000) // 60 seconds
+        textView.setTextColor(ContextCompat.getColor(context, color))
+        sleepTimeText.setTextColor(ContextCompat.getColor(context, color))
     }
 
     private fun countdownTime(targetTime: String, textView: TextView): CountDownTimer {
         countdownTimer?.cancel()
 
-        if (sleepingLeft == 1) {
-            textView.text = ""
-            finish()
-        }
         val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
         val targetCalendar = Calendar.getInstance()
         targetCalendar.time = timeFormat.parse(targetTime)
@@ -336,23 +481,12 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
                     else -> "${seconds % 60} secs"
                 }
 
-                if (textView.id == R.id.sleep_left && strhourText.isEmpty() && strminText.isEmpty() && strsecText.isEmpty()) {
-                    setSleepAndWake(
-                        findViewById(R.id.sleep_left),
-                        findViewById(R.id.upper_half),
-                        findViewById(R.id.sleep_time),
-                        "Time to Sleep!"
-                    )
-                } else if (textView.id == R.id.wakeup_left && strhourText.isEmpty() && strminText.isEmpty() && strsecText.isEmpty()) {
-                    setSleepAndWake(
-                        findViewById(R.id.wakeup_left),
-                        findViewById(R.id.wupper_half),
-                        findViewById(R.id.wakeup_time),
-                        "Wake Up!"
-                    )
-                } else {
+                if (strhourText.isEmpty() && strminText.isEmpty() && strsecText.isEmpty()){
+                    textView.text = "⏰"
+                }else {
                     textView.text = "Ring in $strhourText$strminText$strsecText"
                 }
+
             }
 
             override fun onFinish() {
