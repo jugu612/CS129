@@ -83,7 +83,8 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         editButton.setOnClickListener {
             showCustomDialog(this, R.layout.edit_sleep)
         }
-        updateColorAndTimer(currentTime)
+        if(selectedSleepTime != null || selectedWakeTime != null){
+            updateColorAndTimer(currentTime)}
     }
 
 
@@ -176,12 +177,9 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
 
             val wakeHour = wakeCalendar.get(Calendar.HOUR_OF_DAY)
             val wakeMinute = wakeCalendar.get(Calendar.MINUTE)
-            val sleepTimeChecked = sharedPreferences.getBoolean("SleepTimeChecked", false)
-            val wakeTimeChecked = sharedPreferences.getBoolean("WakeTimeChecked", false)
-
-
 
             if (currentHour == sleepHour && currentMinute == sleepMinute) {
+                Toast.makeText( this, "1", Toast.LENGTH_SHORT).show()
                 setSleepAndWake(
                     findViewById(R.id.sleep_left),
                     findViewById(R.id.upper_half),
@@ -189,10 +187,18 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
                     "Time to Sleep!",
                     R.color.yellow
                 )
+
+                val upper: View= findViewById(R.id.wupper_half)
+                val t: TextView= findViewById(R.id.wakeup_left)
+                val p: TextView= findViewById(R.id.wakeup_time)
+
+                upper.setBackgroundColor(ContextCompat.getColor(this, R.color.cyan))
+                t.setTextColor(ContextCompat.getColor(this, R.color.cyan))
+                p.setTextColor(ContextCompat.getColor(this, R.color.cyan))
                 cardsValues(2)
             }  else if ((currentHour > sleepHour || (currentHour == sleepHour && currentMinute >= sleepMinute)) &&
                 (currentHour < wakeHour || (currentHour == wakeHour && currentMinute < wakeMinute))) {
-                //Toast.makeText( this, "$currentHour $currentMinute \n$sleepCalendar \n$wakeCalendar", Toast.LENGTH_SHORT).show()
+                Toast.makeText( this, "2", Toast.LENGTH_SHORT).show()
                 setSleepAndWake(
                     findViewById(R.id.sleep_left),
                     findViewById(R.id.upper_half),
@@ -202,6 +208,7 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
                 )
                 cardsValues(2)
             }else if (currentHour == wakeHour && currentMinute == wakeMinute) {
+                Toast.makeText( this, "3", Toast.LENGTH_SHORT).show()
                 setSleepAndWake(
                     findViewById(R.id.wakeup_left),
                     findViewById(R.id.wupper_half),
@@ -212,6 +219,7 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
                 cardsValues(3)
             }else if ((currentHour > wakeHour || (currentHour == wakeHour && currentMinute >= wakeMinute)) &&
                 (currentHour < sleepHour || (currentHour == sleepHour && currentMinute < sleepMinute))) {
+                Toast.makeText( this, "4", Toast.LENGTH_SHORT).show()
                 setSleepAndWake(
                     findViewById(R.id.wakeup_left),
                     findViewById(R.id.wupper_half),
@@ -220,24 +228,9 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
                     R.color.red
                 )
                 cardsValues(3)
-            }else if ((currentHour > wakeHour || (currentHour == wakeHour && currentMinute >= wakeMinute)) &&
-                (currentHour > sleepHour || (currentHour == sleepHour && currentMinute >= sleepMinute))) {
-                setSleepAndWake(
-                    findViewById(R.id.wakeup_left),
-                    findViewById(R.id.wupper_half),
-                    findViewById(R.id.wakeup_time),
-                    "Did you Sleep?!",
-                    R.color.red
-                )
-                setSleepAndWake(
-                    findViewById(R.id.sleep_left),
-                    findViewById(R.id.upper_half),
-                    findViewById(R.id.sleep_time),
-                    "Did you Sleep?!",
-                    R.color.red
-                )
-                cardsValues(4)}
+            }
             else {
+                Toast.makeText( this, "5", Toast.LENGTH_SHORT).show()
                 cardsValues(1)
             }
 
