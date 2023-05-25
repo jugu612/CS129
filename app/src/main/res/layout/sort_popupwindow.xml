@@ -9,8 +9,8 @@
     <androidx.cardview.widget.CardView
         android:layout_width="350dp"
         android:layout_height="550dp"
-        app:cardCornerRadius="50dp"
-        >
+        app:cardCornerRadius="50dp">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
             android:orientation="vertical"

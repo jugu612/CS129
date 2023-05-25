@@ -31,7 +31,7 @@ class HomepageAdapter(private val cardDataList: List<HomepageData>) :
                 val intent = when (adapterPosition) {
                     0 -> Intent(context, Planner::class.java)
                     1 -> Intent(context, FoodIntake::class.java)
-                    2 -> Intent(context, HealthAndWellness::class.java)
+                    2 -> Intent(context, WaterIntake::class.java)
                     3 -> Intent(context, SleepSection::class.java)
                     4 -> Intent(context, HealthAndWellness::class.java)
                     5 -> Intent(context, FocusMode::class.java)

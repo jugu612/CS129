@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Header -->
+    <RelativeLayout
+        android:id="@+id/linearLayout_Header"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:background="@color/cyan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/back_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:includeFontPadding="false"
+            android:text="WATER"
+            android:textColor="@color/white"
+            android:textSize="44sp" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/bell_button"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/notif_icon"
+            app:shapeAppearanceOverlay="@style/Circle" />
+
+    </RelativeLayout>
+
+    <!-- Drink Information overall !-->
+    <TextView
+        android:id="@+id/goal_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/glacial_indifference_bold"
+        android:text="Today's Goal"
+        android:textColor="@color/deepBlue"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/drink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/drink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/glacial_indifference"
+        android:text="Drink 1000 ml"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/progress_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:indeterminateOnly="false"
+        android:progressDrawable="@drawable/water_intake_progress_ring"
+        android:rotation="-90"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout_Header"
+        tools:progress="23" />
+
+    <!-- Information inside Progress Bar -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/progress_bar"
+        app:layout_constraintTop_toTopOf="@+id/progress_bar"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/number_percent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:text="13%"
+            android:textColor="@color/black"
+            android:textSize="70sp" />
+
+        <TextView
+            android:id="@+id/number_ml"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/glacial_indifference"
+            android:text="700 ml left"
+            android:textColor="@color/deepBlue"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <!-- SeekBar -->
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:max="1000"
+        android:progressTint="@color/cyan"
+        android:thumbTint="@color/cyan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
+
+    <!-- SeekBar Information -->
+    <TextView
+        android:id="@+id/textView_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/glacial_indifference"
+        android:text="0 ml"
+        android:textColor="@color/black"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        app:layout_constraintBottom_toTopOf="@+id/buttons"/>
+
+    <!-- Buttons  -->
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_progress">
+
+        <Button
+            android:id="@+id/drink_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="145dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/cyan"
+            android:fontFamily="@font/glacial_indifference"
+            android:text="Drink Water"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/records_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="145dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/cyan"
+            android:fontFamily="@font/glacial_indifference"
+            android:text="Records"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
