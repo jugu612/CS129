@@ -83,7 +83,7 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         editButton.setOnClickListener {
             showCustomDialog(this, R.layout.edit_sleep)
         }
-        if(selectedSleepTime != null || selectedWakeTime != null){
+        if(selectedSleepTime != null && selectedWakeTime != null){
             updateColorAndTimer(currentTime)}
     }
 
@@ -136,11 +136,16 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
             }
             sleepButton.text = selectedSleepTime ?: "0:00"
             wakeButton.text = selectedWakeTime ?: "0:00"
-
-            finish()
-            val goToSleepSection = Intent(this, SleepSection::class.java)
-            startActivity(goToSleepSection)
-            overridePendingTransition(0, 0)
+            if (selectedSleepTime == null || selectedWakeTime == null){
+                if(selectedWakeTime == null){ Toast.makeText( this, "Cannot save! Wake-up Time should not be empty", Toast.LENGTH_SHORT).show()}
+                else if(selectedSleepTime == null){ Toast.makeText( this, "Sleeping Time should not be empty", Toast.LENGTH_SHORT).show()}
+            }
+            else {
+                finish()
+                val goToSleepSection = Intent(this, SleepSection::class.java)
+                startActivity(goToSleepSection)
+                overridePendingTransition(0, 0)
+            }
         }
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -148,6 +153,7 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     }
 
     private fun updateColorAndTimer(currentTime: Date) {
+
             checkButtons()
 
             val timeFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
