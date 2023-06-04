@@ -5,12 +5,12 @@
     android:id="@+id/homepage_layout"
     android:layout_width="180dp"
     android:layout_height="250dp"
-    android:layout_marginStart="4dp"
+    android:layout_marginStart="6dp"
     android:layout_marginEnd="4dp"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
     android:padding="40dp"
-    android:elevation="3dp"
+    android:elevation="5dp"
     app:cardCornerRadius="10dp">
 
     <LinearLayout
