@@ -153,22 +153,9 @@
         app:layout_constraintTop_toBottomOf="@+id/textView_progress">
 
         <Button
-            android:id="@+id/drink_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="145dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/cyan"
-            android:fontFamily="@font/glacial_indifference"
-            android:text="Drink Water"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
-
-        <Button
             android:id="@+id/records_button"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="145dp"
+            android:layout_width="100dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
             android:background="@drawable/rounded_button"
@@ -176,7 +163,34 @@
             android:fontFamily="@font/glacial_indifference"
             android:text="Records"
             android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/drink_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/cyan"
+            android:fontFamily="@font/glacial_indifference"
+            android:text="Drink"
+            android:textColor="@color/white"
             android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/reset_button"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/cyan"
+            android:fontFamily="@font/glacial_indifference"
+            android:text="Reset"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
 
     </LinearLayout>
 

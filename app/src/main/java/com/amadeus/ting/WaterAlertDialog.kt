@@ -8,6 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.amadeus.ting.FoodIntake.Companion.newRecyclerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -16,6 +19,7 @@ class WaterAlertDialog {
 
     private lateinit var dialogLayout: View
     private lateinit var nestedDialogLayout: View
+
 
     companion object {
         lateinit var userMilliliterInput : String
@@ -53,46 +57,22 @@ class WaterAlertDialog {
         }
     }
 
-    fun recordsDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1) {
-
-        val inflater = LayoutInflater.from(context)
-        dialogLayout = inflater.inflate(popupLayout, null)
-
-        val builder = AlertDialog.Builder(context, R.style.MyDialogStyle)
-        builder.setView(dialogLayout)
-        //builder.setCancelable(false)
-
-        val dialog = builder.create()
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-        /*
-        val cancelButton = dialogLayout.findViewById<Button>(R.id.cancel_button)
-        cancelButton.setOnClickListener {
-            dialog.dismiss()
-        }
-        */
-
-        val showNestedDialogButton = dialogLayout.findViewById<Button>(R.id.history_button)
-        showNestedDialogButton.setOnClickListener {
-            val nestedDialogLayout = inflater.inflate(nestedPopupLayout, null)
-            val nestedBuilder = AlertDialog.Builder(context, R.style.MyDialogStyle)
-            nestedBuilder.setView(nestedDialogLayout)
-            //nestedBuilder.setCancelable(false)
-
-            val nestedDialog = nestedBuilder.create()
-            nestedDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            nestedDialog?.show()
-
-            /*
-            val cancelButtonNested = nestedDialogLayout.findViewById<Button>(R.id.cancel_button)
-            cancelButtonNested.setOnClickListener {
-                nestedDialog?.dismiss()
-            }
-            */
-
-        }
-        dialog.show()
-    }
+//    fun recordsDialog(context: Context, popupLayout: Int, nestedPopupLayout: Int = -1) {
+//
+//        val alertDialogBuilder = AlertDialog.Builder(context)
+//        val dialogView = LayoutInflater.from(context).inflate(popupLayout, null)
+//
+//        // Initialize Recycler View
+//        recyclerViewWater = dialogView.findViewById(R.id.water_intake_records_rv)
+//        recyclerViewWater.layoutManager = LinearLayoutManager(context)
+//        recyclerViewWater.setHasFixedSize(true)
+//        //builder.setCancelable(false)
+//
+//        alertDialogBuilder.setView(dialogView)
+//        val dialog = alertDialogBuilder.create()
+//        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//        dialog.show()
+//    }
 
 
 
