@@ -2,21 +2,21 @@ package com.amadeus.ting
 
 import android.app.Activity
 import android.content.Intent
-import android.database.sqlite.SQLiteOpenHelper
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.*
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.firebase.auth.FirebaseUser
+
 
 class HomePage : AppCompatActivity() {
 
@@ -29,10 +29,17 @@ class HomePage : AppCompatActivity() {
 
         val currentTime = Calendar.getInstance(TimeZone.getTimeZone("Asia/Manila")).time
 
-        auth = FirebaseAuth.getInstance() //Initializing the Firebase authentication instance
+        auth = FirebaseAuth.getInstance()
+        val user: FirebaseUser? = auth.currentUser
+        val profileImageUrl = user?.photoUrl.toString()
 
-        val email = intent.getStringExtra("email") //Extracting the email from the intent
-        val displayName = intent.getStringExtra("name") //Extracting the name from the intent
+        val imageViewProfile: ImageView = findViewById(R.id.user_image)
+
+        Glide.with(this)
+            .load(profileImageUrl)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(imageViewProfile)
+
 
         recyclerView = findViewById(R.id.homepage_recycler)
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -41,15 +48,10 @@ class HomePage : AppCompatActivity() {
 
 
         onClick<ShapeableImageView>(R.id.user_image) {
-            val goToProgress = Intent(this, ProgressReport::class.java)
-            startActivity(goToProgress)
+            val goToUserProfile = Intent(this, UserProfile::class.java)
+            startActivity(goToUserProfile)
         }
 
-        //onClick<ShapeableImageView>(R.id.logout_button) {
-        ///    val goToRegLogin = Intent(this, RegLogin::class.java)
-        //    startActivity(goToRegLogin)
-        //    Toast.makeText(this, "Successfully logged out.", Toast.LENGTH_SHORT).show()
-        //}
 
         changeMessage(currentTime)
 
