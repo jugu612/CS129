@@ -6,7 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +38,20 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
     private lateinit var tskList: List<TaskModel>
     private var sortedTaskList: List<TaskModel> = emptyList()
 
+    private val notificationSystem: NotificationSystem = NotificationSystem(this)
+
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()){
+            isGranted:Boolean->
+            if(isGranted){
+                notificationSystem.showNotification()
+            }
+            else{
+                Toast.makeText(this,"Notifications are blocked.", Toast.LENGTH_LONG).show()
+            }
+        }
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,6 +63,25 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         setUpClickListener()
         setUpCalendar()
         initRecyclerView()
+
+        // Notification placeholder
+        val notifReq = findViewById<ShapeableImageView>(R.id.notifreq)
+        notifReq.setOnClickListener{
+            when{
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED ->{
+                    notificationSystem.showNotification()
+                }
+                else->{
+                    requestPermissionLauncher.launch(
+                        Manifest.permission.POST_NOTIFICATIONS
+                    )
+                }
+            }
+        }
+
 
 
         // Get the shared preferences object with the name "MyPreferences"
@@ -193,9 +231,9 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         //Add the date here
         val dateModel = calendarAdapter.getItem(position)
         taskadapter?.addList(tskList, dateModel)
-
     }
 
+    //Notification Permission Placeholder
 
 
 
