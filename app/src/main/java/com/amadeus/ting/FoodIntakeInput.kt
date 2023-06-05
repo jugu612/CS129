@@ -13,6 +13,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.imageview.ShapeableImageView
 import android.widget.ArrayAdapter
+import com.amadeus.ting.FoodIntake.Companion.PREFS_NAME
+import com.amadeus.ting.FoodIntake.Companion.newRecyclerView
+import com.amadeus.ting.FoodIntakeInput.Companion.PREF_EATING_INTERVAL_HOURS
+import com.amadeus.ting.FoodIntakeInput.Companion.PREF_EATING_INTERVAL_MINUTES
+import com.amadeus.ting.FoodIntakeInput.Companion.PREF_FIRST_REMINDER_HOURS
+import com.amadeus.ting.FoodIntakeInput.Companion.PREF_FIRST_REMINDER_MINUTES
+import com.amadeus.ting.FoodIntakeInput.Companion.PREF_MEALS_PER_DAY
 
 class FoodIntakeInput : AppCompatActivity() {
 
@@ -20,11 +27,13 @@ class FoodIntakeInput : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
 
     // Keys for SharedPreferences
-    private val PREF_MEALS_PER_DAY = "pref_meals_per_day"
-    private val PREF_EATING_INTERVAL_HOURS = "pref_eating_interval_hours"
-    private val PREF_EATING_INTERVAL_MINUTES = "pref_eating_interval_minutes"
-    private val PREF_FIRST_REMINDER_HOURS = "pref_first_reminder_hours"
-    private val PREF_FIRST_REMINDER_MINUTES = "pref_first_reminder_minutes"
+    companion object {
+        val PREF_MEALS_PER_DAY = "pref_meals_per_day"
+        val PREF_EATING_INTERVAL_HOURS = "pref_eating_interval_hours"
+        val PREF_EATING_INTERVAL_MINUTES = "pref_eating_interval_minutes"
+        val PREF_FIRST_REMINDER_HOURS = "pref_first_reminder_hours"
+        val PREF_FIRST_REMINDER_MINUTES = "pref_first_reminder_minutes"
+    }
 
     // Store the user's choice in these variables
     private var mealsPerDay: Int = 1
@@ -117,6 +126,8 @@ class FoodIntakeInput : AppCompatActivity() {
 
         // Save button
         onClick<View>(R.id.save_button) {
+            resetListInput()
+            saveValuesToFoodIntake()
             saveValuesToSharedPreferences() // Save the values to SharedPreferences
             showToast()
             val goToFoodIntake = Intent(this, FoodIntake::class.java)
@@ -175,6 +186,15 @@ class FoodIntakeInput : AppCompatActivity() {
         editor.apply()
     }
 
+    // Save inputted values to food intake
+    private fun saveValuesToFoodIntake() {
+        FoodIntake.eatingIntervalMinutes = eatingIntervalMinutes
+        FoodIntake.eatingIntervalHours = eatingIntervalHours
+        FoodIntake.mealsPerDay = mealsPerDay
+        FoodIntake.firstReminderHours = firstReminderHours
+        FoodIntake.firstReminderMinutes = firstReminderMinutes
+    }
+
     private fun showToast() {
         val mealsPerDay = sharedPreferences.getInt(PREF_MEALS_PER_DAY, 1)
         val eatingIntervalHours = sharedPreferences.getInt(PREF_EATING_INTERVAL_HOURS, 0)
@@ -188,11 +208,7 @@ class FoodIntakeInput : AppCompatActivity() {
 
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
-
-
-
-
+    @SuppressLint("ClickableViewAccessibility", "UseCompatLoadingForDrawables")
     fun setupFoodSelectionSpinner(
         activity: Activity,
         spinnerId: Int,
@@ -219,6 +235,7 @@ class FoodIntakeInput : AppCompatActivity() {
         }
 
         mealOption.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            @SuppressLint("UseCompatLoadingForDrawables")
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedPosition = parent.selectedItemPosition
                 if (selectedPosition == position) {
@@ -240,6 +257,35 @@ class FoodIntakeInput : AppCompatActivity() {
         findViewById<T>(id)?.setOnClickListener {
             action(it as T)
         }
+    }
+
+    fun resetListInput() {
+
+        FoodIntake.foodScheduleList = arrayListOf<FoodIntakeInfo>()
+
+        for (i in 0 until FoodIntake.mealsPerDay) {
+            val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+            // Resets the visibility of the buttons and the variable pointing to the button to be clicked
+            with(prefs.edit()) {
+                putInt(FoodIntake.BUTTON_TO_BE_CLICKED_KEY, 1)
+                putInt("timeToEatHour_$i", 0)
+                putInt("timeToEatMinute_$i", 0)
+                putString("timeToEatMeridiem_$i", "")
+
+                putBoolean("editTimeVisible_$i", true)
+                putBoolean("eatButtonVisible_$i", true)
+                putBoolean("checkVisible_$i", false)
+                apply()
+            }
+
+            FoodIntake.buttonToBeClicked = 1
+            val intakeInfo = FoodIntakeInfo(i + 1, 0, "", 0, "")
+            FoodIntake.foodScheduleList.add(intakeInfo)
+        }
+
+        newRecyclerView.adapter = FoodIntakeAdapter(FoodIntake.foodScheduleList)
+
     }
 }
 

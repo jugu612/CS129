@@ -46,7 +46,6 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
 
     private lateinit var sharedPreferences: SharedPreferences
     private var selectedSleepTime: String? = null
-    private var selectedWakeTime: String? = null
     private var sleepingInterval: String? = null
     private var sleepingLeft: Int? = 0
     private var wakingLeft: String? = null
@@ -54,6 +53,9 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     private var wakeTimeChecked: Boolean = false
     private var countdownTimer: CountDownTimer? = null
 
+    companion object {
+        var selectedWakeTime: String? = null
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

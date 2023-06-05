@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import java.util.*
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,7 +45,6 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
 
         // Get the FoodIntakeInfo object at the current position in the ArrayList
         val currentItem = foodIntakeSchedule[position]
-
         // Set the text of various TextViews in the ViewHolder to the corresponding properties of the FoodIntakeInfo object
         holder.intervalNumber.text = currentItem.foodIntakeInfoNumber.toString()
         holder.timeToEatHour.text = currentItem.timeIntervalHours.toString()
@@ -116,7 +116,6 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
 
         // Eat Button
         holder.eatButton.setOnClickListener {
-
             // Checks validity of the eat button clicked (must be an appropriate FoodIntakeSchedule)
             if (FoodIntake.buttonToBeClicked == currentItem.foodIntakeInfoNumber) {
 
@@ -127,7 +126,8 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
 
                 // gets the current time of the device and outputs it
                 val calendar = Calendar.getInstance()
-                val hours = calendar.get(Calendar.HOUR)
+                var hours = 0
+                hours = if (calendar.get(Calendar.HOUR) == 0) {12} else { calendar.get(Calendar.HOUR) }
                 val minutes = calendar.get(Calendar.MINUTE)
                 val amPm = if (calendar.get(Calendar.AM_PM) == Calendar.AM) "AM" else "PM"
 
@@ -150,7 +150,6 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
             } else {
                 Toast.makeText(holder.itemView.context, "Eat failed.. Complete Interval #${FoodIntake.buttonToBeClicked} first.", Toast.LENGTH_SHORT).show()
             }
-
         }
     }
 
@@ -163,20 +162,19 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
     private fun updateOtherFoodIntake(prefs : SharedPreferences, buttonToBeClickedNumber : Int) {
 
         // get data of the previous food intake interval from shared preferences
-        val previousFoodInterval = buttonToBeClickedNumber
-        var previousFoodIntakeHours = prefs.getInt("timeToEatHour_${previousFoodInterval}", 0)
-        var previousFoodIntakeMinutes = prefs.getInt("timeToEatMinute_${previousFoodInterval}", 0)
-        var previousFoodIntakeMeridiem: String = prefs.getString("timeToEatMeridiem_${previousFoodInterval}", "") ?: ""
+
+        var previousFoodIntakeHours = prefs.getInt("timeToEatHour_$buttonToBeClickedNumber", 0)
+        var previousFoodIntakeMinutes = prefs.getInt("timeToEatMinute_$buttonToBeClickedNumber", 0)
+        var previousFoodIntakeMeridiem: String = prefs.getString("timeToEatMeridiem_$buttonToBeClickedNumber", "") ?: ""
 
         // fixes the visual bug: the time clicked of the first FoodIntake Schedule is not shown
-        FoodIntake.foodScheduleList[previousFoodInterval].timeIntervalHours = previousFoodIntakeHours
-        FoodIntake.foodScheduleList[previousFoodInterval].timeIntervalMinutes = previousFoodIntakeMinutes
-        FoodIntake.foodScheduleList[previousFoodInterval].timeIntervalColon = ":"
-        FoodIntake.foodScheduleList[previousFoodInterval].timeIntervalMeridiem = previousFoodIntakeMeridiem
+        FoodIntake.foodScheduleList[buttonToBeClickedNumber].timeIntervalHours = previousFoodIntakeHours
+        FoodIntake.foodScheduleList[buttonToBeClickedNumber].timeIntervalMinutes = previousFoodIntakeMinutes
+        FoodIntake.foodScheduleList[buttonToBeClickedNumber].timeIntervalColon = ":"
+        FoodIntake.foodScheduleList[buttonToBeClickedNumber].timeIntervalMeridiem = previousFoodIntakeMeridiem
 
 
-        var changeMeridiem = ""
-        var didChangeMeridiem = false
+        var changeMeridiem = previousFoodIntakeMeridiem
         // iterates through the next food intake schedules and calculates the time
         for (i in buttonToBeClickedNumber + 1 until itemCount) {
 
@@ -190,28 +188,28 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
             }
 
             // Calculates Hours
-            if (newFoodIntakeHours > 12) {
+            if (newFoodIntakeHours > 12) { // 1 pm up
                 newFoodIntakeHours -= 12
-                FoodIntake.foodScheduleList[i].timeIntervalMeridiem = if (previousFoodIntakeMeridiem == "AM") { "PM" } else { "AM" }
+                if (previousFoodIntakeHours == 12) {
+                    FoodIntake.foodScheduleList[i].timeIntervalMeridiem = if (previousFoodIntakeMeridiem == "AM") { "AM" } else { "PM" }
+                } else {
+                    FoodIntake.foodScheduleList[i].timeIntervalMeridiem = if (previousFoodIntakeMeridiem == "AM") { "PM" } else { "AM" }
+                }
                 changeMeridiem = FoodIntake.foodScheduleList[i].timeIntervalMeridiem
-                didChangeMeridiem = true
-            } else if (newFoodIntakeHours == 12) {
-                FoodIntake.foodScheduleList[i].timeIntervalMeridiem = if (previousFoodIntakeMeridiem == "AM") { "PM" } else { "AM" }
+            } else if (newFoodIntakeHours == 12) { // 12 pm
+                if (previousFoodIntakeHours == 12) {
+                    FoodIntake.foodScheduleList[i].timeIntervalMeridiem = if (previousFoodIntakeMeridiem == "AM") { "AM" } else { "PM" }
+                } else {
+                    FoodIntake.foodScheduleList[i].timeIntervalMeridiem = if (previousFoodIntakeMeridiem == "AM") { "PM" } else { "AM" }
+                }
                 changeMeridiem = FoodIntake.foodScheduleList[i].timeIntervalMeridiem
-                didChangeMeridiem = true
             }
 
             // Store the new values of minutes, hours, colon, and meridiem
             FoodIntake.foodScheduleList[i].timeIntervalHours = newFoodIntakeHours
             FoodIntake.foodScheduleList[i].timeIntervalMinutes = newFoodIntakeMinutes
             FoodIntake.foodScheduleList[i].timeIntervalColon = ":"
-
-            if (!didChangeMeridiem) {
-                FoodIntake.foodScheduleList[i].timeIntervalMeridiem = previousFoodIntakeMeridiem
-            } else {
-                FoodIntake.foodScheduleList[i].timeIntervalMeridiem = changeMeridiem
-            }
-
+            FoodIntake.foodScheduleList[i].timeIntervalMeridiem = changeMeridiem
 
             // save the updated data in shared preferences
             with(prefs.edit()) {
@@ -224,6 +222,7 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
 
             previousFoodIntakeHours = newFoodIntakeHours
             previousFoodIntakeMinutes = newFoodIntakeMinutes
+            previousFoodIntakeMeridiem = FoodIntake.foodScheduleList[i].timeIntervalMeridiem
 
         }
     }
@@ -232,6 +231,7 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
     private fun saveDataPreferencesAfterClick(prefs : SharedPreferences, position : Int, hours : Int, minutes : Int, amPm : String, isEdit : Int) {
 
         with(prefs.edit()) {
+
             putInt(FoodIntake.BUTTON_TO_BE_CLICKED_KEY, FoodIntake.buttonToBeClicked)
 
             // doesn't change the button visibility if inside the edit button
@@ -239,15 +239,21 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
                 putBoolean("editTimeVisible_$position", false)
                 putBoolean("eatButtonVisible_$position", false)
                 putBoolean("checkVisible_$position", true)
+            } else {
+                putBoolean("editTimeVisible_$position", true)
+                putBoolean("eatButtonVisible_$position", true)
+                putBoolean("checkVisible_$position", false)
             }
 
             putInt("timeToEatHour_$position", hours)
             putInt("timeToEatMinute_$position", minutes)
             putString("timeToEatMeridiem_$position", amPm)
             putString("timeToEatColon_$position", "")
+
             apply()
         }
     }
+
 
     //  inner class that extends RecyclerView.ViewHolder and holds references to views in the layout
     class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
