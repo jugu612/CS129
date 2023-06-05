@@ -8,7 +8,7 @@
     <string name="save">save</string>
     <string-array name="options">
         <item>♡ Personal</item>
-        <item>☆ Label</item>
+        <item>☆ School</item>
         <item>🎂 Birthday</item>
         <item>Others</item>
     </string-array>

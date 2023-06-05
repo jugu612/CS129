@@ -1,13 +1,16 @@
 package com.amadeus.ting
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContextCompat.startActivity
 
 
 class MyAlertDialog {
@@ -62,7 +65,13 @@ class MyAlertDialog {
                 taskadapter = TaskAdapter(context)
                 taskadapter?.addList(addedList)
                 taskList = addedList
-                dialog.dismiss() // Close the dialog
+                // Finish the activity
+                if (context is Activity) {
+                    context.finish()
+                    val goToPlannerSection = Intent(context, Planner::class.java)
+                    context.startActivity(goToPlannerSection)
+                    context.overridePendingTransition(0, 0)
+                }
             }
 
         }
@@ -91,6 +100,10 @@ class MyAlertDialog {
 
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
+    }
+
+    private fun overridePendingTransition(i: Int, i1: Int) {
+
     }
 
 

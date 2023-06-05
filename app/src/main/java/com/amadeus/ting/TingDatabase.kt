@@ -13,7 +13,9 @@ data class TaskModel(
     var taskDetails: String,
     var taskDate: String,
     var taskLabel: String,
+    var isChecked: Boolean = false
 )
+
 
 data class SleepReminderModel(
     var sleepDate: String,
@@ -39,6 +41,8 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val COLUMN_TASKDETAILS = "taskdetails"
         private const val COLUMN_DEADLINE = "deadline"
         private const val COLUMN_LABEL = "label"
+        private const val COLUMN_ISCHECKED = "ischecked"
+
 
         // Columns for the sleep reminders table
         private const val COLUMN_SLEEP_DATE = "sleepdate"
@@ -51,7 +55,7 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
     override fun onCreate(db: SQLiteDatabase?) {
         // Create the tasks table
         val createTasksTable =
-            "CREATE TABLE $TABLE_TASKS ($COLUMN_TASKID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_TASKNAME TEXT, $COLUMN_TASKDETAILS TEXT, $COLUMN_DEADLINE DATE, $COLUMN_LABEL TEXT)"
+            "CREATE TABLE $TABLE_TASKS ($COLUMN_TASKID INTEGER PRIMARY KEY AUTOINCREMENT, $COLUMN_TASKNAME TEXT, $COLUMN_TASKDETAILS TEXT, $COLUMN_DEADLINE DATE, $COLUMN_LABEL TEXT, $COLUMN_ISCHECKED INTEGER DEFAULT 0)"
         db?.execSQL(createTasksTable)
 
         // Create the sleep reminders table
@@ -79,6 +83,7 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             put(COLUMN_TASKDETAILS, task.taskDetails)
             put(COLUMN_DEADLINE, task.taskDate)
             put(COLUMN_LABEL, task.taskLabel)
+            put(COLUMN_ISCHECKED, if (task.isChecked) 1 else 0)
         }
         db.insert(TABLE_TASKS, null, values)
         db.close()
@@ -90,10 +95,10 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         val tasks = mutableListOf<TaskModel>()
 
         val query = when (queryType) {
-            1 -> "SELECT * FROM $TABLE_TASKS ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order"
-            2 -> "SELECT * FROM $TABLE_TASKS ORDER BY $COLUMN_DEADLINE $order"
-            3 -> "SELECT * FROM $TABLE_TASKS WHERE $COLUMN_LABEL=$labelToGet"
-            else -> "SELECT * FROM $TABLE_TASKS"
+            1 -> "SELECT * FROM $TABLE_TASKS WHERE $COLUMN_ISCHECKED=0 ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order"
+            2 -> "SELECT * FROM $TABLE_TASKS WHERE $COLUMN_ISCHECKED=0 ORDER BY $COLUMN_DEADLINE $order"
+            3 -> "SELECT * FROM $TABLE_TASKS WHERE $COLUMN_ISCHECKED=0 AND $COLUMN_LABEL='$labelToGet'"
+            else -> "SELECT * FROM $TABLE_TASKS WHERE $COLUMN_ISCHECKED=0"
         }
 
         val cursor: Cursor? = db.rawQuery(query, null)
@@ -122,6 +127,49 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return tasks
     }
 
+
+    fun getAllCheckedTasks(): List<TaskModel> {
+        val db = this.readableDatabase
+        val checkedTasks = mutableListOf<TaskModel>()
+
+        val query = "SELECT * FROM $TABLE_TASKS WHERE isChecked = 1"
+        val cursor: Cursor? = db.rawQuery(query, null)
+
+        if (cursor != null && cursor.moveToFirst()) {
+            val taskIdIndex = cursor.getColumnIndex(COLUMN_TASKID)
+            val taskNameIndex = cursor.getColumnIndex(COLUMN_TASKNAME)
+            val taskDetailsIndex = cursor.getColumnIndex(COLUMN_TASKDETAILS)
+            val deadlineIndex = cursor.getColumnIndex(COLUMN_DEADLINE)
+            val labelIndex = cursor.getColumnIndex(COLUMN_LABEL)
+
+            do {
+                val taskId = cursor.getInt(taskIdIndex)
+                val taskName = cursor.getString(taskNameIndex)
+                val taskDetails = cursor.getString(taskDetailsIndex)
+                val deadline = cursor.getString(deadlineIndex)
+                val label = cursor.getString(labelIndex)
+
+                val task = TaskModel(taskId, taskName, taskDetails, deadline, label, true)
+                checkedTasks.add(task)
+            } while (cursor.moveToNext())
+        }
+
+        cursor?.close()
+        db.close()
+        return checkedTasks
+    }
+
+    fun archiveTask(task: TaskModel) {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ISCHECKED, 1) // Set isChecked to 1 (true)
+        }
+        db.update(TABLE_TASKS, values, "$COLUMN_TASKID=?", arrayOf(task.taskId.toString()))
+        db.close()
+    }
+
+
+
     fun updateTask(task: TaskModel) {
         // Get a reference to the database
         val db = this.writableDatabase
@@ -131,6 +179,8 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             put(COLUMN_TASKDETAILS, task.taskDetails)
             put(COLUMN_DEADLINE, task.taskDate)
             put(COLUMN_LABEL, task.taskLabel)
+            put(COLUMN_ISCHECKED, if (task.isChecked) 1 else 0)
+
         }
         // Update the database with the new values for the specified task ID
         db.update(TABLE_TASKS, values, "$COLUMN_TASKID=?", arrayOf(task.taskId.toString()))
@@ -190,7 +240,7 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
     fun getAllTasksSortedAlphabetically(arrowState: Int): List<TaskModel> {
         val order = if (arrowState == 1) "ASC" else if (arrowState == 0) "DESC" else ""
-        return getTasks("SELECT * FROM $TABLE_TASKS ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order", emptyArray())
+        return getTasks("SELECT * FROM $TABLE_TASKS  WHERE $COLUMN_ISCHECKED=0 ORDER BY $COLUMN_TASKNAME COLLATE NOCASE $order", emptyArray())
     }
 
     // TODO LABEL SORT
@@ -201,12 +251,16 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
     fun sortByDeadline(arrowState: Int): List<TaskModel> {
         val order = if (arrowState == 1) "ASC" else if (arrowState == 0) "DESC" else ""
-        return getTasks("SELECT * FROM $TABLE_TASKS ORDER BY $COLUMN_DEADLINE $order", emptyArray())
+        return getTasks("SELECT * FROM $TABLE_TASKS  WHERE $COLUMN_ISCHECKED=0 ORDER BY $COLUMN_DEADLINE $order", emptyArray())
     }
 
     fun sortByTaskID() : List<TaskModel> {
-        val query = "SELECT * FROM $TABLE_TASKS ORDER BY $COLUMN_TASKID ASC"
+        val query = "SELECT * FROM $TABLE_TASKS  WHERE $COLUMN_ISCHECKED=0 ORDER BY $COLUMN_TASKID ASC"
         return getTasks(query, emptyArray())
+    }
+
+    fun getAllChecks(): List<TaskModel> {
+        return getTasks("SELECT * FROM $TABLE_TASKS  WHERE $COLUMN_ISCHECKED=0 ORDER BY $COLUMN_TASKNAME COLLATE NOCASE", emptyArray())
     }
 
     fun getTaskID() : String {
