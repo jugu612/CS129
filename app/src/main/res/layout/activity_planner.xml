@@ -47,6 +47,8 @@
                 android:textColor="@color/white"
                 android:textSize="44sp" />
 
+
+
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/bell_button"
                 android:layout_width="35dp"
@@ -56,6 +58,17 @@
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/notif_icon"
                 app:shapeAppearanceOverlay="@style/Circle" />
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/notifreq"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="40dp"
+                android:src="@drawable/bell"
+                app:shapeAppearanceOverlay="@style/Circle" />
+
 
         </RelativeLayout>
 
@@ -119,6 +132,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         <LinearLayout
+            android:id="@+id/lay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="24dp"
@@ -127,20 +141,43 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/textView_TaskList"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginBottom="12dp"
-                android:fontFamily="@font/glacial_indifference_bold"
-                android:text="TASK LIST:"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@id/horizontal_calendar">
 
-            </TextView>
+                <TextView
+                    android:id="@+id/textView_TaskList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="12dp"
+                    android:fontFamily="@font/glacial_indifference_bold"
+                    android:text="TASK LIST:"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/textView_Done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="12dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/red"
+                    android:fontFamily="@font/glacial_indifference_bold"
+                    android:text=" Done Tasks "
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:padding="2dp"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </RelativeLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@id/taskList_Wrapper"

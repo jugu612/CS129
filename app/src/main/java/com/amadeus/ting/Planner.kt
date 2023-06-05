@@ -5,7 +5,11 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.transition.TransitionManager
+import android.transition.AutoTransition
+import android.util.Log
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -16,6 +20,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import java.text.SimpleDateFormat
 import java.util.*
 import java.time.LocalDate
+
 
 
 class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
@@ -64,6 +69,7 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
                 dbHelper.getAllTasks() // Get all tasks
             }
         } else {
+            dbHelper.getAllChecks()
             dbHelper.getAllTasks() // Get all tasks
         }
 
@@ -103,6 +109,19 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
                 editor.apply()
             }
         }
+
+        val textViewDone = findViewById<TextView>(R.id.textView_Done)
+
+        textViewDone.setOnClickListener {
+            val checkedTasks = dbHelper.getAllCheckedTasks()
+            // Do something with the checked tasks, such as updating the UI
+            // For example, you can log the task titles:
+            checkedTasks.forEach { task ->
+                Log.d("CheckedTask", task.taskTitle)
+            }
+        }
+
+
 
 
         onClick<ShapeableImageView>(R.id.back_button){

@@ -5,8 +5,11 @@ import android.graphics.Color
 import android.app.AlertDialog
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.view.*
 import android.widget.*
+import androidx.cardview.widget.CardView
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -50,7 +53,12 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
         var labelTextView: TextView = itemView.findViewById(R.id.view_label)
         var layout = itemView.findViewById<LinearLayout>(R.id.task_layout)
         var btnDeleteTask = itemView.findViewById<Button>(R.id.btnDeleteTask)
-        var btnEditTask = itemView.findViewById<Button>(R.id.btnEditTask)
+        var btnCheckTask = itemView.findViewById<Button>(R.id.btnCheckTask)
+
+        // New views for expandable card view
+        var cardView: CardView = itemView.findViewById(R.id.task_card)
+
+
 
 
     }
@@ -64,6 +72,9 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
         holder.dateTextView.text = currentItem.taskDate
         holder.labelTextView.text = currentItem.taskLabel
         holder.itemView.setOnClickListener{onClickItem?.invoke(currentItem)}
+
+
+
         holder.btnDeleteTask.setOnClickListener {
 
             val builder = AlertDialog.Builder(holder.itemView.context)
@@ -77,16 +88,32 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
             builder.setNegativeButton("No") { _, _ -> }
             builder.show()
         }
-        holder.btnEditTask.setOnClickListener {
+        holder.btnCheckTask.setOnClickListener {
+
+            val builder = AlertDialog.Builder(holder.itemView.context)
+            builder.setTitle("Done Task")
+            builder.setMessage("Are you sure you're done with this task?")
+            builder.setPositiveButton("Yes") { _, _ ->
+                currentItem.isChecked = true // Set isChecked to true
+                dbHelper.updateTask(currentItem) // Update the task in the database
+                taskList = taskList.toMutableList().apply { removeAt(position) } // Remove the item from the list
+                notifyItemRemoved(position) // Notify the adapter about the removal
+            }
+            builder.setNegativeButton("No") { _, _ -> }
+            builder.show()
+        }
+
+        holder.cardView.setOnClickListener {
             edit_task(currentItem, holder.itemView)
         }
 
         when (currentItem.taskLabel) {
-            "☆ Label" -> holder.layout.setBackgroundColor(Color.parseColor("#C3B1E1"))
-            "♡ Personal" -> holder.layout.setBackgroundColor(Color.parseColor("#AEC6CF"))
+            "☆ School" -> holder.layout.setBackgroundColor(Color.parseColor("#AEC6CF"))
+            "♡ Personal" -> holder.layout.setBackgroundColor(Color.parseColor("#C3B1E1"))
             "\uD83C\uDF82 Birthday" -> holder.layout.setBackgroundColor(Color.parseColor("#F4949E"))
             else -> holder.layout.setBackgroundColor(Color.parseColor("#00917C"))
         }
+
     }
 
 
@@ -100,11 +127,12 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
 
         editTitle.setText(currentItem.taskTitle)
         editDetails.setText(currentItem.taskDetails)
-        dateButton.text = currentItem.taskDate
+        val savedDate = currentItem.taskDate
+        dateButton.text = savedDate
         val dateOpt = DatePick(dateButton)
-        dateOpt.DefaultDate()
         dateOpt.pickDate()
         val labelIndex = getLabelIndex(currentItem.taskLabel)
+        labelSpinner.setSelection(labelIndex)
         labelSpinner.setSelection(labelIndex)
 
         val builder = AlertDialog.Builder(itemView.context)
@@ -143,12 +171,14 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
         window?.attributes = layoutParams
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
+
+
     }
 
     private fun getLabelIndex(label: String): Int {
         return when (label) {
-            "☆ Label" -> 0
-            "♡ Personal" -> 1
+            "☆ School" -> 1
+            "♡ Personal" -> 0
             "\uD83C\uDF82 Birthday" -> 2
             else -> 3
         }
