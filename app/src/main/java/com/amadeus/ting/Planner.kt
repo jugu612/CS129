@@ -5,13 +5,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.transition.TransitionManager
+import android.transition.AutoTransition
+import android.util.Log
 import android.view.View
-import android.widget.Toast
-import android.Manifest
-import android.content.pm.PackageManager
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +20,7 @@ import com.google.android.material.imageview.ShapeableImageView
 import java.text.SimpleDateFormat
 import java.util.*
 import java.time.LocalDate
+
 
 
 class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
@@ -38,20 +38,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
     private lateinit var tskList: List<TaskModel>
     private var sortedTaskList: List<TaskModel> = emptyList()
 
-    private val notificationSystem: NotificationSystem = NotificationSystem(this)
-
-    private val requestPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()){
-            isGranted:Boolean->
-            if(isGranted){
-                notificationSystem.showNotification()
-            }
-            else{
-                Toast.makeText(this,"Notifications are blocked.", Toast.LENGTH_LONG).show()
-            }
-        }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,25 +49,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         setUpClickListener()
         setUpCalendar()
         initRecyclerView()
-
-        // Notification placeholder
-        val notifReq = findViewById<ShapeableImageView>(R.id.notifreq)
-        notifReq.setOnClickListener{
-            when{
-                ContextCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED ->{
-                    notificationSystem.showNotification()
-                }
-                else->{
-                    requestPermissionLauncher.launch(
-                        Manifest.permission.POST_NOTIFICATIONS
-                    )
-                }
-            }
-        }
-
 
 
         // Get the shared preferences object with the name "MyPreferences"
@@ -102,6 +69,7 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
                 dbHelper.getAllTasks() // Get all tasks
             }
         } else {
+            dbHelper.getAllChecks()
             dbHelper.getAllTasks() // Get all tasks
         }
 
@@ -141,6 +109,19 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
                 editor.apply()
             }
         }
+
+        val textViewDone = findViewById<TextView>(R.id.textView_Done)
+
+        textViewDone.setOnClickListener {
+            val checkedTasks = dbHelper.getAllCheckedTasks()
+            // Do something with the checked tasks, such as updating the UI
+            // For example, you can log the task titles:
+            checkedTasks.forEach { task ->
+                Log.d("CheckedTask", task.taskTitle)
+            }
+        }
+
+
 
 
         onClick<ShapeableImageView>(R.id.back_button){
@@ -231,9 +212,9 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         //Add the date here
         val dateModel = calendarAdapter.getItem(position)
         taskadapter?.addList(tskList, dateModel)
+
     }
 
-    //Notification Permission Placeholder
 
 
 
