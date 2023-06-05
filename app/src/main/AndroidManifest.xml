@@ -17,7 +17,7 @@
 
 
         <activity
-            android:name=".HomePage"
+            android:name=".RegLogin"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +35,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".RegLogin"
+            android:name=".HomePage"
             android:exported="false">
 
         </activity>
@@ -74,6 +74,10 @@
 
         <activity
             android:name=".WaterIntake"
+            android:exported="false" />
+
+        <activity
+            android:name=".UserProfile"
             android:exported="false" />
 
     </application>

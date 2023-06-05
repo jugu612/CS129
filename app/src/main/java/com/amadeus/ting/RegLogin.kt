@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
+
 class RegLogin : AppCompatActivity() {
 
     // Authentication object to handle Firebase authentication
@@ -119,8 +120,9 @@ class RegLogin : AppCompatActivity() {
                                     // Email is already registered
                                     // Direct the user to the home page
                                     val intent = Intent(this, HomePage::class.java)
-                                    intent.putExtra("email", email)
+                                    intent.putExtra("email", account.email)
                                     intent.putExtra("name", account.displayName)
+                                    intent.putExtra("profileImage", account.photoUrl?.toString())
                                     startActivity(intent)
                                 }
                             } else {
@@ -142,6 +144,7 @@ class RegLogin : AppCompatActivity() {
                 val intent : Intent = Intent(this, HomePage::class.java)
                 intent.putExtra("email",account.email)
                 intent.putExtra("name",account.displayName)
+                intent.putExtra("profileImage", account.photoUrl?.toString())
                 startActivity(intent)
             } else {
                 Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
