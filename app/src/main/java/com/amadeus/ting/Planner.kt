@@ -4,6 +4,7 @@ package com.amadeus.ting
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.transition.TransitionManager
@@ -11,7 +12,9 @@ import android.transition.AutoTransition
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -115,23 +118,24 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
             }
         }
 
-        val textViewDone = findViewById<TextView>(R.id.textView_Done)
+        val textViewDone = findViewById<ToggleButton>(R.id.textView_Done)
 
-        textViewDone.setOnClickListener {
-            if (isDoneTasksVisible) {
-                tskList = dbHelper.getAllTasks()
-                taskadapter?.addList(tskList)
-                textViewDone.text = " Done Task "
-                isDoneTasksVisible = false
-            } else {
+        textViewDone.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
                 checkedTaskList = dbHelper.getAllCheckedTasks()
                 taskadapter?.addList(checkedTaskList)
-                textViewDone.text = " Tasks "
                 isDoneTasksVisible = true
+                val color = ContextCompat.getColor(this, R.color.red)
+                textViewDone.backgroundTintList = ColorStateList.valueOf(color) // Set the desired color when isChecked is false
+            } else {
+                tskList = dbHelper.getAllTasks()
+                taskadapter?.addList(tskList)
+                isDoneTasksVisible = false
+                val color = ContextCompat.getColor(this, R.color.black)
+                textViewDone.backgroundTintList = ColorStateList.valueOf(color) // Set the desired color when isChecked is true
+
             }
         }
-
-
 
 
         onClick<ShapeableImageView>(R.id.back_button){

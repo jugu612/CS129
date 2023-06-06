@@ -73,8 +73,11 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
         holder.labelTextView.text = currentItem.taskLabel
         holder.itemView.setOnClickListener{onClickItem?.invoke(currentItem)}
 
-
-
+        if (currentItem.isChecked) {
+            holder.btnCheckTask.visibility = View.GONE
+        } else {
+            holder.btnCheckTask.visibility = View.VISIBLE
+        }
         holder.btnDeleteTask.setOnClickListener {
 
             val builder = AlertDialog.Builder(holder.itemView.context)
@@ -104,7 +107,12 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
         }
 
         holder.cardView.setOnClickListener {
-            edit_task(currentItem, holder.itemView)
+            if (currentItem.isChecked){
+                null
+            }
+            else {
+                edit_task(currentItem, holder.itemView)
+            }
         }
 
         when (currentItem.taskLabel) {
