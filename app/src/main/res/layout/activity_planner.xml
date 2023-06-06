@@ -162,21 +162,25 @@
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"/>
 
-                <TextView
+                <ToggleButton
                     android:id="@+id/textView_Done"
                     android:layout_width="wrap_content"
-                    android:layout_height="20dp"
+                    android:layout_height="24dp"
                     android:layout_alignParentRight="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/rounded_button"
-                    android:backgroundTint="@color/red"
+                    android:backgroundTint="@color/black"
                     android:fontFamily="@font/glacial_indifference_bold"
-                    android:text=" Done Tasks "
+                    android:textOff="Tasks Done"
+                    android:textOn="To do"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:padding="2dp"
                     app:layout_constraintEnd_toEndOf="parent" />
+
+
+
             </RelativeLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

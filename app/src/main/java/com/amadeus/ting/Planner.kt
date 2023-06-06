@@ -4,13 +4,17 @@ package com.amadeus.ting
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.transition.TransitionManager
 import android.transition.AutoTransition
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +41,10 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
     private var taskadapter: TaskAdapter? = null
     private lateinit var tskList: List<TaskModel>
     private var sortedTaskList: List<TaskModel> = emptyList()
+    private var checkedTaskList: List<TaskModel> = emptyList()
+    private var isDoneTasksVisible = false
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -110,18 +118,24 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
             }
         }
 
-        val textViewDone = findViewById<TextView>(R.id.textView_Done)
+        val textViewDone = findViewById<ToggleButton>(R.id.textView_Done)
 
-        textViewDone.setOnClickListener {
-            val checkedTasks = dbHelper.getAllCheckedTasks()
-            // Do something with the checked tasks, such as updating the UI
-            // For example, you can log the task titles:
-            checkedTasks.forEach { task ->
-                Log.d("CheckedTask", task.taskTitle)
+        textViewDone.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                checkedTaskList = dbHelper.getAllCheckedTasks()
+                taskadapter?.addList(checkedTaskList)
+                isDoneTasksVisible = true
+                val color = ContextCompat.getColor(this, R.color.red)
+                textViewDone.backgroundTintList = ColorStateList.valueOf(color) // Set the desired color when isChecked is false
+            } else {
+                tskList = dbHelper.getAllTasks()
+                taskadapter?.addList(tskList)
+                isDoneTasksVisible = false
+                val color = ContextCompat.getColor(this, R.color.black)
+                textViewDone.backgroundTintList = ColorStateList.valueOf(color) // Set the desired color when isChecked is true
+
             }
         }
-
-
 
 
         onClick<ShapeableImageView>(R.id.back_button){
