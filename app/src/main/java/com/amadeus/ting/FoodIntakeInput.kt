@@ -1,28 +1,19 @@
 package com.amadeus.ting
 
-import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Bundle
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.Spinner
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.imageview.ShapeableImageView
-import android.widget.ArrayAdapter
+import android.widget.*
 import com.amadeus.ting.FoodIntake.Companion.PREFS_NAME
 import com.amadeus.ting.FoodIntake.Companion.newRecyclerView
-import com.amadeus.ting.FoodIntakeInput.Companion.PREF_EATING_INTERVAL_HOURS
-import com.amadeus.ting.FoodIntakeInput.Companion.PREF_EATING_INTERVAL_MINUTES
-import com.amadeus.ting.FoodIntakeInput.Companion.PREF_FIRST_REMINDER_HOURS
-import com.amadeus.ting.FoodIntakeInput.Companion.PREF_FIRST_REMINDER_MINUTES
-import com.amadeus.ting.FoodIntakeInput.Companion.PREF_MEALS_PER_DAY
 
-class FoodIntakeInput : AppCompatActivity() {
-
+class FoodIntakeInput {
     // SharedPreferences instance
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -42,20 +33,34 @@ class FoodIntakeInput : AppCompatActivity() {
     private var firstReminderHours: Int = 0
     private var firstReminderMinutes: Int = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.edit_food_intake)
+
+    fun editMealtimeDialog(context: Context, layout: Int) {
+
+
+        val inflater = LayoutInflater.from(context)
+        val dialogLayout = inflater.inflate(layout, null)
+
+        val builder = AlertDialog.Builder(context, R.style.MyDialogStyle)
+        builder.setView(dialogLayout)
+        builder.setCancelable(false)
+
+        // Create and show the AlertDialog
+        val alertDialog = builder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        alertDialog.show()
+
+        val cancelButton = dialogLayout.findViewById<Button>(R.id.cancel_button)
+        val saveButton = dialogLayout.findViewById<Button>(R.id.save_button)
+
 
         // Initialize SharedPreferences
-        sharedPreferences = getSharedPreferences("FoodIntakePrefs", Context.MODE_PRIVATE)
+        sharedPreferences = context.getSharedPreferences("FoodIntakePrefs", Context.MODE_PRIVATE)
+
 
         // Restore saved values from SharedPreferences
-        restoreSavedValues()
+        //showToast(context)
+        getSavedValues(dialogLayout)
 
-        onClick<ShapeableImageView>(R.id.back_button) {
-            val goToFoodIntake = Intent(this, FoodIntake::class.java)
-            startActivity(goToFoodIntake)
-        }
 
         // Meal Frequency options:
         val mealFrequencyList = mutableListOf<String>()
@@ -64,8 +69,9 @@ class FoodIntakeInput : AppCompatActivity() {
             mealFrequencyList.add(mealfreq)
         }
         val mealFrequencyOptions = mealFrequencyList.toTypedArray()
-        setupFoodSelectionSpinner(this, R.id.meals_per_day_button, mealFrequencyOptions) { selectedPosition ->
+        setupFoodSelectionSpinner(dialogLayout, R.id.meals_per_day_button, mealFrequencyOptions) { selectedPosition ->
             mealsPerDay = selectedPosition + 1 // Save selected value (1-based index)
+
         }
 
         // Eating Interval Options
@@ -79,14 +85,14 @@ class FoodIntakeInput : AppCompatActivity() {
                 } else if (m == 0) {
                     "$hours"
                 } else {
-                    "$hours and $minutes"
+                    "$hours & $minutes"
                 }
                 intervalOptions.add(interval)
             }
         }
         val eatingIntervalOptions = intervalOptions.toTypedArray()
 
-        setupFoodSelectionSpinner(this, R.id.eating_intervals_button, eatingIntervalOptions) { selectedPosition ->
+        setupFoodSelectionSpinner(dialogLayout, R.id.eating_intervals_button, eatingIntervalOptions) { selectedPosition ->
             // Calculate and save eating interval hours and minutes based on the selected position
             val hours = selectedPosition / 12 // Each hour has 12 options
             val minutes = (selectedPosition % 12) * 5 // Each 5 minutes has 1 option
@@ -101,78 +107,74 @@ class FoodIntakeInput : AppCompatActivity() {
                 val hours = if (h == 1) "$h hr" else "$h hrs"
                 val minutes = if (m == 1) "$m min" else "$m mins"
                 val interval = if (h == 0) {
-                    "$minutes"
+                    "$minutes before"
                 } else if (m == 0) {
-                    "$hours"
+                    "$hours before"
                 } else {
-                    "$hours and $minutes"
+                    "$hours & $minutes before"
                 }
                 firstReminderList.add(interval)
             }
         }
         val firstReminderOptions = firstReminderList.toTypedArray()
 
-        setupFoodSelectionSpinner(this, R.id.first_reminder_button, firstReminderOptions) { selectedPosition ->
-            // Calculate and save first reminder hours and minutes based on the selected position
-            if (selectedPosition == 0) {
-                firstReminderHours = 0
-                firstReminderMinutes = 0
-            } else {
-                val timeBefore = selectedPosition - 1 // Subtract 1 for the "On time" option
-                firstReminderHours = timeBefore / 12 // Each hour has 12 options
-                firstReminderMinutes = (timeBefore % 12) * 5 // Each 5 minutes has 1 option
-            }
+        setupFoodSelectionSpinner(dialogLayout, R.id.first_reminder_button, firstReminderOptions) { selectedPosition ->
+            firstReminderHours = selectedPosition / 12 // Each hour has 12 options
+            firstReminderMinutes = (selectedPosition % 12) * 5 // Each 5 minutes has 1 option
+
+        }
+
+        cancelButton?.setOnClickListener {
+            alertDialog.dismiss()
         }
 
         // Save button
-        onClick<View>(R.id.save_button) {
-            resetListInput()
+        saveButton?.setOnClickListener {
+            resetListInput(context)
             saveValuesToFoodIntake()
             saveValuesToSharedPreferences() // Save the values to SharedPreferences
-            showToast()
-            val goToFoodIntake = Intent(this, FoodIntake::class.java)
-            startActivity(goToFoodIntake)
-        }
-        // Cancel button
-        onClick<View>(R.id.cancel_button) {
-            val goToFoodIntake = Intent(this, FoodIntake::class.java)
-            startActivity(goToFoodIntake)
-        }
-    }
-    override fun onResume() {
-        super.onResume()
+            showToast(context)
+            if (context is Activity) {
+                context.finish()
+                val goToFoodSection = Intent(context, FoodIntake::class.java)
+                context.startActivity(goToFoodSection)
+                context.overridePendingTransition(0, 0)
+            }
 
-        // Restore saved values from SharedPreferences
-        restoreSavedValues()
+        }
+
     }
 
-    private fun restoreSavedValues() {
-        // Restore mealsPerDay value from SharedPreferences
+
+    private fun getSavedValues( dialogLayout: View) {
         mealsPerDay = sharedPreferences.getInt(PREF_MEALS_PER_DAY, 1)
-
-        // Restore eatingIntervalHours and eatingIntervalMinutes values from SharedPreferences
         eatingIntervalHours = sharedPreferences.getInt(PREF_EATING_INTERVAL_HOURS, 0)
         eatingIntervalMinutes = sharedPreferences.getInt(PREF_EATING_INTERVAL_MINUTES, 0)
-
-        // Restore firstReminderHours and firstReminderMinutes values from SharedPreferences
         firstReminderHours = sharedPreferences.getInt(PREF_FIRST_REMINDER_HOURS, 0)
         firstReminderMinutes = sharedPreferences.getInt(PREF_FIRST_REMINDER_MINUTES, 0)
 
-        // Update the spinners with the restored values
-        val mealsPerDaySpinner = findViewById<Spinner>(R.id.meals_per_day_button)
-        mealsPerDaySpinner.setSelection(mealsPerDay - 1) // Subtract 1 to convert to 0-based index
 
-        val eatingIntervalSpinner = findViewById<Spinner>(R.id.eating_intervals_button)
-        val eatingIntervalPosition = eatingIntervalHours * 12 + eatingIntervalMinutes / 5
-        eatingIntervalSpinner.setSelection(eatingIntervalPosition)
+        val mealsPerDayButton = dialogLayout.findViewById<Spinner>(R.id.meals_per_day_button)
+        val eatingIntervalsButton = dialogLayout.findViewById<Spinner>(R.id.eating_intervals_button)
+        val firstReminderButton = dialogLayout.findViewById<Spinner>(R.id.first_reminder_button)
 
-        val firstReminderSpinner = findViewById<Spinner>(R.id.first_reminder_button)
-        val firstReminderPosition = if (firstReminderHours == 0 && firstReminderMinutes == 0) {
-            0 // "On time" option
-        } else {
-            (firstReminderHours * 12 + firstReminderMinutes / 5) + 1 // Add 1 for the "On time" option
+        mealsPerDayButton.post {
+            mealsPerDayButton.setSelection(mealsPerDay - 1, false) // Adjust for 0-based index
         }
-        firstReminderSpinner.setSelection(firstReminderPosition)
+
+        eatingIntervalsButton.post {
+            eatingIntervalsButton.setSelection(calculateIntervalPosition(eatingIntervalHours, eatingIntervalMinutes), false)
+        }
+
+        firstReminderButton.post {
+            firstReminderButton.setSelection(calculateIntervalPosition(firstReminderHours, firstReminderMinutes), false)
+        }
+    }
+
+
+    private fun calculateIntervalPosition(hours: Int, minutes: Int): Int {
+        val position = (hours * 12) + (minutes / 5)
+        return position
     }
 
 
@@ -195,29 +197,31 @@ class FoodIntakeInput : AppCompatActivity() {
         FoodIntake.firstReminderMinutes = firstReminderMinutes
     }
 
-    private fun showToast() {
-        val mealsPerDay = sharedPreferences.getInt(PREF_MEALS_PER_DAY, 1)
-        val eatingIntervalHours = sharedPreferences.getInt(PREF_EATING_INTERVAL_HOURS, 0)
-        val eatingIntervalMinutes = sharedPreferences.getInt(PREF_EATING_INTERVAL_MINUTES, 0)
-        val firstReminderHours = sharedPreferences.getInt(PREF_FIRST_REMINDER_HOURS, 0)
-        val firstReminderMinutes = sharedPreferences.getInt(PREF_FIRST_REMINDER_MINUTES, 0)
+    // Assuming this code is inside an Activity class
+    private fun showToast(context: Context) {
+        mealsPerDay = sharedPreferences.getInt(PREF_MEALS_PER_DAY, 1)
+        eatingIntervalHours = sharedPreferences.getInt(PREF_EATING_INTERVAL_HOURS, 0)
+        eatingIntervalMinutes = sharedPreferences.getInt(PREF_EATING_INTERVAL_MINUTES, 0)
+        firstReminderHours = sharedPreferences.getInt(PREF_FIRST_REMINDER_HOURS, 0)
+        firstReminderMinutes = sharedPreferences.getInt(PREF_FIRST_REMINDER_MINUTES, 0)
 
         val message = "Meals per day: $mealsPerDay\n" +
                 "Eating interval: $eatingIntervalHours hours $eatingIntervalMinutes minutes\n" +
                 "First reminder: $firstReminderHours hours $firstReminderMinutes minutes"
 
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
-    @SuppressLint("ClickableViewAccessibility", "UseCompatLoadingForDrawables")
+
+
     fun setupFoodSelectionSpinner(
-        activity: Activity,
+        dialogLayout: View,
         spinnerId: Int,
         spinnerOptions: Array<out Any>,
         callback: (Int) -> Unit // Add callback parameter
     ) {
-        val mealOption = activity.findViewById<Spinner>(spinnerId)
+        val mealOption = dialogLayout.findViewById<Spinner>(spinnerId)
         val adapterMF = ArrayAdapter(
-            activity,
+            dialogLayout.context,
             R.layout.spinner_item_color,
             spinnerOptions.map { it.toString() }
         )
@@ -227,44 +231,38 @@ class FoodIntakeInput : AppCompatActivity() {
 
         mealOption.setOnTouchListener { _, _ ->
             if (mealOption.isPressed) {
-                mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_down)
+                mealOption.background = dialogLayout.context.resources.getDrawable(R.drawable.food_intake_spinner_down)
             } else {
-                mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_down)
+                mealOption.background = dialogLayout.context.resources.getDrawable(R.drawable.food_intake_spinner_down)
             }
             false
         }
 
         mealOption.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            @SuppressLint("UseCompatLoadingForDrawables")
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val selectedPosition = parent.selectedItemPosition
                 if (selectedPosition == position) {
-                    mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_up)
+                    mealOption.background = dialogLayout.context.resources.getDrawable(R.drawable.food_intake_spinner_up)
                 } else {
-                    mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_up)
+                    mealOption.background = dialogLayout.context.resources.getDrawable(R.drawable.food_intake_spinner_up)
                 }
                 // Call the callback with the selected position
                 callback(selectedPosition)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
-                mealOption.background = activity.resources.getDrawable(R.drawable.food_intake_spinner_up)
+                mealOption.background = dialogLayout.context.resources.getDrawable(R.drawable.food_intake_spinner_up)
             }
         }
     }
 
-    private inline fun <reified T : View> Activity.onClick(id: Int, crossinline action: (T) -> Unit) {
-        findViewById<T>(id)?.setOnClickListener {
-            action(it as T)
-        }
-    }
 
-    fun resetListInput() {
 
+    fun resetListInput(context: Context) {
         FoodIntake.foodScheduleList = arrayListOf<FoodIntakeInfo>()
 
         for (i in 0 until FoodIntake.mealsPerDay) {
-            val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
             // Resets the visibility of the buttons and the variable pointing to the button to be clicked
             with(prefs.edit()) {
@@ -283,9 +281,8 @@ class FoodIntakeInput : AppCompatActivity() {
             val intakeInfo = FoodIntakeInfo(i + 1, 0, "", 0, "")
             FoodIntake.foodScheduleList.add(intakeInfo)
         }
-
         newRecyclerView.adapter = FoodIntakeAdapter(FoodIntake.foodScheduleList)
-
     }
+
 }
 

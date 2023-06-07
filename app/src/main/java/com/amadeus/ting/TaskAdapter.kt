@@ -10,6 +10,7 @@ import android.transition.TransitionManager
 import android.view.*
 import android.widget.*
 import androidx.cardview.widget.CardView
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
@@ -94,7 +95,7 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
         holder.btnCheckTask.setOnClickListener {
 
             val builder = AlertDialog.Builder(holder.itemView.context)
-            builder.setTitle("Done Task")
+            builder.setTitle("Task Done")
             builder.setMessage("Are you sure you're done with this task?")
             builder.setPositiveButton("Yes") { _, _ ->
                 currentItem.isChecked = true // Set isChecked to true
@@ -115,14 +116,20 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
             }
         }
 
+
         when (currentItem.taskLabel) {
             "☆ School" -> holder.layout.setBackgroundColor(Color.parseColor("#AEC6CF"))
             "♡ Personal" -> holder.layout.setBackgroundColor(Color.parseColor("#C3B1E1"))
             "\uD83C\uDF82 Birthday" -> holder.layout.setBackgroundColor(Color.parseColor("#F4949E"))
-            else -> holder.layout.setBackgroundColor(Color.parseColor("#00917C"))
+            else -> holder.layout.setBackgroundColor(Color.parseColor("#FFB144"))
         }
 
+
     }
+
+    // Helper function to parse the task date and time string into a Date object
+
+
 
 
     private fun edit_task(currentItem: TaskModel, itemView: View) {
