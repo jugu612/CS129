@@ -41,20 +41,28 @@
 
             <TextView
                 android:id="@+id/totalWaterIntake"
-                android:layout_width="208dp"
+                android:layout_width="wrap_content"
                 android:layout_height="36dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="40dp"
                 android:fontFamily="@font/glacial_indifference"
-                android:gravity="left|center"
-                android:paddingLeft="@dimen/margin_10"
-                android:text="Today's Record:"
+                android:gravity="start"
+                android:text="Today's Records:"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                app:layout_constraintBottom_toTopOf="@+id/history_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.112"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.109" />
+                tools:ignore="RtlHardcoded" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/water_intake_records_rv"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                app:layout_constraintBottom_toTopOf="@+id/history_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/totalWaterIntake"
+                tools:listitem="@layout/water_intake_rv"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

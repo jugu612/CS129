@@ -4,6 +4,8 @@ package com.amadeus.ting
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.transition.TransitionManager
 import android.transition.AutoTransition
@@ -12,6 +14,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,8 +44,9 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
     private var taskadapter: TaskAdapter? = null
     private lateinit var tskList: List<TaskModel>
     private var sortedTaskList: List<TaskModel> = emptyList()
-    // Using a helper for the data class
-    private lateinit var horizontalCalendar: HorizontalCalendar
+    private var checkedTaskList: List<TaskModel> = emptyList()
+    private var isDoneTasksVisible = false
+
 
 
     private val notificationSystem:NotificationSystem = NotificationSystem(this)
@@ -66,9 +70,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         binding = ActivityPlannerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val dbHelper = TingDatabase(applicationContext)
-
-        horizontalCalendar = HorizontalCalendar()
-
         setUpAdapter()
         setUpClickListener()
         setUpCalendar()
@@ -151,18 +152,24 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
             }
         }
 
-        val textViewDone = findViewById<TextView>(R.id.textView_Done)
+        val textViewDone = findViewById<ToggleButton>(R.id.textView_Done)
 
-        textViewDone.setOnClickListener {
-            val checkedTasks = dbHelper.getAllCheckedTasks()
-            // Do something with the checked tasks, such as updating the UI
-            // For example, you can log the task titles:
-            checkedTasks.forEach { task ->
-                Log.d("CheckedTask", task.taskTitle)
+        textViewDone.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                checkedTaskList = dbHelper.getAllCheckedTasks()
+                taskadapter?.addList(checkedTaskList)
+                isDoneTasksVisible = true
+                val color = ContextCompat.getColor(this, R.color.red)
+                textViewDone.backgroundTintList = ColorStateList.valueOf(color) // Set the desired color when isChecked is false
+            } else {
+                tskList = dbHelper.getAllTasks()
+                taskadapter?.addList(tskList)
+                isDoneTasksVisible = false
+                val color = ContextCompat.getColor(this, R.color.black)
+                textViewDone.backgroundTintList = ColorStateList.valueOf(color) // Set the desired color when isChecked is true
+
             }
         }
-
-
 
 
         onClick<ShapeableImageView>(R.id.back_button){

@@ -44,141 +44,236 @@
             app:shapeAppearanceOverlay="@style/Circle" />
 
     </RelativeLayout>
-
-    <!-- Drink Information overall !-->
-    <TextView
-        android:id="@+id/goal_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/glacial_indifference_bold"
-        android:text="Today's Goal"
-        android:textColor="@color/deepBlue"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/drink"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/drink"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/glacial_indifference"
-        android:text="Drink 1000 ml"
-        android:paddingVertical="10dp"
-        android:textColor="@color/black"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/progress_bar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <!-- Progress Bar -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="320dp"
-        android:layout_height="320dp"
-        android:indeterminateOnly="false"
-        android:progressDrawable="@drawable/water_intake_progress_ring"
-        android:rotation="-90"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/horizontal_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout_Header"
-        tools:progress="23" />
+        app:layout_constraintTop_toBottomOf="@id/linearLayout_Header"
+        tools:context=".WaterIntake">
 
-    <!-- Information inside Progress Bar -->
-    <LinearLayout
+        <ImageView
+            android:id="@+id/iv_calendar_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_20"
+            android:contentDescription="@string/cd_previous"
+            android:src="@drawable/ic_previous"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_calendar_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_20"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:contentDescription="@string/cd_next"
+            android:src="@drawable/ic_next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_date_month"
+            android:fontFamily="@font/glacial_indifference"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textFontWeight="1000"
+            android:textSize="25sp"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@id/iv_calendar_next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/iv_calendar_next"
+            tools:text="MONTH AND YEAR" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/calendar_recycler"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_date_month" />
+
+        <TextView
+            android:id="@+id/test_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!-- Drink Information overall !-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/drink_wrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
-        app:layout_constraintEnd_toEndOf="@+id/progress_bar"
-        app:layout_constraintStart_toStartOf="@+id/progress_bar"
-        app:layout_constraintTop_toTopOf="@+id/progress_bar"
-        android:gravity="center_horizontal">
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/horizontal_calendar">
 
         <TextView
-            android:id="@+id/number_percent"
+            android:id="@+id/goal_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/glacial_indifference_bold"
-            android:text="13%"
-            android:textColor="@color/black"
-            android:textSize="70sp" />
+            android:text="Today's Goal"
+            android:textColor="@color/deepBlue"
+            android:textSize="40sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/drink"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/number_ml"
+            android:id="@+id/drink"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/glacial_indifference"
-            android:text="700 ml left"
-            android:textColor="@color/deepBlue"
-            android:textSize="30sp" />
-    </LinearLayout>
+            android:paddingVertical="10dp"
+            android:text="Drink 1000 ml"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="@+id/progress_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- SeekBar -->
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="320dp"
-        android:layout_height="wrap_content"
-        android:max="1000"
-        android:progressTint="@color/cyan"
-        android:thumbTint="@color/cyan"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progress_bar" />
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="320dp"
+            android:layout_height="320dp"
+            android:indeterminateOnly="false"
+            android:progressDrawable="@drawable/water_intake_progress_ring"
+            android:rotation="-90"
+            app:layout_constraintBottom_toTopOf="@id/seekBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:progress="23" />
 
-    <!-- SeekBar Information -->
-    <TextView
-        android:id="@+id/textView_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/glacial_indifference"
-        android:text="0 ml"
-        android:textColor="@color/black"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar"
-        app:layout_constraintBottom_toTopOf="@+id/buttons"/>
+        <!-- Information inside Progress Bar -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/progress_bar"
+            app:layout_constraintEnd_toEndOf="@+id/progress_bar"
+            app:layout_constraintStart_toStartOf="@+id/progress_bar"
+            app:layout_constraintTop_toTopOf="@+id/progress_bar">
 
-    <!-- Buttons  -->
-    <LinearLayout
-        android:id="@+id/buttons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_progress">
+            <TextView
+                android:id="@+id/number_percent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/glacial_indifference_bold"
+                android:text="13%"
+                android:textColor="@color/black"
+                android:textSize="70sp" />
 
-        <Button
-            android:id="@+id/drink_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="145dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/cyan"
+            <TextView
+                android:id="@+id/number_ml"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/glacial_indifference"
+                android:text="700 ml left"
+                android:textColor="@color/deepBlue"
+                android:textSize="30sp" />
+        </LinearLayout>
+
+        <!-- SeekBar -->
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:max="1000"
+            android:progressTint="@color/cyan"
+            android:thumbTint="@color/cyan"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progress_bar">
+        </SeekBar>
+
+        <!-- SeekBar Information -->
+        <TextView
+            android:id="@+id/textView_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/glacial_indifference"
-            android:text="Drink Water"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:text="0 ml"
+            android:textColor="@color/black"
+            android:textSize="22sp"
+            app:layout_constraintBottom_toTopOf="@+id/buttons"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar"/>
 
-        <Button
-            android:id="@+id/records_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="145dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/cyan"
-            android:fontFamily="@font/glacial_indifference"
-            android:text="Records"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+        <!-- Buttons  -->
+        <LinearLayout
+            android:id="@+id/buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/textView_progress"
+            app:layout_constraintEnd_toEndOf="@+id/drink_wrapper"
+            app:layout_constraintStart_toStartOf="@+id/drink_wrapper"
+            app:layout_constraintTop_toBottomOf="@+id/textView_progress">
 
-    </LinearLayout>
+            <Button
+                android:id="@+id/records_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/cyan"
+                android:fontFamily="@font/glacial_indifference"
+                android:text="Records"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/drink_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/cyan"
+                android:fontFamily="@font/glacial_indifference"
+                android:text="Drink"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/reset_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="100dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/rounded_button"
+                android:backgroundTint="@color/cyan"
+                android:fontFamily="@font/glacial_indifference"
+                android:text="Reset"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

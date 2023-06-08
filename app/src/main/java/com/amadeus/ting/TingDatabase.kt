@@ -26,6 +26,13 @@ data class SleepReminderModel(
     var sleepHours: Int
 )
 
+data class CalendarData(
+    val dateFormat: SimpleDateFormat = SimpleDateFormat("MMMM, yyyy", Locale.ENGLISH),
+    val currentDate: Calendar = Calendar.getInstance(Locale.ENGLISH),
+    val dates: ArrayList<Date> = ArrayList(),
+    val calendarList: ArrayList<CalendarDateModel> = ArrayList()
+)
+
 data class CalendarDateModel(var data: Date, var isSelected: Boolean = false) {
 
     val calendarDay: String
