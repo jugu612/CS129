@@ -5,6 +5,8 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 data class TaskModel(
@@ -23,6 +25,35 @@ data class SleepReminderModel(
     var wakeTime: String,
     var sleepHours: Int
 )
+
+data class CalendarData(
+    val dateFormat: SimpleDateFormat = SimpleDateFormat("MMMM, yyyy", Locale.ENGLISH),
+    val currentDate: Calendar = Calendar.getInstance(Locale.ENGLISH),
+    val dates: ArrayList<Date> = ArrayList(),
+    val calendarList: ArrayList<CalendarDateModel> = ArrayList()
+)
+
+data class CalendarDateModel(var data: Date, var isSelected: Boolean = false) {
+
+    val calendarDay: String
+        get() = SimpleDateFormat("EE", Locale.getDefault()).format(data)
+
+    val calendarDate: String
+        get() {
+            val cal = Calendar.getInstance()
+            cal.time = data
+            return cal[Calendar.DAY_OF_MONTH].toString()
+        }
+    val calendarDatefull: String
+        get() {
+            val cal = Calendar.getInstance()
+            cal.time = data
+            val dayOfMonth = cal[Calendar.DAY_OF_MONTH]
+            val month = cal[Calendar.MONTH] + 1 // Month starts from 0, so add 1
+            val year = cal[Calendar.YEAR]
+            return String.format("%d/%d/%04d", month, dayOfMonth, year)
+        }
+}
 
 
 // Define a SQLite helper class to manage the database containing the tasks

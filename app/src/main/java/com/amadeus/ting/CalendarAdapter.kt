@@ -54,6 +54,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
             if(calendarDateModel.calendarDate == curDate.toString()){
                 calendarDateModel.isSelected = true
             }
+
             if (calendarDateModel.isSelected) {
                 calendarDay.setTextColor(
                     ContextCompat.getColor(
@@ -123,6 +124,7 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
         val color = when (holder.itemView.context) {
             is FoodIntake, is SleepSection -> "Blue"
             is Planner -> "Red"
+            is WaterIntake -> "Blue"
             else -> null
         }
         if (color != null) {

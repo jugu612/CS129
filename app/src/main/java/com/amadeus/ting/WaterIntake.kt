@@ -16,14 +16,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Recycler
+import androidx.recyclerview.widget.SnapHelper
+import com.amadeus.ting.databinding.ActivityWaterIntakeBinding
 import com.google.android.material.imageview.ShapeableImageView
+import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.properties.Delegates
 
-class WaterIntake : AppCompatActivity() {
+class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
+    private lateinit var binding: ActivityWaterIntakeBinding
+    private lateinit var calendarAdapter: CalendarAdapter
 
     private lateinit var seekBar: SeekBar
     private lateinit var valueTextView: TextView
@@ -51,13 +57,19 @@ class WaterIntake : AppCompatActivity() {
     private lateinit var alertDialogBuilder : AlertDialog.Builder
     private lateinit var dialogView : View
 
+    private val calendarData = CalendarData()
 
     @SuppressLint("MissingInflatedId", "UseCompatLoadingForDrawables", "SetTextI18n",
         "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_water_intake)
+
+        binding = ActivityWaterIntakeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setUpAdapter()
+        setUpClickListener()
+        setUpCalendar()
 
         alertDialogBuilder = AlertDialog.Builder(this)
         dialogView = LayoutInflater.from(this).inflate(R.layout.water_intake_records, null)
@@ -266,6 +278,69 @@ class WaterIntake : AppCompatActivity() {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
     }
+
+    private fun setUpClickListener() {
+        val currentDate = Calendar.getInstance(Locale.ENGLISH)
+        binding.ivCalendarNext.setOnClickListener {
+            calendarData.currentDate.add(Calendar.MONTH, 1)
+            setUpCalendar()
+        }
+        binding.ivCalendarPrevious.setOnClickListener {
+            calendarData.currentDate.add(Calendar.MONTH, -1)
+            if (calendarData.currentDate == currentDate)
+                setUpCalendar()
+            else
+                setUpCalendar()
+        }
+    }
+    private fun setUpAdapter() {
+        //For positioning the recyclerview
+        val curDate = LocalDate.now()
+        val defPos = curDate.dayOfMonth-3
+
+        // Horizontal spacing for each date in the calendar
+        val dateSpacing = resources.getDimensionPixelSize(R.dimen.single_calendar_margin)
+        binding.calendarRecycler.addItemDecoration(HorizontalItemDecoration(dateSpacing))
+
+        // Center snap for scrolling
+        val snapHelper: SnapHelper = LinearSnapHelper()
+        snapHelper.attachToRecyclerView(binding.calendarRecycler)
+
+
+
+        calendarAdapter = CalendarAdapter({ calendarDateModel: CalendarDateModel, position ->
+            calendarData.calendarList.forEachIndexed { index, calendarModel ->
+                calendarModel.isSelected = index == position
+            }
+            calendarAdapter.setData(calendarData.calendarList)
+        }, this)
+
+        binding.calendarRecycler.adapter = calendarAdapter
+        binding.calendarRecycler.scrollToPosition(defPos)
+        // Line below requires debugging, need to check why it doesn't function
+    }
+    private fun setUpCalendar() {
+        val calendarList = java.util.ArrayList<CalendarDateModel>()
+        binding.tvDateMonth.text = calendarData.dateFormat.format(calendarData.currentDate.time)
+        val monthCalendar = calendarData.currentDate.clone() as Calendar
+        val maxDaysInMonth = calendarData.currentDate.getActualMaximum(Calendar.DAY_OF_MONTH)
+        calendarData.dates.clear()
+        monthCalendar.set(Calendar.DAY_OF_MONTH, 1)
+        while (calendarData.dates.size < maxDaysInMonth) {
+            calendarData.dates.add(monthCalendar.time)
+            calendarList.add(CalendarDateModel(monthCalendar.time))
+            monthCalendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+        calendarData.calendarList.clear()
+        calendarData.calendarList.addAll(calendarList)
+        calendarAdapter.setData(calendarList)
+    }
+    override fun onDateClick(position: Int) {
+        //Add the date here
+        val dateModel = calendarAdapter.getItem(position)
+
+    }
+
 
 }
 

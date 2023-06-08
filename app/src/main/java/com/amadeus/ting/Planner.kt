@@ -12,6 +12,8 @@ import android.transition.AutoTransition
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -24,7 +26,8 @@ import com.google.android.material.imageview.ShapeableImageView
 import java.text.SimpleDateFormat
 import java.util.*
 import java.time.LocalDate
-
+import android.Manifest
+import android.content.pm.PackageManager
 
 
 class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
@@ -46,6 +49,20 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
 
 
 
+    private val notificationSystem:NotificationSystem = NotificationSystem(this)
+
+    private val requestPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ){
+        isGranted: Boolean ->
+        if(isGranted){
+            notificationSystem.showNotification()
+        }
+        else{
+            Toast.makeText(this, "Notifications currently disabled.", Toast.LENGTH_LONG).show()
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,6 +74,23 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         setUpClickListener()
         setUpCalendar()
         initRecyclerView()
+
+        val notifButton = findViewById<ShapeableImageView>(R.id.notifreq)
+        notifButton.setOnClickListener{
+            when{
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED ->{
+                    notificationSystem.showNotification()
+                }
+                else->{
+                    requestPermissionsLauncher.launch(
+                        Manifest.permission.POST_NOTIFICATIONS
+                    )
+                }
+            }
+        }
 
 
         // Get the shared preferences object with the name "MyPreferences"

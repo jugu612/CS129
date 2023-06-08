@@ -1,18 +1,11 @@
 package com.amadeus.ting
 
-import android.Manifest
-import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.pm.PackageManager
 import android.os.Build
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 
 
 class NotificationSystem(context: Context) : ContextWrapper(context) {
@@ -38,7 +31,7 @@ class NotificationSystem(context: Context) : ContextWrapper(context) {
         val notification = NotificationCompat.Builder(applicationContext, "channel_id")
             .setContentText("Elon Musk <3")
             .setContentTitle("It works")
-            .setSmallIcon(R.drawable.elon_placeholder)
+            .setSmallIcon(R.drawable.edit_text)
             .build()
         notificationManager.notify(1,notification)
     }

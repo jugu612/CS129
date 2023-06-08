@@ -22,6 +22,8 @@
         <activity
             android:name=".RegLogin"
             android:exported="false" />
+        </activity>
+
 
         <activity
             android:name=".SignUp"
