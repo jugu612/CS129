@@ -21,8 +21,9 @@
 
         <activity
             android:name=".RegLogin"
-            android:exported="false">
+            android:exported="false" />
         </activity>
+
 
         <activity
             android:name=".SignUp"
@@ -67,9 +68,7 @@
             android:name=".FoodIntake"
             android:exported="false" />
 
-        <activity
-            android:name=".FoodIntakeInput"
-            android:exported="false"/>
+
         <activity
             android:name=".SleepSection"
             android:exported="false" />

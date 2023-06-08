@@ -90,8 +90,8 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         }
 
         onClick<ShapeableImageView>(R.id.edit_button){
-            val goToFoodIntakeInput = Intent(this, FoodIntakeInput::class.java)
-            startActivity(goToFoodIntakeInput)
+            val labelAlert = FoodIntakeInput()
+            labelAlert.editMealtimeDialog(this, R.layout.edit_mealtime)
         }
 
         // Resets the user's food intake info
