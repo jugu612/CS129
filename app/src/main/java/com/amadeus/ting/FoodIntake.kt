@@ -20,7 +20,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
-    // Initializing horizontal calendar
     private lateinit var binding: ActivityFoodIntakeBinding
     private lateinit var calendarAdapter: CalendarAdapter
     private lateinit var tskList: List<TaskModel>

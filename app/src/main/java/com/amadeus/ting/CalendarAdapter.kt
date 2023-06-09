@@ -1,4 +1,5 @@
 package com.amadeus.ting
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,12 +51,29 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                 onPressColor = R.color.cyan
             }
 
-            //Database instance to grab the date and convert it to a usable string
-            if(calendarDateModel.calendarDate == curDate.toString()){
-                calendarDateModel.isSelected = true
+
+            if(calendarDateModel.isSelected && calendarDateModel.calendarDate == curDate.toString()){
+                calendarDay.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.white
+                    )
+                )
+                calendarDate.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.white
+                    )
+                )
+                cardView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.gray
+                    )
+                )
             }
 
-            if (calendarDateModel.isSelected) {
+            else if (calendarDateModel.isSelected) {
                 calendarDay.setTextColor(
                     ContextCompat.getColor(
                         itemView.context,

@@ -16,12 +16,10 @@ import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     private val dbHelper = TingDatabase(context)
     private var taskList: List<TaskModel> = ArrayList()
     private var onClickItem: ((TaskModel) ->Unit)?=null
-    private var selectedDate: String? = null
 
     //Takes the date attribute from the current calendarDateModel and performs a filter on the list of tasks
     fun addList(lists: List<TaskModel>, calendarDateModel: CalendarDateModel?=null) {
@@ -58,10 +56,6 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
 
         // New views for expandable card view
         var cardView: CardView = itemView.findViewById(R.id.task_card)
-
-
-
-
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
@@ -186,7 +180,6 @@ class TaskAdapter(private val context: Context) : RecyclerView.Adapter<TaskAdapt
         window?.attributes = layoutParams
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
-
 
     }
 

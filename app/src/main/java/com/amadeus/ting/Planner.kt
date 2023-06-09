@@ -32,25 +32,18 @@ import android.content.pm.PackageManager
 
 class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
 
-    // Initializing horizontal calendar
     private lateinit var binding: ActivityPlannerBinding
-    private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
-    private val cal = Calendar.getInstance(Locale.ENGLISH)
-    private val currentDate = Calendar.getInstance(Locale.ENGLISH)
-    private val dates = ArrayList<Date>()
     private lateinit var calendarAdapter: CalendarAdapter
-    private val calendarList2 = ArrayList<CalendarDateModel>()
     private lateinit var recyclerView: RecyclerView
-    private var taskadapter: TaskAdapter? = null
     private lateinit var tskList: List<TaskModel>
+
+    private var taskadapter: TaskAdapter? = null
     private var sortedTaskList: List<TaskModel> = emptyList()
     private var checkedTaskList: List<TaskModel> = emptyList()
     private var isDoneTasksVisible = false
 
-
-
+    private val calendarData = CalendarData()
     private val notificationSystem:NotificationSystem = NotificationSystem(this)
-
     private val requestPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ){
@@ -70,6 +63,7 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         binding = ActivityPlannerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val dbHelper = TingDatabase(applicationContext)
+
         setUpAdapter()
         setUpClickListener()
         setUpCalendar()
@@ -189,20 +183,21 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
     }
 
 
+    //Setting up the calendar adapter
     private fun setUpClickListener() {
+        val currentDate = Calendar.getInstance(Locale.ENGLISH)
         binding.ivCalendarNext.setOnClickListener {
-            cal.add(Calendar.MONTH, 1)
+            calendarData.currentDate.add(Calendar.MONTH, 1)
             setUpCalendar()
         }
         binding.ivCalendarPrevious.setOnClickListener {
-            cal.add(Calendar.MONTH, -1)
-            if (cal == currentDate)
+            calendarData.currentDate.add(Calendar.MONTH, -1)
+            if (calendarData.currentDate == currentDate)
                 setUpCalendar()
             else
                 setUpCalendar()
         }
     }
-    /* Calendar Data Binding */
     private fun setUpAdapter() {
         //For positioning the recyclerview
         val curDate = LocalDate.now()
@@ -219,34 +214,33 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
 
 
         calendarAdapter = CalendarAdapter({ calendarDateModel: CalendarDateModel, position ->
-            calendarList2.forEachIndexed { index, calendarModel ->
+            calendarData.calendarList.forEachIndexed { index, calendarModel ->
                 calendarModel.isSelected = index == position
             }
-            calendarAdapter.setData(calendarList2)
+            calendarAdapter.setData(calendarData.calendarList)
         }, this)
 
         binding.calendarRecycler.adapter = calendarAdapter
         binding.calendarRecycler.scrollToPosition(defPos)
         // Line below requires debugging, need to check why it doesn't function
     }
-
-
     private fun setUpCalendar() {
-        val calendarList = ArrayList<CalendarDateModel>()
-        binding.tvDateMonth.text = sdf.format(cal.time)
-        val monthCalendar = cal.clone() as Calendar
-        val maxDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-        dates.clear()
+        val calendarList = java.util.ArrayList<CalendarDateModel>()
+        binding.tvDateMonth.text = calendarData.dateFormat.format(calendarData.currentDate.time)
+        val monthCalendar = calendarData.currentDate.clone() as Calendar
+        val maxDaysInMonth = calendarData.currentDate.getActualMaximum(Calendar.DAY_OF_MONTH)
+        calendarData.dates.clear()
         monthCalendar.set(Calendar.DAY_OF_MONTH, 1)
-        while (dates.size < maxDaysInMonth) {
-            dates.add(monthCalendar.time)
+        while (calendarData.dates.size < maxDaysInMonth) {
+            calendarData.dates.add(monthCalendar.time)
             calendarList.add(CalendarDateModel(monthCalendar.time))
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1)
         }
-        calendarList2.clear()
-        calendarList2.addAll(calendarList)
+        calendarData.calendarList.clear()
+        calendarData.calendarList.addAll(calendarList)
         calendarAdapter.setData(calendarList)
     }
+
 
 
     private inline fun <reified T : View> Activity.onClick(id: Int, crossinline action: (T) -> Unit) {

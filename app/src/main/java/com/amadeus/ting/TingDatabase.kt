@@ -33,6 +33,14 @@ data class CalendarData(
     val calendarList: ArrayList<CalendarDateModel> = ArrayList()
 )
 
+data class FoodIntakeInfo(
+    var foodIntakeInfoNumber: Int,
+    var timeIntervalHours : Int,
+    var timeIntervalColon : String,
+    var timeIntervalMinutes : Int,
+    var timeIntervalMeridiem : String)
+
+
 data class CalendarDateModel(var data: Date, var isSelected: Boolean = false) {
 
     val calendarDay: String
@@ -80,6 +88,10 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val COLUMN_SLEEP_TIME = "sleeptime"
         private const val COLUMN_WAKE_TIME = "waketime"
         private const val COLUMN_SLEEP_HOURS = "sleephours"
+
+
+        // private const val COLUMN_WATER_INTAKE_DATE = "waterdate"
+
     }
     // Called when the database is created for the first time
 

@@ -22,7 +22,6 @@
         <activity
             android:name=".RegLogin"
             android:exported="false" />
-        </activity>
 
 
         <activity

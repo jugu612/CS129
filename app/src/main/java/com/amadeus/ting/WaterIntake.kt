@@ -255,7 +255,7 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
             val waterIntakeInfo = WaterIntakeInfo(timeArray[i],  numberOfLitersArray[i])
             waterIntakeInformation.add(waterIntakeInfo)
         }
-        recyclerViewWater.adapter = WaterIntakeAdapter(waterIntakeInformation)
+        recyclerViewWater.adapter = WaterIntakeAdapter(this, waterIntakeInformation)
     }
 
     private fun recordsDialog() {
@@ -270,7 +270,7 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         recyclerViewWater.layoutManager = LinearLayoutManager(this)
         recyclerViewWater.setHasFixedSize(true)
 
-        val adapter = WaterIntakeAdapter(waterIntakeInformation)
+        val adapter = WaterIntakeAdapter(this, waterIntakeInformation)
         recyclerViewWater.adapter = adapter
 
         alertDialogBuilder.setView(dialogView)
