@@ -28,6 +28,10 @@ import java.util.*
 import java.time.LocalDate
 import android.Manifest
 import android.content.pm.PackageManager
+import android.media.MediaPlayer
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 
 
 class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
@@ -60,6 +64,8 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_planner)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.red)
+
         binding = ActivityPlannerBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val dbHelper = TingDatabase(applicationContext)
@@ -173,7 +179,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
 
     }
 
-
     private fun initRecyclerView(){
         recyclerView = findViewById<RecyclerView>(R.id.Tasklist)
         recyclerView.layoutManager = LinearLayoutManager(this)
@@ -209,6 +214,7 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         // Center snap for scrolling
         val snapHelper: SnapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.calendarRecycler)
+
 
 
         calendarAdapter = CalendarAdapter({ calendarDateModel: CalendarDateModel, position ->
@@ -250,7 +256,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         //Add the date here
         val dateModel = calendarAdapter.getItem(position)
         taskadapter?.addList(tskList, dateModel)
-
 
     }
 

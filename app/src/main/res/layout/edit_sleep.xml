@@ -65,14 +65,15 @@
                 android:id="@+id/sleep_bell_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="80dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="24dp"
                 android:contentDescription="@string/display"
                 android:gravity="center"
                 android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/sleeping_time_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.036"
                 app:srcCompat="@drawable/sleep_bell_logo" />
 
             <TextView
@@ -80,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="32dp"
                 android:fontFamily="@font/glacial_indifference_bold"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -100,7 +101,7 @@
                 android:layout_marginEnd="35dp"
                 android:padding="4dp"
                 android:background="@drawable/roundborder"
-                android:backgroundTint="@color/cyan"
+                android:backgroundTint="@color/purple"
                 android:fontFamily="@font/glacial_indifference_bold"
                 android:gravity="center"
                 android:popupElevation="4dp"
@@ -136,7 +137,7 @@
                 android:layout_marginEnd="30dp"
                 android:padding="4dp"
                 android:background="@drawable/roundborder"
-                android:backgroundTint="@color/cyan"
+                android:backgroundTint="@color/purple"
                 android:fontFamily="@font/glacial_indifference_bold"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -171,7 +172,7 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="30dp"
                 android:padding="4dp"
-                android:background="#D4F1F9"
+                android:background="@color/light_purple"
                 android:gravity="center"
                 android:textColor="#2C275F"
                 android:textSize="20sp"
@@ -179,25 +180,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sw_reminder_text" />
-
-            <Button
-                android:id="@+id/settings_button"
-                android:layout_width="250dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="50dp"
-                android:background="@drawable/roundborder"
-                android:backgroundTint="@color/cblue"
-                android:fontFamily="@font/glacial_indifference"
-                android:gravity="center"
-                android:popupElevation="4dp"
-                android:text="Change Default Settings"
-                android:textColor="@color/white"
-                android:textSize="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sw_hours_button" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

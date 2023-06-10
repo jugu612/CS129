@@ -56,6 +56,7 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sleep)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.purple)
 
         binding = ActivitySleepBinding.inflate(layoutInflater)
         setContentView(binding.root)

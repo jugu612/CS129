@@ -51,6 +51,14 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                 onPressColor = R.color.cyan
             }
 
+            if(color == "Orange"){
+                onPressColor = R.color.orange
+            }
+
+            if(color == "Purple"){
+                onPressColor = R.color.purple
+            }
+
 
             if(calendarDateModel.isSelected && calendarDateModel.calendarDate == curDate.toString()){
                 calendarDay.setTextColor(
@@ -140,9 +148,10 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val color = when (holder.itemView.context) {
-            is FoodIntake, is SleepSection -> "Blue"
             is Planner -> "Red"
             is WaterIntake -> "Blue"
+            is FoodIntake -> "Orange"
+            is SleepSection -> "Purple"
             else -> null
         }
         if (color != null) {
