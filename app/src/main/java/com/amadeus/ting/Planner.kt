@@ -112,7 +112,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         // Add the task list to the adapter
         taskadapter?.addList(tskList)
 
-
         // Label -> Myka
         onClick<ShapeableImageView>(R.id.label_button) {
             val labelAlertDialog = MyAlertDialog()
@@ -212,7 +211,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         snapHelper.attachToRecyclerView(binding.calendarRecycler)
 
 
-
         calendarAdapter = CalendarAdapter({ calendarDateModel: CalendarDateModel, position ->
             calendarData.calendarList.forEachIndexed { index, calendarModel ->
                 calendarModel.isSelected = index == position
@@ -241,8 +239,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         calendarAdapter.setData(calendarList)
     }
 
-
-
     private inline fun <reified T : View> Activity.onClick(id: Int, crossinline action: (T) -> Unit) {
         findViewById<T>(id)?.setOnClickListener {
             action(it as T)
@@ -255,9 +251,7 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
         val dateModel = calendarAdapter.getItem(position)
         taskadapter?.addList(tskList, dateModel)
 
+
     }
-
-
-
 
 }

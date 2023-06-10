@@ -90,7 +90,6 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val COLUMN_SLEEP_HOURS = "sleephours"
 
 
-        // private const val COLUMN_WATER_INTAKE_DATE = "waterdate"
 
     }
     // Called when the database is created for the first time

@@ -540,7 +540,7 @@ class SleepSection : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         val calendarList = ArrayList<CalendarDateModel>()
         binding.tvDateMonth.text = calendarData.dateFormat.format(calendarData.currentDate.time)
         val monthCalendar = calendarData.currentDate.clone() as Calendar
-        val maxDaysInMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        val maxDaysInMonth = calendarData.currentDate.getActualMaximum(Calendar.DAY_OF_MONTH)
         calendarData.dates.clear()
         monthCalendar.set(Calendar.DAY_OF_MONTH, 1)
         while (calendarData.dates.size < maxDaysInMonth) {

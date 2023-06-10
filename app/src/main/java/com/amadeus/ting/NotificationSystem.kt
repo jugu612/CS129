@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 
 
 class NotificationSystem(context: Context) : ContextWrapper(context) {
+
     fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // Create the notification channel for Android 8.0 and above
@@ -29,9 +30,9 @@ class NotificationSystem(context: Context) : ContextWrapper(context) {
         // Customize the notification based on the activity
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = NotificationCompat.Builder(applicationContext, "channel_id")
-            .setContentText("Elon Musk <3")
-            .setContentTitle("It works")
-            .setSmallIcon(R.drawable.edit_text)
+            .setContentText("Ting notifications enabled!")
+            .setContentTitle("Ting Notification")
+            .setSmallIcon(R.drawable.app_logo)
             .build()
         notificationManager.notify(1,notification)
     }
