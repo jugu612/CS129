@@ -1,21 +1,29 @@
 package com.amadeus.ting
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
+import android.media.MediaPlayer
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.imageview.ShapeableImageView
-import com.google.firebase.auth.FirebaseAuth
-import java.text.SimpleDateFormat
-import java.util.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class HomePage : AppCompatActivity() {
@@ -23,9 +31,12 @@ class HomePage : AppCompatActivity() {
     private lateinit var auth : FirebaseAuth //Firebase authentication instance
     private lateinit var homeadapter: HomepageAdapter
     private lateinit var recyclerView: RecyclerView
+//    private var isLogoAnimated = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.dark_green)
 
         val currentTime = Calendar.getInstance(TimeZone.getTimeZone("Asia/Manila")).time
 
@@ -51,10 +62,21 @@ class HomePage : AppCompatActivity() {
             val goToUserProfile = Intent(this, UserProfile::class.java)
             startActivity(goToUserProfile)
         }
-
-
         changeMessage(currentTime)
 
+        onClick<ShapeableImageView>(R.id.applogo) {
+            AnimateLogo()
+        }
+
+    }
+
+    private fun AnimateLogo() {
+        val music: MediaPlayer = MediaPlayer.create(this, R.raw.ting_sfx)
+        val shake: Animation = AnimationUtils.loadAnimation(this, R.anim.shakeanimation)
+        val imgBell = findViewById<View>(R.id.applogo) as ImageView
+        imgBell.setImageResource(R.drawable.logo)
+        music.start()
+        imgBell.startAnimation(shake)
     }
 
     fun changeMessage(currentTime: Date) {

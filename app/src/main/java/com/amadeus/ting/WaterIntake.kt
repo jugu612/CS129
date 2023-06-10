@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -64,6 +65,7 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_water_intake)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.cyan)
 
         binding = ActivityWaterIntakeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -224,6 +226,11 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
             editor.apply()
 
             Toast.makeText(this, "Reset successful!", Toast.LENGTH_SHORT).show()
+        }
+
+        onClick<ShapeableImageView>(R.id.back_button){
+            val goToHomePage = Intent(this, HomePage::class.java)
+            startActivity(goToHomePage)
         }
     }
 
