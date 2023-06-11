@@ -1,6 +1,7 @@
 package com.amadeus.ting
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,8 +19,8 @@ data class WaterIntakeInfo(
     var numberOfLiters : String)
 
 
-class WaterIntakeAdapter(private val waterIntakeData : ArrayList<WaterIntakeInfo>) : RecyclerView.Adapter<WaterIntakeAdapter.MyViewHolder>() {
-
+class WaterIntakeAdapter(private val context: Context, private val waterIntakeData : ArrayList<WaterIntakeInfo>) : RecyclerView.Adapter<WaterIntakeAdapter.MyViewHolder>() {
+    private val dbhelper = TingDatabase(context)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.water_intake_rv, parent, false)

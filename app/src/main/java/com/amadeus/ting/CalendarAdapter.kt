@@ -1,4 +1,5 @@
 package com.amadeus.ting
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -50,12 +51,37 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
                 onPressColor = R.color.cyan
             }
 
-            //Database instance to grab the date and convert it to a usable string
-            if(calendarDateModel.calendarDate == curDate.toString()){
-                calendarDateModel.isSelected = true
+            if(color == "Orange"){
+                onPressColor = R.color.orange
             }
 
-            if (calendarDateModel.isSelected) {
+            if(color == "Purple"){
+                onPressColor = R.color.purple
+            }
+
+
+            if(calendarDateModel.isSelected && calendarDateModel.calendarDate == curDate.toString()){
+                calendarDay.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.white
+                    )
+                )
+                calendarDate.setTextColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.white
+                    )
+                )
+                cardView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        itemView.context,
+                        R.color.gray
+                    )
+                )
+            }
+
+            else if (calendarDateModel.isSelected) {
                 calendarDay.setTextColor(
                     ContextCompat.getColor(
                         itemView.context,
@@ -122,9 +148,10 @@ class CalendarAdapter(private val listener: (calendarDateModel: CalendarDateMode
 
     override fun onBindViewHolder(holder: CalendarViewHolder, position: Int) {
         val color = when (holder.itemView.context) {
-            is FoodIntake, is SleepSection -> "Blue"
             is Planner -> "Red"
             is WaterIntake -> "Blue"
+            is FoodIntake -> "Orange"
+            is SleepSection -> "Purple"
             else -> null
         }
         if (color != null) {

@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -28,12 +29,7 @@ import kotlin.collections.ArrayList
 class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     // Initializing horizontal calendar
     private lateinit var binding: ActivityWaterIntakeBinding
-    private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
-    private val cal = Calendar.getInstance(Locale.ENGLISH)
-    private val currentDate = Calendar.getInstance(Locale.ENGLISH)
-    private val dates = ArrayList<Date>()
     private lateinit var calendarAdapter: CalendarAdapter
-    private val calendarList2 = ArrayList<CalendarDateModel>()
 
     private lateinit var seekBar: SeekBar
     private lateinit var valueTextView: TextView
@@ -71,6 +67,7 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_water_intake)
+        window.statusBarColor = ContextCompat.getColor(this, R.color.cyan)
 
         databaseTing = TingDatabase(applicationContext)
 
@@ -254,6 +251,7 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
             Toast.makeText(this, "Reset successful!", Toast.LENGTH_SHORT).show()
         }
 
+
         // Behavior of each buttons in the app
         onClick<ShapeableImageView>(R.id.back_button){
             val goToHomePage = Intent(this, HomePage::class.java)
@@ -290,7 +288,7 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
             val waterIntakeInfo = WaterIntakeInfo(timeArray[i],  numberOfLitersArray[i])
             waterIntakeInformation.add(waterIntakeInfo)
         }
-        recyclerViewWater.adapter = WaterIntakeAdapter(waterIntakeInformation)
+        recyclerViewWater.adapter = WaterIntakeAdapter(this, waterIntakeInformation)
     }
 
     @SuppressLint("InflateParams")
@@ -306,7 +304,8 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
 
         recyclerViewWater.layoutManager = LinearLayoutManager(this)
         recyclerViewWater.setHasFixedSize(true)
-        val adapter = WaterIntakeAdapter(waterIntakeInformation)
+
+        val adapter = WaterIntakeAdapter(this, waterIntakeInformation)
         recyclerViewWater.adapter = adapter
 
         val cancelButton = dialogView.findViewById<Button>(R.id.back_button)
@@ -323,13 +322,14 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     }
 
     private fun setUpClickListener() {
+        val currentDate = Calendar.getInstance(Locale.ENGLISH)
         binding.ivCalendarNext.setOnClickListener {
-            cal.add(Calendar.MONTH, 1)
+            calendarData.currentDate.add(Calendar.MONTH, 1)
             setUpCalendar()
         }
         binding.ivCalendarPrevious.setOnClickListener {
-            cal.add(Calendar.MONTH, -1)
-            if (cal == currentDate)
+            calendarData.currentDate.add(Calendar.MONTH, -1)
+            if (calendarData.currentDate == currentDate)
                 setUpCalendar()
             else
                 setUpCalendar()
@@ -349,10 +349,10 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         snapHelper.attachToRecyclerView(binding.calendarRecycler)
 
         calendarAdapter = CalendarAdapter({ calendarDateModel: CalendarDateModel, position ->
-            calendarList2.forEachIndexed { index, calendarModel ->
+            calendarData.calendarList.forEachIndexed { index, calendarModel ->
                 calendarModel.isSelected = index == position
             }
-            calendarAdapter.setData(calendarList2)
+            calendarAdapter.setData(calendarData.calendarList)
         }, this)
 
         binding.calendarRecycler.adapter = calendarAdapter
@@ -361,21 +361,21 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     }
     private fun setUpCalendar() {
         val calendarList = java.util.ArrayList<CalendarDateModel>()
-        binding.tvDateMonth.text = sdf.format(cal.time)
-        val monthCalendar = cal.clone() as Calendar
-        val maxDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-        dates.clear()
+        binding.tvDateMonth.text = calendarData.dateFormat.format(calendarData.currentDate.time)
+        val monthCalendar = calendarData.currentDate.clone() as Calendar
+        val maxDaysInMonth = calendarData.currentDate.getActualMaximum(Calendar.DAY_OF_MONTH)
+        calendarData.dates.clear()
         monthCalendar.set(Calendar.DAY_OF_MONTH, 1)
-        while (dates.size < maxDaysInMonth) {
-            dates.add(monthCalendar.time)
+        while (calendarData.dates.size < maxDaysInMonth) {
+            calendarData.dates.add(monthCalendar.time)
             calendarList.add(CalendarDateModel(monthCalendar.time))
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1)
         }
-        calendarList2.clear()
-        calendarList2.addAll(calendarList)
-
+        calendarData.calendarList.clear()
+        calendarData.calendarList.addAll(calendarList)
         calendarAdapter.setData(calendarList)
     }
+
     override fun onDateClick(position: Int) {
         //Add the date here
         val clickedDateModel = calendarAdapter.getItem(position)
@@ -417,7 +417,7 @@ class WaterIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
                 val intakeInfo = WaterIntakeInfo(tempTime, tempMl)
                 tempWaterScheduleList.add(intakeInfo)
             }
-            recyclerViewWaterMain.adapter = WaterIntakeAdapter(tempWaterScheduleList)
+            recyclerViewWaterMain.adapter = WaterIntakeAdapter(this, tempWaterScheduleList)
         }
     }
     private fun getMonthDayYear(information : String): String  {

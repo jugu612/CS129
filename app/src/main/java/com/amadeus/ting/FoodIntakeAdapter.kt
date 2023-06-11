@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 
 
+
 data class FoodIntakeInfo(
     var foodIntakeInfoNumber: Int,
     var timeIntervalHours : Int,
@@ -21,8 +22,6 @@ data class FoodIntakeInfo(
     var timeIntervalMinutes : Int,
     var timeIntervalMeridiem : String,
     var checkVisibility : Boolean = false)
-
-
 
 // A custom RecyclerView adapter that takes an ArrayList of FoodIntakeInfo objects as input and binds them to a layout
 class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInfo>) : RecyclerView.Adapter<FoodIntakeAdapter.MyViewHolder>() {

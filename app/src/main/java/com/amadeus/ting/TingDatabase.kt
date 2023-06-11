@@ -39,12 +39,11 @@ data class WaterIntakeModel(
 )
 
 data class CalendarData(
-    val dateFormat: SimpleDateFormat = SimpleDateFormat("MMMM, yyyy", Locale.ENGLISH),
+    val dateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH),
     val currentDate: Calendar = Calendar.getInstance(Locale.ENGLISH),
     val dates: ArrayList<Date> = ArrayList(),
     val calendarList: ArrayList<CalendarDateModel> = ArrayList()
 )
-
 data class CalendarDateModel(var data: Date, var isSelected: Boolean = false) {
 
     val calendarDay: String
@@ -264,7 +263,7 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         db.close()
     }
 
-     fun getTasks(query: String, selectionArgs: Array<String>): List<TaskModel> {
+    fun getTasks(query: String, selectionArgs: Array<String>): List<TaskModel> {
         // create an empty list to store tasks
         val tasks = mutableListOf<TaskModel>()
         // get a reference to the readable database
@@ -282,7 +281,7 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
                 cursor.getColumnIndex(COLUMN_DEADLINE),
                 cursor.getColumnIndex(COLUMN_LABEL),
 
-            )
+                )
 
             // loop through each row in the cursor and create a task object for each one
             do {

@@ -50,23 +50,13 @@
 
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/bell_button"
+                android:id="@+id/notifreq"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/notif_icon"
-                app:shapeAppearanceOverlay="@style/Circle" />
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/notifreq"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="40dp"
-                android:src="@drawable/bell"
                 app:shapeAppearanceOverlay="@style/Circle" />
 
 
@@ -179,8 +169,6 @@
                     android:padding="2dp"
                     app:layout_constraintEnd_toEndOf="parent" />
 
-
-
             </RelativeLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -255,7 +243,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:shapeAppearanceOverlay="@style/Circle">
-
         </com.google.android.material.imageview.ShapeableImageView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

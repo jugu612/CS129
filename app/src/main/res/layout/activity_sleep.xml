@@ -24,7 +24,7 @@
             android:id="@+id/linearLayout_Header"
             android:layout_width="match_parent"
             android:layout_height="68dp"
-            android:background="@color/cyan"
+            android:background="@color/purple"
             android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
                 android:layout_centerInParent="true"
                 android:fontFamily="@font/glacial_indifference_bold"
                 android:includeFontPadding="false"
-                android:text="SLEEPING"
+                android:text="SLEEP"
                 android:textColor="@color/white"
                 android:textSize="44sp" />
 
@@ -146,7 +146,7 @@
                         android:id="@+id/upper_half"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="@color/cyan"
+                        android:background="@color/purple"
                         app:cardElevation="8dp"/>
 
                     <TextView
@@ -193,7 +193,7 @@
                         android:fontFamily="@font/glacial_indifference_bold"
                         android:gravity="center"
                         android:text="Time"
-                        android:textColor="@color/cblue"
+                        android:textColor="@color/purple"
                         android:textSize="28sp" />
 
                     <TextView
@@ -206,7 +206,7 @@
                         android:fontFamily="@font/glacial_indifference_bold"
                         android:gravity="center"
                         android:text="Ring in hrs and mins"
-                        android:textColor="@color/cblue"
+                        android:textColor="@color/purple"
                         android:textSize="16sp" />
 
                 </RelativeLayout>
@@ -232,7 +232,7 @@
                     android:id="@+id/wupper_half"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:background="@color/cyan"
+                    android:background="@color/purple"
                     app:cardElevation="8dp"/>
 
                 <TextView
@@ -269,7 +269,7 @@
                     android:fontFamily="@font/glacial_indifference_bold"
                     android:gravity="center"
                     android:text="Time"
-                    android:textColor="@color/cblue"
+                    android:textColor="@color/purple"
                     android:textSize="28sp" />
 
                 <TextView
@@ -282,7 +282,7 @@
                     android:fontFamily="@font/glacial_indifference_bold"
                     android:gravity="center"
                     android:text="Ring in hrs and mins"
-                    android:textColor="@color/cblue"
+                    android:textColor="@color/purple"
                     android:textSize="16sp" />
 
                 <Button
@@ -310,7 +310,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/roundborder"
-                android:backgroundTint="@color/cyan"
+                android:backgroundTint="@color/purple"
                 android:text="9 hrs Sleeping Time"
                 android:fontFamily="@font/glacial_indifference_bold"
                 android:textSize="20sp"
@@ -326,7 +326,7 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:backgroundTint="@color/cyan"
+        android:backgroundTint="@color/purple"
         android:src="@drawable/edit_button"
         app:shapeAppearanceOverlay="@style/Circle"
         app:layout_constraintEnd_toEndOf="parent"

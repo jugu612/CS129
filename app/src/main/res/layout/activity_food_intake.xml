@@ -24,7 +24,7 @@
         android:id="@+id/linearLayout_Header"
         android:layout_width="match_parent"
         android:layout_height="68dp"
-        android:background="@color/cyan"
+        android:background="@color/orange"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

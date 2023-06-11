@@ -1,26 +1,21 @@
 package com.amadeus.ting;
 
-import android.annotation.SuppressLint
+
 import android.app.Activity
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
-import com.amadeus.ting.FoodIntake.Companion.PREFS_NAME
-import com.amadeus.ting.SleepSection.Companion.selectedWakeTime
 import com.amadeus.ting.databinding.ActivityFoodIntakeBinding
 import com.google.android.material.imageview.ShapeableImageView
 import java.text.SimpleDateFormat
@@ -32,17 +27,15 @@ import kotlin.collections.ArrayList
 
 class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
 
+
     // Initializing horizontal calendar
     private lateinit var binding: ActivityFoodIntakeBinding
-    private val sdf = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
-    private val cal = Calendar.getInstance(Locale.ENGLISH)
-    private val currentDate = Calendar.getInstance(Locale.ENGLISH)
-    private val dates = ArrayList<Date>()
     private lateinit var calendarAdapter: CalendarAdapter
-    private val calendarList2 = ArrayList<CalendarDateModel>()
-
     private lateinit var tskList: List<TaskModel>
+
+
     private lateinit var databaseTing: TingDatabase
+    private val calendarData = CalendarData()
 
     companion object {
 
@@ -92,6 +85,7 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         setContentView(R.layout.activity_food_intake)
         appContext = applicationContext
 
+        window.statusBarColor = ContextCompat.getColor(this, R.color.orange)
 
         // Reads the values from SharedPreferences
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -130,7 +124,7 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
             Toast.makeText(this, "Reset My Day Clicked!", Toast.LENGTH_SHORT).show()
         }
 
-        setupAlarm()
+        // setupAlarm()
     }
 
     fun resetList() {
@@ -215,23 +209,23 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
 
     //Setting up the calendar adapter
     private fun setUpClickListener() {
+        val currentDate = Calendar.getInstance(Locale.ENGLISH)
         binding.ivCalendarNext.setOnClickListener {
-            cal.add(Calendar.MONTH, 1)
+            calendarData.currentDate.add(Calendar.MONTH, 1)
             setUpCalendar()
         }
         binding.ivCalendarPrevious.setOnClickListener {
-            cal.add(Calendar.MONTH, -1)
-            if (cal == currentDate)
+            calendarData.currentDate.add(Calendar.MONTH, -1)
+            if (calendarData.currentDate == currentDate)
                 setUpCalendar()
             else
                 setUpCalendar()
         }
     }
-
     private fun setUpAdapter() {
         //For positioning the recyclerview
         val curDate = LocalDate.now()
-        val defPos = curDate.dayOfMonth - 3
+        val defPos = curDate.dayOfMonth-3
 
         // Horizontal spacing for each date in the calendar
         val dateSpacing = resources.getDimensionPixelSize(R.dimen.single_calendar_margin)
@@ -241,11 +235,13 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         val snapHelper: SnapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.calendarRecycler)
 
-        calendarAdapter = CalendarAdapter({ calendarDateModel: CalendarDateModel, position ->
-            calendarList2.forEachIndexed { index, calendarModel ->
+
+
+        calendarAdapter = CalendarAdapter({ _: CalendarDateModel, position ->
+            calendarData.calendarList.forEachIndexed { index, calendarModel ->
                 calendarModel.isSelected = index == position
             }
-            calendarAdapter.setData(calendarList2)
+            calendarAdapter.setData(calendarData.calendarList)
         }, this)
 
         binding.calendarRecycler.adapter = calendarAdapter
@@ -255,19 +251,18 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
 
     private fun setUpCalendar() {
         val calendarList = java.util.ArrayList<CalendarDateModel>()
-        binding.tvDateMonth.text = sdf.format(cal.time)
-        val monthCalendar = cal.clone() as Calendar
-        val maxDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH)
-        dates.clear()
+        binding.tvDateMonth.text = calendarData.dateFormat.format(calendarData.currentDate.time)
+        val monthCalendar = calendarData.currentDate.clone() as Calendar
+        val maxDaysInMonth = calendarData.currentDate.getActualMaximum(Calendar.DAY_OF_MONTH)
+        calendarData.dates.clear()
         monthCalendar.set(Calendar.DAY_OF_MONTH, 1)
-        while (dates.size < maxDaysInMonth) {
-            dates.add(monthCalendar.time)
+        while (calendarData.dates.size < maxDaysInMonth) {
+            calendarData.dates.add(monthCalendar.time)
             calendarList.add(CalendarDateModel(monthCalendar.time))
             monthCalendar.add(Calendar.DAY_OF_MONTH, 1)
         }
-        calendarList2.clear()
-        calendarList2.addAll(calendarList)
-
+        calendarData.calendarList.clear()
+        calendarData.calendarList.addAll(calendarList)
         calendarAdapter.setData(calendarList)
     }
 
@@ -285,7 +280,7 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         val currentDate = Calendar.getInstance()
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-        var mealtimeDataArray = mutableListOf<MealTimeModel>()
+        val mealtimeDataArray: MutableList<MealTimeModel>
 
         if (clickedYear == currentDate.get(Calendar.YEAR) &&
             clickedMonth == currentDate.get(Calendar.MONTH) &&
@@ -359,32 +354,32 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         finish()
     }
 
-    @RequiresApi(Build.VERSION_CODES.S)
-    private fun setupAlarm() {
-        println("=============== setUpAlarm()")
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val alarmIntent = Intent(this, ResetListReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_MUTABLE)
 
-        // Get WakeTime Data
-        val sleepSharedPref = getSharedPreferences("SleepData", Context.MODE_PRIVATE)
-        val wakeTimeFromSleep = sleepSharedPref.getString("WakeTime", null)
-
-        val wakeTimeParts = wakeTimeFromSleep?.split(":")
-        val wakeHour = wakeTimeParts?.get(0)?.toIntOrNull()
-        val wakeMinute = wakeTimeParts?.get(1)?.substringBefore(" ")?.toIntOrNull()
-
-        val calendar = Calendar.getInstance()
-        if (wakeHour != null) {
-            calendar.set(Calendar.HOUR_OF_DAY, wakeHour)
-        }
-        if (wakeMinute != null) {
-            calendar.set(Calendar.MINUTE, wakeMinute)
-        }
-        calendar.set(Calendar.SECOND, 0)
-
-        // Schedule a repeating alarm that triggers at the specified time every day
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
-    }
+//    private fun setupAlarm() {
+//        println("=============== setUpAlarm()")
+//        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val alarmIntent = Intent(this, ResetListReceiver::class.java)
+//        val pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_MUTABLE)
+//
+//        // Get WakeTime Data
+//        val sleepSharedPref = getSharedPreferences("SleepData", Context.MODE_PRIVATE)
+//        val wakeTimeFromSleep = sleepSharedPref.getString("WakeTime", null)
+//
+//        val wakeTimeParts = wakeTimeFromSleep?.split(":")
+//        val wakeHour = wakeTimeParts?.get(0)?.toIntOrNull()
+//        val wakeMinute = wakeTimeParts?.get(1)?.substringBefore(" ")?.toIntOrNull()
+//
+//        val calendar = Calendar.getInstance()
+//        if (wakeHour != null) {
+//            calendar.set(Calendar.HOUR_OF_DAY, wakeHour)
+//        }
+//        if (wakeMinute != null) {
+//            calendar.set(Calendar.MINUTE, wakeMinute)
+//        }
+//        calendar.set(Calendar.SECOND, 0)
+//
+//        // Schedule a repeating alarm that triggers at the specified time every day
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+//    }
 }
 
