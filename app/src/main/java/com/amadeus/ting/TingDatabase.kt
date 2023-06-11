@@ -18,7 +18,6 @@ data class TaskModel(
     var isChecked: Boolean = false
 )
 
-
 data class SleepReminderModel(
     var sleepDate: String,
     var sleepTime: String,
@@ -26,21 +25,25 @@ data class SleepReminderModel(
     var sleepHours: Int
 )
 
+data class MealTimeModel(
+    var intakeNumber : Int,
+    var dateIntake : String,
+    var foodIntakeHours : String,
+    var checkVisibility : Boolean
+)
+data class WaterIntakeModel(
+    var dateIntake : String,
+    var waterIntakeNumber : Int,
+    var intakeTime: String,
+    var intakeNumberMl : String
+)
+
 data class CalendarData(
-    val dateFormat: SimpleDateFormat = SimpleDateFormat("MMMM, yyyy", Locale.ENGLISH),
+    val dateFormat: SimpleDateFormat = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH),
     val currentDate: Calendar = Calendar.getInstance(Locale.ENGLISH),
     val dates: ArrayList<Date> = ArrayList(),
     val calendarList: ArrayList<CalendarDateModel> = ArrayList()
 )
-
-data class FoodIntakeInfo(
-    var foodIntakeInfoNumber: Int,
-    var timeIntervalHours : Int,
-    var timeIntervalColon : String,
-    var timeIntervalMinutes : Int,
-    var timeIntervalMeridiem : String)
-
-
 data class CalendarDateModel(var data: Date, var isSelected: Boolean = false) {
 
     val calendarDay: String
@@ -73,6 +76,8 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
         private const val TABLE_TASKS = "tasks"
         private const val TABLE_SLEEP_REMINDERS = "sleep_reminders"
+        private const val TABLE_MEALTIME = "mealtime"
+        private const val TABLE_WATER = "water"
 
         // Columns for the tasks table
         private const val COLUMN_TASKID = "taskid"
@@ -89,7 +94,17 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         private const val COLUMN_WAKE_TIME = "waketime"
         private const val COLUMN_SLEEP_HOURS = "sleephours"
 
+        // Mealtime Columns
+        private const val COLUMN_MEALTIME_NUMBER = "mealtimenumber"
+        private const val COLUMN_MEALTIME_DATE = "mealtimedate"
+        private const val COLUMN_MEALTIME_TIME = "mealtimetime"
+        private const val COLUMN_MEALTIME_CHECK_VISIBILITY = "mealtimecheckvisibility"
 
+        // Water Intake Columns
+        private const val COLUMN_WATER_DATE = "waterdate"
+        private const val COLUMN_WATER_NUMBER = "waternumber"
+        private const val COLUMN_INTAKE_TIME = "waterintaketime"
+        private const val COLUMN_WATER_ML = "waterintakeml"
 
     }
     // Called when the database is created for the first time
@@ -104,6 +119,15 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         val createSleepRemindersTable =
             "CREATE TABLE $TABLE_SLEEP_REMINDERS ($COLUMN_SLEEP_DATE TEXT, $COLUMN_SLEEP_TIME TEXT, $COLUMN_WAKE_TIME TEXT, $COLUMN_SLEEP_HOURS INTEGER)"
         db?.execSQL(createSleepRemindersTable)
+
+        val createMealTimeTable =
+            "CREATE TABLE $TABLE_MEALTIME ($COLUMN_MEALTIME_NUMBER INTEGER, $COLUMN_MEALTIME_DATE TEXT, $COLUMN_MEALTIME_TIME TEXT, $COLUMN_MEALTIME_CHECK_VISIBILITY INTEGER)"
+        db?.execSQL(createMealTimeTable)
+
+        val createWaterIntakeTable =
+            "CREATE TABLE $TABLE_WATER ($COLUMN_WATER_NUMBER INTEGER, $COLUMN_WATER_DATE TEXT, $COLUMN_INTAKE_TIME TEXT, $COLUMN_WATER_ML TEXT)"
+        db?.execSQL(createWaterIntakeTable)
+
     }
 
 
@@ -239,7 +263,7 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         db.close()
     }
 
-     fun getTasks(query: String, selectionArgs: Array<String>): List<TaskModel> {
+    fun getTasks(query: String, selectionArgs: Array<String>): List<TaskModel> {
         // create an empty list to store tasks
         val tasks = mutableListOf<TaskModel>()
         // get a reference to the readable database
@@ -257,7 +281,7 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
                 cursor.getColumnIndex(COLUMN_DEADLINE),
                 cursor.getColumnIndex(COLUMN_LABEL),
 
-            )
+                )
 
             // loop through each row in the cursor and create a task object for each one
             do {
@@ -356,5 +380,87 @@ class TingDatabase(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
         return sleepReminders
     }
 
+    fun addMealtimeData(mealtimeData : MealTimeModel) {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_MEALTIME_NUMBER, mealtimeData.intakeNumber)
+            put(COLUMN_MEALTIME_DATE, mealtimeData.dateIntake)
+            put(COLUMN_MEALTIME_TIME, mealtimeData.foodIntakeHours)
+            put(COLUMN_MEALTIME_CHECK_VISIBILITY, mealtimeData.checkVisibility)
+        }
+        db.insert(TABLE_MEALTIME, null, values)
+        db.close()
+    }
+
+    fun getMealtimeData(date: String) : List<MealTimeModel> {
+        val db = this.readableDatabase
+        val mealtimeDataArray = mutableListOf<MealTimeModel>()
+
+        val query = "SELECT * FROM $TABLE_MEALTIME WHERE $COLUMN_MEALTIME_DATE = '$date' ORDER BY $COLUMN_MEALTIME_NUMBER ASC"
+        val cursor: Cursor? = db.rawQuery(query, null)
+
+        if (cursor != null && cursor.moveToFirst()) {
+            val mealTimeNumberIndex = cursor.getColumnIndex(COLUMN_MEALTIME_NUMBER)
+            val mealDateIndex = cursor.getColumnIndex(COLUMN_MEALTIME_DATE)
+            val mealTimeIndex = cursor.getColumnIndex(COLUMN_MEALTIME_TIME)
+            val mealTimeCheckVisibility = cursor.getColumnIndex(COLUMN_MEALTIME_CHECK_VISIBILITY)
+
+            do {
+                val mealNumber = cursor.getInt(mealTimeNumberIndex)
+                val mealDate = cursor.getString(mealDateIndex)
+                val mealTime = cursor.getString(mealTimeIndex)
+                val mealTimeCheckVisibilityValue = cursor.getInt(mealTimeCheckVisibility)
+
+                val temp = mealTimeCheckVisibilityValue == 1
+
+                val mealReminder = MealTimeModel(mealNumber, mealDate, mealTime, temp)
+                mealtimeDataArray.add(mealReminder)
+            } while (cursor.moveToNext())
+        }
+        cursor?.close()
+        db.close()
+        return mealtimeDataArray
+    }
+
+    fun addWaterData(waterData : WaterIntakeModel) {
+
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_WATER_DATE, waterData.dateIntake)
+            put(COLUMN_WATER_NUMBER, waterData.waterIntakeNumber)
+            put(COLUMN_INTAKE_TIME, waterData.intakeTime)
+            put(COLUMN_WATER_ML, waterData.intakeNumberMl)
+        }
+        db.insert(TABLE_WATER, null, values)
+        db.close()
+    }
+
+    fun getWaterData(date: String) : List<WaterIntakeModel> {
+        val db = this.readableDatabase
+        val waterIntakeArray= mutableListOf<WaterIntakeModel>()
+
+        val query = "SELECT * FROM $TABLE_WATER WHERE $COLUMN_WATER_DATE = '$date' ORDER BY $COLUMN_WATER_NUMBER ASC"
+        val cursor: Cursor? = db.rawQuery(query, null)
+
+        if (cursor != null && cursor.moveToFirst()) {
+            val waterDateIndex = cursor.getColumnIndex(COLUMN_WATER_DATE)
+            val waterNumberIndex = cursor.getColumnIndex(COLUMN_WATER_NUMBER)
+            val waterTimeIndex = cursor.getColumnIndex(COLUMN_INTAKE_TIME)
+            val waterMlIndex = cursor.getColumnIndex(COLUMN_WATER_ML)
+
+            do {
+                val waterDate = cursor.getString(waterDateIndex)
+                val waterNumber = cursor.getInt(waterNumberIndex)
+                val waterTime = cursor.getString(waterTimeIndex)
+                val waterMl = cursor.getString(waterMlIndex)
+
+                val waterReminder = WaterIntakeModel(waterDate, waterNumber, waterTime, waterMl)
+                waterIntakeArray.add(waterReminder)
+            } while (cursor.moveToNext())
+        }
+        cursor?.close()
+        db.close()
+        return waterIntakeArray
+    }
 
 }

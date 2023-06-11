@@ -11,7 +11,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="350dp"
         android:layout_height="550dp"
-        app:cardCornerRadius="50dp">>
+        app:cardCornerRadius="50dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout"
@@ -23,13 +23,13 @@
             android:padding="10dp">
 
             <Button
-                android:id="@+id/history_button"
-                android:layout_width="181dp"
-                android:layout_height="34dp"
+                android:id="@+id/back_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/rounded_button"
                 android:backgroundTint="@color/cyan"
                 android:fontFamily="@font/glacial_indifference"
-                android:text="Water Intake History"
+                android:text="EXIT"
                 android:textColor="@color/white"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -58,7 +58,7 @@
                 android:id="@+id/water_intake_records_rv"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                app:layout_constraintBottom_toTopOf="@+id/history_button"
+                app:layout_constraintBottom_toTopOf="@+id/back_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/totalWaterIntake"

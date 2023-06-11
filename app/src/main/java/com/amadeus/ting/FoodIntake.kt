@@ -1,14 +1,16 @@
 package com.amadeus.ting;
 
+
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
@@ -16,21 +18,39 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SnapHelper
 import com.amadeus.ting.databinding.ActivityFoodIntakeBinding
 import com.google.android.material.imageview.ShapeableImageView
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
+
+
 class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
+
+
+    // Initializing horizontal calendar
     private lateinit var binding: ActivityFoodIntakeBinding
     private lateinit var calendarAdapter: CalendarAdapter
     private lateinit var tskList: List<TaskModel>
 
-    private var taskadapter: TaskAdapter? = null
+
+    private lateinit var databaseTing: TingDatabase
     private val calendarData = CalendarData()
-    private var sortedTaskList: List<TaskModel> = emptyList()
 
     companion object {
-        const val PREFS_NAME = "FoodIntakePrefFile"  // created a SharedReferences file that can store the data even if the file is exited
+
+        private var instance: FoodIntake? = null
+        lateinit var appContext: Context
+
+        fun getInstance(): FoodIntake {
+            if (instance == null) {
+                instance = FoodIntake()
+            }
+            return instance as FoodIntake
+        }
+
+        const val PREFS_NAME =
+            "FoodIntakePrefFile"  // created a SharedReferences file that can store the data even if the file is exited
         const val BUTTON_TO_BE_CLICKED_KEY = "buttonToBeClicked"
 
         var eatingIntervalHours: Int = 0
@@ -40,33 +60,36 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         var firstReminderHours: Int = 0
         var firstReminderMinutes: Int = 0
 
-        lateinit var foodScheduleList : ArrayList<FoodIntakeInfo>
+        lateinit var foodScheduleList: ArrayList<FoodIntakeInfo>
         var buttonToBeClicked = 1
 
-        lateinit var newRecyclerView : RecyclerView
-
+        lateinit var newRecyclerView: RecyclerView
     }
 
-
-
     // Button Visibility Variables
-    private lateinit var editTimeVisibility : Array<Boolean>
-    private lateinit  var eatButtonVisibility : Array<Boolean>
-    private lateinit var checkVisibility : Array<Boolean>
+    private lateinit var editTimeVisibility: Array<Boolean>
+    private lateinit var eatButtonVisibility: Array<Boolean>
+    private lateinit var checkVisibility: Array<Boolean>
 
     // Food Intake Information Data
-    private lateinit var timeToEatHours : Array<Int>
-    private lateinit var timeToEatColons : Array<String>
-    private lateinit var timeToEatMinutes : Array<Int>
-    private lateinit var timeToEatMeridiem : Array<String>
+    private lateinit var timeToEatHours: Array<Int>
+    private lateinit var timeToEatColons: Array<String>
+    private lateinit var timeToEatMinutes: Array<Int>
+    private lateinit var timeToEatMeridiem: Array<String>
 
+    private var selectedWakeupTime: String? = null
+
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_food_intake)
+        appContext = applicationContext
+
         window.statusBarColor = ContextCompat.getColor(this, R.color.orange)
 
         // Reads the values from SharedPreferences
         val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        databaseTing = TingDatabase(applicationContext)
         buttonToBeClicked = prefs.getInt(BUTTON_TO_BE_CLICKED_KEY, 1)
         assignValuesFromSharedPreferences()
 
@@ -85,26 +108,26 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         getListData(prefs)
 
         // Behavior of each buttons in the app
-        onClick<ShapeableImageView>(R.id.back_button){
+        onClick<ShapeableImageView>(R.id.back_button) {
             val goToHomePage = Intent(this, HomePage::class.java)
             startActivity(goToHomePage)
         }
 
-        onClick<ShapeableImageView>(R.id.edit_button){
+        onClick<ShapeableImageView>(R.id.edit_button) {
             val labelAlert = FoodIntakeInput()
             labelAlert.editMealtimeDialog(this, R.layout.edit_mealtime)
         }
 
         // Resets the user's food intake info
-        onClick<ShapeableImageView>(R.id.delete_button){
+        onClick<ShapeableImageView>(R.id.delete_button) {
             resetList()
             Toast.makeText(this, "Reset My Day Clicked!", Toast.LENGTH_SHORT).show()
         }
 
-        resetListWakeup(SleepSection.selectedWakeTime)
+        // setupAlarm()
     }
 
-   fun resetList() {
+    fun resetList() {
 
         foodScheduleList = arrayListOf<FoodIntakeInfo>()
 
@@ -134,7 +157,7 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     }
 
     // gets the data from the shared preferences and put it in the recycler view
-    private fun getListData(prefs : SharedPreferences) {
+    private fun getListData(prefs: SharedPreferences) {
 
         foodScheduleList = arrayListOf<FoodIntakeInfo>()
 
@@ -142,30 +165,39 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         eatButtonVisibility = Array(mealsPerDay) { false }
         checkVisibility = Array(mealsPerDay) { false }
 
-        timeToEatHours  = Array(mealsPerDay) {0}
-        timeToEatColons  = Array(mealsPerDay) {""}
-        timeToEatMinutes  = Array(mealsPerDay) {0}
-        timeToEatMeridiem = Array(mealsPerDay) {""}
+        timeToEatHours = Array(mealsPerDay) { 0 }
+        timeToEatColons = Array(mealsPerDay) { "" }
+        timeToEatMinutes = Array(mealsPerDay) { 0 }
+        timeToEatMeridiem = Array(mealsPerDay) { "" }
 
         for (i in 0 until mealsPerDay) {
 
             getSharedPreferencesValues(prefs, i)
 
-            val intakeInfo = FoodIntakeInfo(i + 1,  timeToEatHours[i], timeToEatColons[i],  timeToEatMinutes[i], timeToEatMeridiem[i])
+            val intakeInfo = FoodIntakeInfo(
+                i + 1,
+                timeToEatHours[i],
+                timeToEatColons[i],
+                timeToEatMinutes[i],
+                timeToEatMeridiem[i]
+            )
             foodScheduleList.add(intakeInfo)
         }
         newRecyclerView.adapter = FoodIntakeAdapter(foodScheduleList)
     }
 
 
-    private inline fun <reified T : View> Activity.onClick(id: Int, crossinline action: (T) -> Unit) {
+    private inline fun <reified T : View> Activity.onClick(
+        id: Int,
+        crossinline action: (T) -> Unit
+    ) {
         findViewById<T>(id)?.setOnClickListener {
             action(it as T)
         }
     }
 
     // retrieves the values stored in the shared preferences
-    private fun getSharedPreferencesValues(prefs : SharedPreferences, i : Int) {
+    fun getSharedPreferencesValues(prefs: SharedPreferences, i: Int) {
         editTimeVisibility[i] = prefs.getBoolean("editTimeVisible_${i}", true)
         eatButtonVisibility[i] = prefs.getBoolean("eatButtonVisible_${i}", true)
         checkVisibility[i] = prefs.getBoolean("checkVisible_${i}", false)
@@ -174,6 +206,7 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         timeToEatMinutes[i] = prefs.getInt("timeToEatMinute_${i}", 0)
         timeToEatMeridiem[i] = prefs.getString("timeToEatMeridiem_${i}", "").toString()
     }
+
     //Setting up the calendar adapter
     private fun setUpClickListener() {
         val currentDate = Calendar.getInstance(Locale.ENGLISH)
@@ -204,7 +237,7 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
 
 
 
-        calendarAdapter = CalendarAdapter({ calendarDateModel: CalendarDateModel, position ->
+        calendarAdapter = CalendarAdapter({ _: CalendarDateModel, position ->
             calendarData.calendarList.forEachIndexed { index, calendarModel ->
                 calendarModel.isSelected = index == position
             }
@@ -215,6 +248,7 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         binding.calendarRecycler.scrollToPosition(defPos)
         // Line below requires debugging, need to check why it doesn't function
     }
+
     private fun setUpCalendar() {
         val calendarList = java.util.ArrayList<CalendarDateModel>()
         binding.tvDateMonth.text = calendarData.dateFormat.format(calendarData.currentDate.time)
@@ -233,9 +267,73 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
     }
 
     override fun onDateClick(position: Int) {
-        //Add the date here
-        val dateModel = calendarAdapter.getItem(position)
-        taskadapter?.addList(tskList, dateModel)
+        val clickedDateModel = calendarAdapter.getItem(position)
+
+        val dateString = getMonthDayYear(clickedDateModel.toString())
+        val dateParts = dateString.split(" ")
+
+        val clickedMonth = dateParts[0].toInt()
+        val clickedDay = dateParts[1].toInt()
+        val clickedYear = dateParts[2].toInt()
+        val queryDate = "$clickedMonth $clickedDay $clickedYear"
+
+        val currentDate = Calendar.getInstance()
+        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+        val mealtimeDataArray: MutableList<MealTimeModel>
+
+        if (clickedYear == currentDate.get(Calendar.YEAR) &&
+            clickedMonth == currentDate.get(Calendar.MONTH) &&
+            clickedDay == currentDate.get(Calendar.DAY_OF_MONTH)
+        ) {
+            getListData(prefs)
+        } else {
+            mealtimeDataArray =
+                databaseTing.getMealtimeData(queryDate) as MutableList<MealTimeModel>
+            val tempFoodScheduleList = arrayListOf<FoodIntakeInfo>()
+
+            for (i in 0 until mealtimeDataArray.size) {
+                val tempDate = mealtimeDataArray[i].foodIntakeHours.split(" ")
+
+                val hour = tempDate[0].toInt()
+                val minute = tempDate[1].toInt()
+                val amPM = tempDate[2]
+
+                val intakeInfo = FoodIntakeInfo(
+                    mealtimeDataArray[i].intakeNumber,
+                    hour,
+                    ":",
+                    minute,
+                    amPM,
+                    mealtimeDataArray[i].checkVisibility
+                )
+                tempFoodScheduleList.add(intakeInfo)
+            }
+            newRecyclerView.adapter = FoodIntakeAdapterForDatabase(tempFoodScheduleList)
+        }
+
+    }
+
+    private fun getMonthDayYear(information: String): String {
+
+        // Extract the date portion from the input string
+        val dateString = information.substringAfter("data=").substringBefore(",")
+
+        // Parse the date string using SimpleDateFormat
+        val dateFormat = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+        val date = dateFormat.parse(dateString)
+
+        // Extract the desired components (date, month, year) from the parsed date
+        val calendar = Calendar.getInstance()
+        if (date != null) {
+            calendar.time = date
+        }
+
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+        val month = calendar.get(Calendar.MONTH)
+        val year = calendar.get(Calendar.YEAR)
+
+        return "$month $day $year"
 
     }
 
@@ -256,49 +354,32 @@ class FoodIntake : AppCompatActivity(), CalendarAdapter.OnDateClickListener {
         finish()
     }
 
-    private fun resetListWakeup(selectedWakeTime: String?) {
-        // Check if it is already the wake-up time
-        val currentTime = Calendar.getInstance()
-        val currentHour = currentTime.get(Calendar.HOUR_OF_DAY)
-        val currentMinute = currentTime.get(Calendar.MINUTE)
 
-        val wakeTimeParts = selectedWakeTime?.split(":")
-        val wakeHour = wakeTimeParts?.get(0)?.toIntOrNull()
-        val wakeMinute = wakeTimeParts?.get(1)?.substringBefore(" ")?.toIntOrNull()
-
-        if (wakeHour != null && wakeMinute != null)  {
-                if (wakeHour <= currentHour && wakeMinute <= currentMinute) {
-                    // Perform the reset operation
-                    foodScheduleList = arrayListOf<FoodIntakeInfo>()
-
-                    for (i in 0 until mealsPerDay) {
-                        val prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-
-                        // Resets the visibility of the buttons and the variable pointing to the button to be clicked
-                        with(prefs.edit()) {
-                            putInt(BUTTON_TO_BE_CLICKED_KEY, 1)
-                            putInt("timeToEatHour_$i", 0)
-                            putInt("timeToEatMinute_$i", 0)
-                            putString("timeToEatMeridiem_$i", "")
-
-                            putBoolean("editTimeVisible_$i", true)
-                            putBoolean("eatButtonVisible_$i", true)
-                            putBoolean("checkVisible_$i", false)
-                            apply()
-                        }
-
-                        buttonToBeClicked = 1
-                        val intakeInfo = FoodIntakeInfo(i + 1, 0, "", 0, "")
-                        foodScheduleList.add(intakeInfo)
-                    }
-
-                    newRecyclerView.adapter = FoodIntakeAdapter(foodScheduleList)
-
-                    // Display a toast message
-                    val toastMessage = "Wake-up time reached! List reset."
-                    Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
+//    private fun setupAlarm() {
+//        println("=============== setUpAlarm()")
+//        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val alarmIntent = Intent(this, ResetListReceiver::class.java)
+//        val pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_MUTABLE)
+//
+//        // Get WakeTime Data
+//        val sleepSharedPref = getSharedPreferences("SleepData", Context.MODE_PRIVATE)
+//        val wakeTimeFromSleep = sleepSharedPref.getString("WakeTime", null)
+//
+//        val wakeTimeParts = wakeTimeFromSleep?.split(":")
+//        val wakeHour = wakeTimeParts?.get(0)?.toIntOrNull()
+//        val wakeMinute = wakeTimeParts?.get(1)?.substringBefore(" ")?.toIntOrNull()
+//
+//        val calendar = Calendar.getInstance()
+//        if (wakeHour != null) {
+//            calendar.set(Calendar.HOUR_OF_DAY, wakeHour)
+//        }
+//        if (wakeMinute != null) {
+//            calendar.set(Calendar.MINUTE, wakeMinute)
+//        }
+//        calendar.set(Calendar.SECOND, 0)
+//
+//        // Schedule a repeating alarm that triggers at the specified time every day
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, pendingIntent)
+//    }
+}
 
