@@ -47,8 +47,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
     private var checkedTaskList: List<TaskModel> = emptyList()
     private var isDoneTasksVisible = false
 
-
-
     private val notificationSystem:NotificationSystem = NotificationSystem(this)
 
     private val requestPermissionsLauncher = registerForActivityResult(
@@ -167,7 +165,6 @@ class Planner : AppCompatActivity(), CalendarAdapter.OnDateClickListener{
                 isDoneTasksVisible = false
                 val color = ContextCompat.getColor(this, R.color.black)
                 textViewDone.backgroundTintList = ColorStateList.valueOf(color) // Set the desired color when isChecked is true
-
             }
         }
 

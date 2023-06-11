@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.marginStart
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 
@@ -18,7 +19,8 @@ data class FoodIntakeInfo(
     var timeIntervalHours : Int,
     var timeIntervalColon : String,
     var timeIntervalMinutes : Int,
-    var timeIntervalMeridiem : String)
+    var timeIntervalMeridiem : String,
+    var checkVisibility : Boolean = false)
 
 
 
@@ -54,6 +56,7 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
 
         // Restore the visibility settings of the buttons from SharedPreferences
         val prefs = holder.itemView.context.getSharedPreferences(FoodIntake.PREFS_NAME, Context.MODE_PRIVATE)
+
         holder.editTime.visibility = if (prefs.getBoolean("editTimeVisible_$position", true)) View.VISIBLE else View.GONE
         holder.eatButton.visibility = if (prefs.getBoolean("eatButtonVisible_$position", true)) View.VISIBLE else View.GONE
         holder.check.visibility = if (prefs.getBoolean("checkVisible_$position", false)) View.VISIBLE else View.GONE
@@ -97,7 +100,7 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
                 holder.timeToEatMeridiem.text = amPm
 
                 // Save the updated value of buttonToBeClicked to SharedPreferences
-                saveDataPreferencesAfterClick(prefs, position, hour.toInt(), minute.toInt(), amPm, 1)
+                saveDataPreferencesAfterClick(prefs, position, hour.toInt(), minute.toInt(), amPm, 1, FoodIntake.buttonToBeClicked)
 
                 // Updates the other food intake schedule below it
                 updateOtherFoodIntake(prefs, position)
@@ -138,7 +141,7 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
                 holder.timeToEatColon.text = ":"
 
                 // Save the updated value of buttonToBeClicked to SharedPreferences
-                saveDataPreferencesAfterClick(prefs, position, hours, minutes, amPm, 0)
+                saveDataPreferencesAfterClick(prefs, position, hours, minutes, amPm, 0, FoodIntake.buttonToBeClicked + 1)
 
                 // Updates the other food intake schedule below it
                 updateOtherFoodIntake(prefs, FoodIntake.buttonToBeClicked - 1)
@@ -228,11 +231,11 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
     }
 
     // save the data in the shared preferences so that the data will be retained even if the app is closed
-    private fun saveDataPreferencesAfterClick(prefs : SharedPreferences, position : Int, hours : Int, minutes : Int, amPm : String, isEdit : Int) {
+    private fun saveDataPreferencesAfterClick(prefs : SharedPreferences, position : Int, hours : Int, minutes : Int, amPm : String, isEdit : Int, buttonValue : Int) {
 
         with(prefs.edit()) {
 
-            putInt(FoodIntake.BUTTON_TO_BE_CLICKED_KEY, FoodIntake.buttonToBeClicked)
+            putInt(FoodIntake.BUTTON_TO_BE_CLICKED_KEY, buttonValue)
 
             // doesn't change the button visibility if inside the edit button
             if (isEdit == 0) {
@@ -254,9 +257,70 @@ class FoodIntakeAdapter(private val foodIntakeSchedule : ArrayList<FoodIntakeInf
         }
     }
 
+    //  inner class that extends RecyclerView.ViewHolder and holds references to views in the layout
+    class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+        val editTime : ShapeableImageView = itemView.findViewById(R.id.edit_time)
+        val eatButton : Button = itemView.findViewById(R.id.eat_button)
+        val check : ImageView = itemView.findViewById(R.id.food_intake_check)
+        val timeToEatHour : TextView = itemView.findViewById(R.id.time_to_eat_hour)
+        val timeToEatMinute : TextView = itemView.findViewById(R.id.time_to_eat_minute)
+        val timeToEatMeridiem : TextView = itemView.findViewById(R.id.time_to_eat_meridiem)
+        val intervalNumber : TextView = itemView.findViewById(R.id.interval_number)
+        val timeToEatColon : TextView = itemView.findViewById(R.id.time_to_eat_colon)
+    }
+}
+
+class FoodIntakeAdapterForDatabase(private val foodIntakeSchedule : ArrayList<FoodIntakeInfo>) : RecyclerView.Adapter<FoodIntakeAdapterForDatabase.MyViewHolder>() {
+
+    // called when a new view holder is created for the first time
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.view_food_intake_schedule, parent, false)
+        val holder = MyViewHolder(itemView)
+
+        // Set the RecyclerView to have a fixed size to disable infinite scrolling
+        holder.itemView.isClickable = true
+        holder.itemView.isFocusable = true
+        holder.itemView.layoutParams = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
+
+        holder.eatButton.visibility = View.GONE
+        holder.editTime.visibility = View.GONE
+
+        for (i in 0 until itemCount) {
+            onBindViewHolder(holder, i)
+        }
+
+        return holder
+    }
+    // called to update the contents of a view holder when the data at a particular position changes
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+
+        // Get the FoodIntakeInfo object at the current position in the ArrayList
+        val currentItem = foodIntakeSchedule[position]
+        // Set the text of various TextViews in the ViewHolder to the corresponding properties of the FoodIntakeInfo object
+        holder.intervalNumber.text = currentItem.foodIntakeInfoNumber.toString()
+        holder.timeToEatHour.text = currentItem.timeIntervalHours.toString()
+        holder.timeToEatMinute.text = String.format("%02d", currentItem.timeIntervalMinutes)
+        holder.timeToEatMeridiem.text = currentItem.timeIntervalMeridiem
+        holder.timeToEatColon.text = ":"
+
+        if (currentItem.checkVisibility) {
+            holder.check.visibility = View.VISIBLE
+        } else {
+            holder.check.visibility = View.GONE
+        }
+
+    }
+
+    // getItemCount returns the number of items in the ArrayList
+    override fun getItemCount(): Int {
+        return foodIntakeSchedule.size
+    }
 
     //  inner class that extends RecyclerView.ViewHolder and holds references to views in the layout
     class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+        val eatAt : TextView = itemView.findViewById(R.id.eat_at)
         val editTime : ShapeableImageView = itemView.findViewById(R.id.edit_time)
         val eatButton : Button = itemView.findViewById(R.id.eat_button)
         val check : ImageView = itemView.findViewById(R.id.food_intake_check)

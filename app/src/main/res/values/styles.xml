@@ -12,9 +12,4 @@
         <item name="android:background">@drawable/logout_button</item>
     </style>
 
-    <style name="AppEditText" parent="Widget.AppCompat.EditText">
-        <item name="android:background">@drawable/edit_text</item>
-    </style>
-
-
 </resources>

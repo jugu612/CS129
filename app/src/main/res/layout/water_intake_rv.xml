@@ -44,14 +44,15 @@
         android:textColor="@color/gray"
         android:textSize="25sp"
         app:layout_constraintStart_toEndOf="@+id/water_glass"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingStart="20dp"
+        android:paddingEnd="0dp"/>
 
     <View
         android:id="@+id/cyan_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-
         android:background="@color/cyan"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/water_glass" />

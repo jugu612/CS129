@@ -7,6 +7,10 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name=".Ting"
         android:allowBackup="true"
@@ -18,12 +22,9 @@
         android:theme="@style/Theme.Ting"
         tools:targetApi="31">
 
-
         <activity
             android:name=".RegLogin"
             android:exported="false" />
-        </activity>
-
 
         <activity
             android:name=".SignUp"
@@ -80,6 +81,15 @@
         <activity
             android:name=".UserProfile"
             android:exported="false" />
+
+        <receiver
+            android:name=".ResetListReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DATE_CHANGED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
